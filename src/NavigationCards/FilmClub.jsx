@@ -46,7 +46,7 @@ const FilmClubUI = () => {
         {cards.map((card, index) => (
           <div
             key={index}
-            className="relative w-64 h-80 bg-white/10 backdrop-blur-lg p-6 rounded-lg shadow-lg transition transform hover:scale-110 hover:shadow-2xl"
+            className="relative w-64 h-80 bg-black/40 backdrop-blur-lg p-6 rounded-lg shadow-lg transition transform hover:scale-110 hover:shadow-2xl"
           >
             {/* Sticker */}
             <div className="absolute top-6 left-6 bg-red-500 text-white text-4xl px-3 py-2 rounded-full">

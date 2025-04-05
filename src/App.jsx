@@ -6,16 +6,18 @@ import Vr from "/src/NavigationCards/Vr"
 import FilmClubUI from "./NavigationCards/FilmClub";
 import ContactUs from "./NavigationCards/ContactUs";
 // import Navbar from "./Components/Navbar";
+import GoverningComponent from "./NavigationCards/GoverningBody";
 
 function App() {
   return (
     <>
   
       <VideoSection />
-      {/* <Body /> */}
+      <Body />
       <Location />
       <FilmClubUI />
       <Vr />
+      <GoverningComponent />
       <ContactUs />
     
     </>

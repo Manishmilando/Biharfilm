@@ -53,10 +53,10 @@ const Navbar = () => {
           VR
         </button>
         <button
-          onClick={() => handleLocationClick("ContactUs")}
+          onClick={() => handleLocationClick("GoverningBody")}
           className="cursor-pointer hover:text-red-600 text-xl font-semibold"
         >
-          Contact Us
+          Governing Body
         </button>
         <button
           onClick={() => handleLocationClick("about")}
