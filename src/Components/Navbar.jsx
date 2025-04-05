@@ -47,10 +47,10 @@ const Navbar = () => {
           Film Club
         </button>
         <button
-          onClick={() => handleLocationClick("gallery")}
+          onClick={() => handleLocationClick("Vr")}
           className="cursor-pointer hover:text-red-600 text-xl font-semibold"
         >
-          Gallery
+          VR
         </button>
         <button
           onClick={() => handleLocationClick("ContactUs")}
