@@ -1,0 +1,41 @@
+import React, { useState } from "react";
+import Navbar from "../Components/Navbar";
+import Final from "../assets/final.mp4";
+
+function App() {
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    const { clientX, clientY, currentTarget } = e;
+    const { width, height } = currentTarget.getBoundingClientRect();
+
+    const maxOffsetX = 100;
+    const maxOffsetY = 50;
+
+    setOffset({
+      x: (0.5 - clientX / width) * maxOffsetX,
+      y: (0.5 - clientY / height) * maxOffsetY,
+    });
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Navbar */}
+      <Navbar />
+
+      {/* Video Section */}
+      <div className="flex-1 relative overflow-hidden" onMouseMove={handleMouseMove}>
+        <div
+          className="absolute w-[130vw] h-[130vh] -top-[10vh] -left-[10vw] transition-transform duration-100 ease-out"
+          style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
+        >
+          <video className="w-full h-full object-cover" src={Final} autoPlay loop muted />
+        </div>
+      </div>
+
+      
+    </div>
+  );
+}
+
+export default App;
