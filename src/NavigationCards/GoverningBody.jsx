@@ -2,20 +2,19 @@ import React from "react";
 
 const topImages = [
   {
-    src: "https://biharconnect.in/wp-content/uploads/2024/10/Vijay-Kumar-Sinha-Bihar-Deputy-CM-780x470.jpeg",
+    src: "https://film.bihar.gov.in/assets/motilal.PNG",
     alt: "Leader 1",
-    name: "Ravi kishan",
+    name: "Shri Motilal Prasad",
+    namee:"Hon'ble Minister"
   },
   {
-    src: "https://patnapress.com/wp-content/uploads/2025/02/Vijay-Kumar-Sinha.jpg",
+    src: "https://www.northblocksouthblock.com/wp-content/uploads/2025/01/u-6.jpg",
     alt: "Leader 2",
-    name: "Ravi kishan",
+    name: "Sri Pranav Kumar,I.A.S",
+    namee:"Managing Director",
+    nameee:"Secretary(Art,Culture & Youth Department)"
   },
-  {
-    src: "https://img.etimg.com/thumb/width-1200,height-900,imgsize-277143,resizemode-75,msid-49721349/news/politics-and-nation/pratyaya-amrit-the-ias-who-shares-the-same-reputation-as-bihar-cm-nitish-kumar.jpg",
-    alt: "Leader 3",
-    name: "Ravi kishan",
-  },
+
 ];
 
 const bodyMembers = [
@@ -66,7 +65,7 @@ const GoverningComponent = () => {
       </p>
 
     {/* Top Leaders */}
-<div className="flex flex-wrap justify-center gap-18 mb-16">
+<div className="flex flex-wrap justify-center gap-28 mb-16">
   {topImages.map((item, index) => (
     <div key={index} className="flex flex-col items-center">
       <div className="bg-white w-40 h-40 rounded-full overflow-hidden shadow-lg hover:scale-105  transition">
@@ -77,6 +76,10 @@ const GoverningComponent = () => {
         />
       </div>
       <p className="mt-2 text-white text-lg font-semibold">{item.name}</p>
+      <p className=" text-zinc-400 ">{item.namee}</p>
+      <p className=" text-zinc-400 ">{item.nameee}</p>
+      
+      
     </div>
   ))}
 </div>
