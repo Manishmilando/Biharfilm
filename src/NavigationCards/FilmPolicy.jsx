@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Reelfilm from "../assets/Reelfilm.svg";
-
+import FilmSubsidyTable from "../Budget/value.jsx";
+import InvestmentSubsidyTable from "../Budget/InvestmentSubsidyTable.jsx";
+import FilmSubsidy from "../Budget/FilmSubsidy.jsx";
 export default function FilmPolicyNOC() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginData, setLoginData] = useState({ username: "", password: "" });
@@ -41,14 +43,19 @@ export default function FilmPolicyNOC() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white pl-[48rem] flex items-center justify-center relative overflow-hidden ">
+    <div className="grid grid-cols-2 ">
+       <div className=" pl-[6rem] pt-[12rem] scale-x-90"> 
+        <FilmSubsidyTable />
+      </div>
+    <div className="min-h-screen w-full bg-white pl-[6rem] flex items-center justify-center relative overflow-hidden ">
+     
       {/* Background SVG */}
       <img
         src={Reelfilm}
         alt="Reel Film"
-        className="absolute inset-0 ml-[58rem]  w-[500px] h-auto pointer-events-none"
+        className="absolute inset-0 ml-[14rem] mt-16  w-[500px] h-auto pointer-events-none"
       />
-
+    
       {/* Login Section */}
       {!isLoggedIn ? (
         <div className="relative z-10 w-[23rem] h-[20rem] bg-white/30   backdrop-blur-2xl rounded-2xl shadow-xl p-8">
@@ -144,8 +151,17 @@ export default function FilmPolicyNOC() {
               Submit NOC Application
             </button>
           </form>
+          
         </div>
       )}
+      
+    </div>
+    <div className="     pl-30 pb-14 ">
+      <InvestmentSubsidyTable />
+    </div>
+    <div className="mt-18 ml-10">
+    <FilmSubsidy />
+    </div>
     </div>
   );
 }
