@@ -21,7 +21,7 @@ const Navbar = () => {
         showNavbar ? "opacity-100" : "opacity-0"
       }`}
     >
-      <ul className="flex items-center gap-28  py-4 px-20 text-white text-lg bg-transparent transition-colors duration-300 hover:bg-white hover:text-black">
+      <ul className="flex items-center gap-18  py-4 px-20 text-white text-lg bg-transparent transition-colors duration-300 hover:bg-white hover:text-black">
         {/* Logo */}
         <li className="flex items-center cursor-pointer hover:text-red-600 text-2xl">
           <img src={Logo1} alt="logo" className="h-16 w-24  " />
@@ -57,6 +57,12 @@ const Navbar = () => {
           className="cursor-pointer hover:text-red-600 text-xl font-semibold"
         >
           Governing Body
+        </button>
+        <button
+          onClick={() => handleLocationClick("FilmPolicy")}
+          className="cursor-pointer hover:text-red-600 text-xl font-semibold"
+        >
+          Film Policy
         </button>
         <button
           onClick={() => handleLocationClick("about")}

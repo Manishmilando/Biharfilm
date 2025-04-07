@@ -67,14 +67,14 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-black">
+    <div className="min-h-screen flex flex-col bg-black overflow-auto scroll-hidden">
       {/* Navbar */}
       <Navbar />
 
       {/* Video Section */}
       <div className="flex-1 relative overflow-hidden" onMouseMove={handleMouseMove}>
         <div
-          className="absolute w-[130vw] h-[130vh] -top-[10vh] -left-[10vw] transition-transform duration-100 ease-out"
+          className="absolute w-[120vw] h-[120vh] -top-[10vh] -left-[10vw] transition-transform duration-100 ease-out"
           style={{ transform: `translate(${offset.x}px, ${offset.y}px)` }}
         >
           <video

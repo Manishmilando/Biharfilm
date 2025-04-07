@@ -7,6 +7,7 @@ import FilmClubUI from "./NavigationCards/FilmClub";
 import ContactUs from "./NavigationCards/ContactUs";
 // import Navbar from "./Components/Navbar";
 import GoverningComponent from "./NavigationCards/GoverningBody";
+import FilemPolicyPage from "./NavigationCards/FilmPolicy";
 
 function App() {
   return (
@@ -18,7 +19,9 @@ function App() {
       <FilmClubUI />
       <Vr />
       <GoverningComponent />
+      <FilemPolicyPage />
       <ContactUs />
+      
     
     </>
   );
