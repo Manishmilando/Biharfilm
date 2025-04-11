@@ -66,7 +66,7 @@ const FilterableCarousel = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center bg-[#190108] py-6 px-16">
+    <div className="w-full flex flex-col items-center justify-center bg-[#190108] py-6 px-16  ">
       <h1 className="text-4xl font-bold mb-4 text-white">Top Shooting Locations</h1>
 
       {/* Filter Buttons */}
