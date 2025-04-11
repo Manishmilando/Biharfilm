@@ -5,22 +5,22 @@ const FilmSubsidyTable = () => {
     {
       filmNo: '1st Film',
       ranges: [
-        { cost: 'Up to ₹2 Cr', subsidy: '25%', days: '50 days' },
-        { cost: '₹2–₹5 Cr', subsidy: '25%', days: '75 days' },
+        { cost: 'Up to ₹2 Cr', subsidy: '25%', days: '50% of shooting days' },
+        { cost: '₹2–₹5 Cr', subsidy: '25%', days: '75% of shooting days' },
       ],
     },
     {
       filmNo: '2nd Film',
       ranges: [
-        { cost: '₹2–₹7.5 Cr', subsidy: '25%', days: '50 days' },
-        { cost: '₹3–₹10 Cr', subsidy: '25%', days: '75 days' },
+        { cost: '₹2–₹7.5 Cr', subsidy: '25%', days: '50% of shooting days' },
+        { cost: '₹3–₹10 Cr', subsidy: '25%', days: '75% of shooting days' },
       ],
     },
     {
       filmNo: '3rd Film',
       ranges: [
-        { cost: '₹3.5–₹15 Cr', subsidy: '25%', days: '50 days' },
-        { cost: '₹4–₹20 Cr', subsidy: '25%', days: '75 days' },
+        { cost: '₹3.5–₹15 Cr', subsidy: '25%', days: '50% of shooting days' },
+        { cost: '₹4–₹20 Cr', subsidy: '25%', days: '75% of shooting days' },
       ],
     },
   ];

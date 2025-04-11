@@ -67,7 +67,7 @@ const FilterableCarousel = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center bg-[#190108] py-6">
+    <div className="w-full flex flex-col items-center justify-center bg-zinc-800 py-6">
       <h1 className="text-4xl font-bold mb-4 text-white">Top Shooting Locations</h1>
 
       {/* Filter Buttons */}
@@ -93,8 +93,8 @@ const FilterableCarousel = () => {
       
 
       {/* Cards Carousel */}
-      <div className="overflow-hidden mt-4 w-[70%] relative">
-        <div className="flex gap-6 transition-transform duration-500 ease-in-out">
+      <div className="overflow-hidden mt-4 w-[70%] relative bg-amber-700">
+        <div className="flex gap-6 transition-transform duration-500 ease-in-out bg-zinc-400">
           {cards.slice(index, index + itemsPerPage).map((card) => (
             <div
               key={card.id}

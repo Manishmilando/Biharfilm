@@ -62,7 +62,7 @@ const people = [
 
 const CarouselOfCelebs = () => {
   const [index, setIndex] = useState(0);
-  const itemsPerPage = 3;
+  const itemsPerPage = 4;
   const total = people.length;
 
   const nextSlide = () => {
@@ -75,24 +75,29 @@ const CarouselOfCelebs = () => {
 
   return (
     <div className="w-full flex flex-col items-center justify-center bg-[#190108] py-10">
-      <h2 className="text-3xl text-white font-bold  mt-16 mb-14">Actors of Bihar</h2>
-
+      <h2 className="text-3xl text-white font-bold mb-10">Celebrities of Bihar</h2>
+  
       {/* Carousel Cards */}
-      <div className="w-full flex justify-center mt-10">
+      <div className="w-full flex justify-center">
         <div className="flex gap-6 transition-transform duration-500 ease-in-out">
           {people.slice(index, index + itemsPerPage).map((person) => (
             <div
               key={person.id}
-              className="w-72 h-96 bg-white/40 backdrop-blur-3xl text-white rounded-2xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-700"
+              className="w-72 h-96 bg-white/40 backdrop-blur-3xl text-white rounded-2xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-700 relative"
             >
-              <div className="w-full h-3/4 overflow-hidden">
+              {/* Image */}
+              <div className="w-full h-full overflow-hidden relative">
                 <img
                   src={person.img}
                   alt={person.name}
-                  className="w-full h-full object-cover rounded-t-2xl"
+                  className="w-full h-full object-cover rounded-2xl"
                 />
+                {/* Fade overlay */}
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/70 to-transparent z-10" />
               </div>
-              <div className="h-1/4 flex flex-col items-center justify-center px-3 text-center">
+  
+              {/* Text over the fade */}
+              <div className="absolute bottom-4 left-4 z-20">
                 <h3 className="text-xl font-semibold">{person.name}</h3>
                 <p className="text-sm text-white">{person.occupation}</p>
               </div>
@@ -100,6 +105,8 @@ const CarouselOfCelebs = () => {
           ))}
         </div>
       </div>
+    
+  
 
       {/* Arrows BELOW the cards */}
       <div className="flex justify-center gap-4 mt-6">

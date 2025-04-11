@@ -2,7 +2,7 @@ import React from "react";
 
 const topImages = [
   {
-    src: "https://film.bihar.gov.in/assets/motilal.PNG",
+    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp_3U00IWSSR-omPQem2GCHZyg_Kq0DmZoGg&s",
     alt: "Leader 1",
     name: "Shri Motilal Prasad",
     namee:"Hon'ble Minister"
@@ -58,7 +58,7 @@ const bodyMembers = [
 
 const GoverningComponent = () => {
   return (
-    <div className="p-6 bg-[#190108] w-full min-h-screen" id="GoverningBody">
+    <div className="p-6 pt-10 bg-[#190108] w-full min-h-screen" id="GoverningBody">
       {/* Title */}
       <p className="text-white text-5xl  pt-24 font-bold pb-16 pl-12">
         Governing Bodies of Bihar Films
