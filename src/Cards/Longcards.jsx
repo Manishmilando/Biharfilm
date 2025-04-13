@@ -16,7 +16,7 @@ function CardWithText({ imageUrl, title, description }) {
       <div className="h-1/2 p-4 flex flex-col justify-center">
         <h2 className="text-lg font-bold text-gray-300">{title}</h2>
         <p className="text-sm text-gray-500 mt-2">{description}</p>
-        <div className="absolute inset-0 bg-black opacity-30 group-hover:opacity-10 transition-opacity duration-300"></div>
+        <div className="absolute inset-0  group-hover:opacity-10 transition-opacity duration-300"></div>
       </div>
     </div>
   );

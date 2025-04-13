@@ -5,63 +5,64 @@ import Snow from "/src/assets/Snow.mp4";
 import Snowtrain from "/src/assets/Snowtrain.mp4";
 import Mountain from "/src/assets/mountain.mp4";
 import Watertemp from "/src/assets/watertemp.mp4";
+import { motion } from "framer-motion";
 
 const videos = [Mtrain, Snow, Snowtrain, Mountain, Watertemp];
 
 const textOverlays = [
   [
     {
-      title: "Mountain Journey",
-      description: "Experience the breathtaking mountain landscapes.",
+      title: "Roooling Reels, Rolling Fields",
+      description: "Capturing Bihar’s soul — one frame at a time.",
       top: "25%",
       left: "10%",
     },
     {
-      title: "Breathtaking Views",
-      description: "Immerse yourself in nature’s beauty.",
+      title: "Highway of Bihar, Frames of a journey",
+      description: "Where every mile tells a cinematic story.",
       top: "50%",
-      left: "65%",
+      left: "50%",
     },
   ],
   [
     {
-      title: "Snowfall Beauty",
-      description: "Watch the mesmerizing snowfall in winter wonderlands.",
+      title: "Whispers of the Riverbank",
+      description: "Where crystal waters kiss the sands of Bihar, stories begin in silence",
       top: "30%",
       left: "20%",
     },
     {
-      title: "Winter Wonderland",
-      description: "A magical experience of snow-covered landscapes.",
+      title: "River Rhythms of Bihar",
+      description: "Crystal waters, sandy banks, and children at play — the soul of the state, in motion.",
       top: "55%",
       left: "70%",
     },
   ],
   [
     {
-      title: "Train Adventure",
-      description: "Embark on a scenic train journey through stunning routes.",
-      top: "20%",
+      title: "Karamchat Calm, Rohtas Proud",
+      description: "Blue waters and mountain echoes — where Bihar's natural heritage stands tall.",
+      top: "60%",
       left: "25%",
     },
     {
-      title: "Scenic Route",
-      description: "Enjoy picturesque views along the railway.",
-      top: "60%",
-      left: "50%",
+      title: "Rohtas Rises",
+      description: "Beneath the mountains. Beyond the waters. A spirit unshaken",
+      top: "30%",
+      left: "82%",
     },
   ],
   [
     {
-      title: "High Altitude",
-      description: "Mountains brushing the sky.",
-      top: "25%",
+      title: "Echoes of the Plateau",
+      description: "Whispers of wind, strength of stone.",
+      top: "45%",
       left: "30%",
     },
     {
-      title: "Peaceful Ranges",
-      description: "Unwind in the silence of the peaks.",
-      top: "60%",
+      title: "Roots of Rohtas",
+      description: "Where the ancient plateau meets emerald heights.",
+      top: "75%",
       left: "60%",
     },
   ],
@@ -69,13 +70,13 @@ const textOverlays = [
     {
       title: "Crystal Waters",
       description: "Refreshing and clear water visuals.",
-      top: "30%",
+      top: "50%",
       left: "35%",
     },
     {
       title: "Soothing Streams",
       description: "Feel the calm of flowing water.",
-      top: "55%",
+      top: "75%",
       left: "55%",
     },
   ],
@@ -138,7 +139,10 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-black overflow-auto scroll-hidden">
+    <motion.div
+  
+    
+    className="min-h-screen flex flex-col bg-black overflow-auto scroll-hidden">
       <Navbar />
 
       {/* Video Section */}
@@ -202,7 +206,7 @@ function App() {
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { motion } from "framer-motion";
 
 // Sample Data with Image URLs
 const categories = {
@@ -66,8 +67,10 @@ const FilterableCarousel = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center bg-[#190108] py-6 px-16  ">
-      <h1 className="text-4xl font-bold mb-4 text-white">Top Shooting Locations</h1>
+    <motion.div
+    
+     className="w-full flex flex-col items-center justify-center bg-[#190108] py-6 px-16 pb-20  ">
+      <h1 className="text-4xl font-bold mb-16 pt-24 text-white">Top Shooting Locations</h1>
 
       {/* Filter Buttons */}
       <div className="flex space-x-4 mb-6">
@@ -124,7 +127,7 @@ const FilterableCarousel = () => {
           <IoIosArrowForward size={30} />
         </button>
       </div>
-  </div>
+  </motion.div>
   );
 };
 
