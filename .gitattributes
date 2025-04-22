@@ -2,3 +2,5 @@ Snow.mp4 filter=lfs diff=lfs merge=lfs -text
 Snowtrain.mp4 filter=lfs diff=lfs merge=lfs -text
 Vrvideo.mp4 filter=lfs diff=lfs merge=lfs -text
 Mtrain.mp4 filter=lfs diff=lfs merge=lfs -text
+mountain.mp4 filter=lfs diff=lfs merge=lfs -text
+watertemp.mp4 filter=lfs diff=lfs merge=lfs -text

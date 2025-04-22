@@ -25,7 +25,7 @@ const FilmClubUI = () => {
 
   return (
     <div
-      className="relative w-full h-screen flex items-center justify-center bg-[#190108] overflow-hidden"
+      className="relative w-full h-screen flex items-center justify-center bg-[#190108] overflow-hidden max-w-screen overflow-x-hidden"
       id="FilmClub"
     >
       {/* Background Image with slight movement */}
@@ -38,30 +38,40 @@ const FilmClubUI = () => {
       />
 
       {/* Header Description */}
-      <div className="absolute top-20 text-white text-center z-10 px-4">
-        <h1 className="text-4xl md:text-5xl font-serif">Welcome to the Film Club</h1>
-        <p className="text-lg md:text-xl mt-2">Discover and explore amazing films with us.</p>
+      <div className="absolute top-[clamp(2.5rem,5vw,5rem)] text-white text-center z-10 px-2">
+        <h1 className="text-[clamp(1.25rem,3.5vw,2.5rem)] font-serif">Welcome to the Film Club</h1>
+        <p className="text-[clamp(0.75rem,1.75vw,1.1rem)] mt-2">
+          Discover and explore amazing films with us.
+        </p>
       </div>
 
-      {/* Floating Cards */}
+      {/* Floating Cards using Grid */}
       <div
-        
-       
-        className="absolute top-1/2 transform -translate-y-1/2 flex flex-col md:flex-row items-center gap-16 z-10 pt-10 px-4"
+        className="absolute top-1/2 transform -translate-y-1/2 z-10 px-4 w-full max-w-screen
+        grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center"
       >
         {cards.map((card, index) => (
           <div
             key={index}
-            className="relative w-64 h-86 bg-white/20 backdrop-blur-md p-6 rounded-xl border border-white/30 shadow-lg transition-transform hover:scale-105 hover:shadow-2xl"
+            className="relative 
+              w-[clamp(8rem,20vw,13rem)] 
+              h-[clamp(11rem,22vw,16rem)] 
+              bg-white/20 backdrop-blur-md 
+              p-[clamp(0.5rem,1.5vw,1rem)] 
+              rounded-xl border border-white/30 shadow-lg 
+              transition-transform hover:scale-105 hover:shadow-2xl 
+              overflow-hidden"
           >
             {/* Sticker */}
-            <div className="absolute top-6 left-6 bg-red-600 text-white text-4xl p-2 rounded-full shadow-md">
+            <div className="absolute top-4 left-4 bg-red-600 text-white text-[clamp(1.25rem,2.5vw,2rem)] p-2 rounded-full shadow-md">
               {card.icon}
             </div>
             {/* Description */}
-            <div className="mt-24 text-white text-center">
-              <h2 className="text-2xl font-semibold">{card.title}</h2>
-              <p className="text-md mt-3">{card.description}</p>
+            <div className="mt-20 text-white text-center px-2 overflow-y-auto scrollbar-hidden">
+              <h2 className="text-[clamp(0.9rem,1.5vw,1.2rem)] font-semibold">{card.title}</h2>
+              <p className="text-[clamp(0.65rem,1.25vw,0.95rem)] mt-2">
+                {card.description}
+              </p>
             </div>
           </div>
         ))}

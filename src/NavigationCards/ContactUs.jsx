@@ -2,96 +2,83 @@ import React from 'react';
 import { CiMail } from "react-icons/ci";
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 
-
 const Footer = () => {
   return (
-    <>
-    <div className="bg-gray-100 py-8 px-10 " id='ContactUs'>
-      <div className="flex justify-between max-w-6xl mx-auto w-full space-x-12">
-        
-        {/* Legal Information */}
-        <div className="w-2/3 transiton  ">
-          <ul className="text-gray-700 ">
-            <li className="font-bold  text-2xl mb-2">About</li>
-            <li className=" py-2 border-gray-400 font-semibold mt-4 ">Over the years BSFDFC has worked with some of the most acclaimed filmmakers of India including Satyajit Ray, Mira Nair, Aparna Sen, Shyam Benegal, Govind Nihalani, Mrinal Sen, Richard Attenborogh, Adoor Gopalkrishnan and Ketan Mehta. BSFDFC is breaking new grounds by co-producing projects involving public-private partnerships</li>
-            
-          </ul>
-        </div>
-
-        {/* More Pages */}
-        <div className="w-1/3">
-          <ul className="text-gray-700">
-            <li className="font-bold mb-2">Important Links</li>
-            <li className="border-b border-gray-400 py-2 font-semibold hover:text-red-500 transition-colors duration-300">Shooting Location</li>
-            <li className="border-b border-gray-400 py-2 font-semibold hover:text-red-500 transition-colors duration-300">Film Club</li>
-            <li className="border-b border-gray-400 py-2 font-semibold hover:text-red-500 transition-colors duration-300">Youth and Culture</li>
-            <li className="border-b border-gray-400 py-2 font-semibold hover:text-red-500 transition-colors duration-300">Bihar Tourism</li>
-            <li className="border-b border-gray-400 py-2 font-semibold hover:text-red-500 transition-colors duration-300"> Environment and forest</li>
-            <li className="border-b border-gray-400 py-2 font-semibold hover:text-red-500 transition-colors duration-300"> Transport</li>
-          </ul>
-        </div>
-
-        {/* Contact */}
-        <div className="w-1/3 ">
-          <ul className="text-gray-700">
-            <li className=" font-bold mb-2">Contact</li>
-            <li className="border-b border-gray-400 py-2 font-semibold hover:text-red-500 transition-colors duration-300">Bihar State Film Development and Finance Corporation Limited</li>
-            <li className="border-b border-gray-400 py-2 font-semibold hover:text-red-500 transition-colors duration-300">0612-2219213</li>
-            <li className="border-b border-gray-400 py-2 font-semibold hover:text-red-500 transition-colors duration-300">biharfilmnigam@gmail.com</li>
-            <li className="border-b border-gray-400 py-2 font-semibold hover:text-red-500 transition-colors duration-300">Get Location</li>
-          </ul>
-        </div>
-
-      </div>
-    </div>
-
-   
-
-
-    <div className="bg-gray-100 py-8 px-10">
-        <div className="flex justify-between max-w-6xl mx-auto w-full space-x-12">
+    <footer className="bg-gray-100 text-gray-700">
+      {/* Top Section */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:space-x-12 space-y-8 lg:space-y-0">
           
-          {/* Newsletter Section */}
-          <div className="w-1/3">
-            <h2 className="text-lg font-semibold mb-4">Newsletter</h2>
-            <button className="flex items-center space-x-2 bg-red-500 text-white text-lg font-medium py-2 px-6 rounded-full hover:bg-red-600 transition duration-300">
-              <CiMail className="text-2xl" />  {/* Mail Icon */}
-              <span>Register For Newsletter</span>
+          {/* About */}
+          <div className="lg:w-2/3">
+            <h3 className="text-2xl font-bold mb-4">About</h3>
+            <p className="text-sm sm:text-base leading-relaxed">
+              Over the years BSFDFC has worked with some of the most acclaimed filmmakers of India including Satyajit Ray, Mira Nair, Aparna Sen, Shyam Benegal, Govind Nihalani, Mrinal Sen, Richard Attenborough, Adoor Gopalkrishnan and Ketan Mehta. BSFDFC is breaking new grounds by co-producing projects involving public-private partnerships.
+            </p>
+          </div>
+
+          {/* Important Links */}
+          <div className="lg:w-1/3 grid grid-cols-2 sm:grid-cols-1 gap-4">
+            <div>
+              <h3 className="text-xl font-bold mb-2">Important Links</h3>
+              <ul className="space-y-2 text-sm">
+                {["Shooting Location","Film Club","Youth and Culture","Bihar Tourism"].map(link => (
+                  <li key={link} className="hover:text-red-500 transition-colors">{link}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-2">&nbsp;</h3>
+              <ul className="space-y-2 text-sm">
+                {["Environment and Forest","Transport"].map(link => (
+                  <li key={link} className="hover:text-red-500 transition-colors">{link}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div className="lg:w-1/3">
+            <h3 className="text-xl font-bold mb-2">Contact</h3>
+            <ul className="space-y-2 text-sm">
+              <li>Bihar State Film Development and Finance Corporation Limited</li>
+              <li>0612-2219213</li>
+              <li>biharfilmnigam@gmail.com</li>
+              <li className="hover:text-red-500 transition-colors cursor-pointer">Get Location</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <hr className="border-gray-300"/>
+
+      {/* Bottom Section */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-6 md:space-y-0">
+          
+          {/* Newsletter */}
+          <div className="w-full md:w-1/3">
+            <h4 className="text-lg font-semibold mb-3">Newsletter</h4>
+            <button className="flex items-center space-x-2 bg-red-500 text-white text-sm sm:text-base font-medium py-2 px-4 sm:px-6 rounded-full hover:bg-red-600 transition">
+              <CiMail className="text-xl" />
+              <span>Register for Newsletter</span>
             </button>
           </div>
 
-          {/* Follow Us Section */}
-          <div className="w-2/3">
-            <h2 className="text-lg font-semibold mb-4">Follow us</h2>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-500 hover:text-blue-600 text-2xl transition">
-                <FaFacebook />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-pink-500 text-2xl transition">
-                <FaInstagram />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-blue-400 text-2xl transition">
-                <FaTwitter />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-red-500 text-2xl transition">
-                <FaYoutube />
-              </a>
+          {/* Social Links */}
+          <div className="w-full md:w-2/3">
+            <h4 className="text-lg font-semibold mb-3">Follow us</h4>
+            <div className="flex space-x-4 text-2xl">
+              <a href="#" className="text-gray-500 hover:text-blue-600 transition"><FaFacebook /></a>
+              <a href="#" className="text-gray-500 hover:text-pink-500 transition"><FaInstagram /></a>
+              <a href="#" className="text-gray-500 hover:text-blue-400 transition"><FaTwitter /></a>
+              <a href="#" className="text-gray-500 hover:text-red-500 transition"><FaYoutube /></a>
             </div>
           </div>
-          
         </div>
-         <div className=" border-t-2 border-gray-500 mt-6">
-
-          
-         </div>
-        
-    </div>
-
-
-
-
-    </>
-  );
+      </div>
+    </footer>
+);
 };
 
 export default Footer;

@@ -2,7 +2,7 @@ import React from "react";
 
 function CardWithText({ imageUrl, title, description }) {
   return (
-    <div className=" mt-6 w-[25rem] h-[35rem]  group relative overflow-hidden rounded-2xl bg-[#190108] shadow-lg transform transition duration-300 hover:scale-95 hover:bg-[#38242a] outline-1 outline-[#3a0d1a] outline-offset-1">
+    <div className=" mt-6 w-[22rem] h-[28rem]  group relative overflow-hidden rounded-2xl bg-[#190108] shadow-lg transform transition duration-300 hover:scale-95 hover:bg-[#38242a] outline-1 outline-[#3a0d1a] outline-offset-1">
       {/* Image Section with Zoom Effect */}
       <div className="group relative h-1/2 overflow-hidden">
         <img

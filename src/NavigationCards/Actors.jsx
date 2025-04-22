@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import "../app.css";
 
@@ -64,8 +64,26 @@ const people = [
 
 const CarouselOfCelebs = () => {
   const [index, setIndex] = useState(0);
-  const itemsPerPage = 4;
+  const [itemsPerPage, setItemsPerPage] = useState(4);
   const total = people.length;
+
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerPage(1);
+      } else if (window.innerWidth < 768) {
+        setItemsPerPage(2);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerPage(3);
+      } else {
+        setItemsPerPage(4);
+      }
+    };
+
+    updateItemsPerPage();
+    window.addEventListener("resize", updateItemsPerPage);
+    return () => window.removeEventListener("resize", updateItemsPerPage);
+  }, []);
 
   const nextSlide = () => {
     setIndex((prev) => (prev + itemsPerPage >= total ? 0 : prev + itemsPerPage));
@@ -76,16 +94,18 @@ const CarouselOfCelebs = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center bg-[#190108] py-10 ">
-      <h2 className=" text-white playwrite-mx-guides-regular text-5xl mb-10 pt-10 pb-8">Celebrities of Bihar</h2>
-  
+    <div className="w-full flex flex-col items-center justify-center bg-[#190108] py-10">
+      <h2 className="text-white playwrite-mx-guides-regular text-3xl sm:text-4xl md:text-5xl mb-10 pt-10 pb-8 text-center">
+        Celebrities of Bihar
+      </h2>
+
       {/* Carousel Cards */}
-      <div className="w-full flex justify-center">
-        <div className="flex gap-6 transition-transform duration-500 ease-in-out">
+      <div className="w-full flex justify-center px-4">
+        <div className="flex gap-4 sm:gap-6 transition-transform duration-500 ease-in-out flex-wrap justify-center">
           {people.slice(index, index + itemsPerPage).map((person) => (
             <div
               key={person.id}
-              className="w-72 h-96 bg-white/40 backdrop-blur-3xl text-white rounded-2xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-700 relative"
+              className="w-64 sm:w-72 h-96 bg-white/40 backdrop-blur-3xl text-white rounded-2xl shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-700 relative"
             >
               {/* Image */}
               <div className="w-full h-full overflow-hidden relative">
@@ -94,11 +114,10 @@ const CarouselOfCelebs = () => {
                   alt={person.name}
                   className="w-full h-full object-cover rounded-2xl"
                 />
-                {/* Fade overlay */}
                 <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/70 to-transparent z-10" />
               </div>
-  
-              {/* Text over the fade */}
+
+              {/* Text */}
               <div className="absolute bottom-4 left-4 z-20">
                 <h3 className="text-xl font-semibold">{person.name}</h3>
                 <p className="text-sm text-white">{person.occupation}</p>
@@ -107,8 +126,6 @@ const CarouselOfCelebs = () => {
           ))}
         </div>
       </div>
-    
-  
 
       {/* Arrows BELOW the cards */}
       <div className="flex justify-center gap-4 mt-6">

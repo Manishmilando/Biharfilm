@@ -50,6 +50,8 @@ const categories = {
   ],
 };
 
+// ... (imports remain unchanged)
+
 const FilterableCarousel = () => {
   const [selectedCategory, setSelectedCategory] = useState("Film Locations");
   const [index, setIndex] = useState(0);
@@ -68,16 +70,19 @@ const FilterableCarousel = () => {
 
   return (
     <motion.div
-    
-     className="w-full flex flex-col items-center justify-center bg-[#190108] py-6 px-16 pb-20  ">
-      <h1 className="text-4xl font-bold mb-16 pt-24 text-white">Top Shooting Locations</h1>
+      className="w-full flex flex-col items-center justify-center bg-[#190108] py-6 px-4 sm:px-8 md:px-12 lg:px-16 pb-20"
+      id="Shooting-location"
+    >
+      <h1 className="text-3xl sm:text-4xl font-bold mb-12 sm:mb-16 pt-24 text-white text-center">
+        Top Shooting Locations
+      </h1>
 
       {/* Filter Buttons */}
-      <div className="flex space-x-4 mb-6">
+      <div className="flex flex-wrap justify-center gap-4 mb-6 px-2">
         {Object.keys(categories).map((category) => (
           <button
             key={category}
-            className={`px-4 py-2 rounded-lg text-lg ${
+            className={`px-4 py-2 rounded-lg text-sm sm:text-base ${
               selectedCategory === category
                 ? "bg-red-600 text-white"
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
@@ -92,25 +97,23 @@ const FilterableCarousel = () => {
         ))}
       </div>
 
-      
-
       {/* Cards Carousel */}
-      <div className="overflow-hidden mt-4 w-[90%] relative">
-        <div className="flex gap-6 transition-transform duration-500 ease-in-out">
+      <div className="overflow-hidden mt-4 w-full md:w-[90%] relative px-2">
+        <div className="flex gap-6 transition-transform duration-500 ease-in-out justify-center">
           {cards.slice(index, index + itemsPerPage).map((card) => (
             <div
               key={card.id}
-              className="w-72 h-80 border-1  rounded-2xl overflow-hidden bg-transparent transform transition-transform duration ease-in-out hover:scale-95 group"
+              className="w-[270px] sm:w-72 h-80 border-1 rounded-2xl overflow-hidden bg-transparent transform transition-transform duration ease-in-out hover:scale-95 group relative"
             >
               {/* Image */}
               <img
                 src={card.img}
                 alt={card.title}
-                className="w-full h-full object-cover transition-transform duration-[2000ms] ease-in-out group-hover:scale-110 "
+                className="w-full h-full object-cover transition-transform duration-[2000ms] ease-in-out group-hover:scale-110"
               />
 
               {/* Location Name */}
-              <div className="absolute text-xl font-bold bg-gradient-to-t from-black/40 to-transparent bottom-0 left-0 w-full  text-white text-start p-4">
+              <div className="absolute text-base sm:text-xl font-bold bg-gradient-to-t from-black/40 to-transparent bottom-0 left-0 w-full text-white text-start p-4">
                 {card.title}
               </div>
             </div>
@@ -119,7 +122,7 @@ const FilterableCarousel = () => {
       </div>
 
       {/* Navigation Arrows */}
-      <div className="flex  mt-6 gap-4">
+      <div className="flex mt-6 gap-4">
         <button onClick={prevSlide} className="p-3 bg-gray-800 text-white rounded-full hover:bg-gray-600">
           <IoIosArrowBack size={30} />
         </button>
@@ -127,8 +130,9 @@ const FilterableCarousel = () => {
           <IoIosArrowForward size={30} />
         </button>
       </div>
-  </motion.div>
+    </motion.div>
   );
 };
 
- export default FilterableCarousel;
+export default FilterableCarousel;
+

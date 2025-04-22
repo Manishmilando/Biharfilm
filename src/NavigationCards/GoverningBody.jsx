@@ -5,22 +5,21 @@ const topImages = [
     src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp_3U00IWSSR-omPQem2GCHZyg_Kq0DmZoGg&s",
     alt: "Leader 1",
     name: "Shri Motilal Prasad",
-    namee:"Hon'ble Minister"
+    namee: "Hon'ble Minister"
   },
   {
     src: "https://www.northblocksouthblock.com/wp-content/uploads/2025/01/u-6.jpg",
     alt: "Leader 2",
     name: "Sri Pranav Kumar,I.A.S",
-    namee:"Managing Director",
-    nameee:"Secretary(Art,Culture & Youth Department)"
+    namee: "Managing Director",
+    nameee: "Secretary (Art, Culture & Youth Department)"
   },
-
 ];
 
 const bodyMembers = [
   {
     img: "https://static.toiimg.com/thumb/msid-72050900,width-1070,height-580,imgsize-60422,resizemode-75,overlay-toi_sw,pt-32,y_pad-40/photo.jpg",
-    name: "Ravi kishan",
+    name: "Ravi Kishan",
     role: "Finance Head",
     description: "Responsible for managing the overall finances of the board.",
   },
@@ -58,43 +57,40 @@ const bodyMembers = [
 
 const GoverningComponent = () => {
   return (
-    <div className="p-6 pt-10 bg-[#190108] w-full min-h-screen" id="GoverningBody">
+    <div className="px-4 sm:px-6 lg:px-20 pt-10 pb-20 bg-[#190108] w-full" id="GoverningBody">
       {/* Title */}
-      <p className="text-white text-5xl  pt-24 font-bold pb-16 pl-12">
+      <p className="text-white text-3xl sm:text-4xl md:text-5xl font-bold pb-12">
         Governing Bodies of Bihar Films
       </p>
 
-    {/* Top Leaders */}
-<div className="flex flex-wrap justify-center gap-28 mb-16">
-  {topImages.map((item, index) => (
-    <div key={index} className="flex flex-col items-center">
-      <div className="bg-white w-40 h-40 rounded-full overflow-hidden shadow-lg hover:scale-105  transition">
-        <img
-          src={item.src}
-          alt={item.alt}
-          className="w-full h-full object-cover"
-        />
+      {/* Top Leaders */}
+      <div className="flex flex-wrap justify-center gap-12 sm:gap-20 mb-16">
+        {topImages.map((item, index) => (
+          <div key={index} className="flex flex-col items-center text-center max-w-xs">
+            <div className="bg-white w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden shadow-lg hover:scale-105 transition">
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <p className="mt-3 text-white text-base sm:text-lg font-semibold">{item.name}</p>
+            <p className="text-zinc-400 text-sm">{item.namee}</p>
+            {item.nameee && <p className="text-zinc-400 text-sm">{item.nameee}</p>}
+          </div>
+        ))}
       </div>
-      <p className="mt-2 text-white text-lg font-semibold">{item.name}</p>
-      <p className=" text-zinc-400 ">{item.namee}</p>
-      <p className=" text-zinc-400 ">{item.nameee}</p>
-      
-      
-    </div>
-  ))}
-</div>
 
-
-      {/* Table-like Member Rows */}
-      <div className="bg-white m-20 rounded-xl shadow-md overflow-hidden">
-        <div className="grid grid-cols-1">
+      {/* Member Table */}
+      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="divide-y divide-gray-200">
           {bodyMembers.map((member, index) => (
             <div
               key={index}
-              className="flex items-center border-b border-gray-200 px-16 py-4 hover:bg-gray-100 transition"
+              className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-0 sm:justify-start px-6 sm:px-10 lg:px-16 py-4 hover:bg-gray-100 transition"
             >
               {/* Profile Image */}
-              <div className="w-12 h-12 rounded-full overflow-hidden mr-4">
+              <div className="w-12 h-12 rounded-full overflow-hidden mr-0 sm:mr-4">
                 <img
                   src={member.img}
                   alt={member.name}
@@ -102,14 +98,12 @@ const GoverningComponent = () => {
                 />
               </div>
 
-              {/* Name */}
-              <div className="w-40 font-medium  text-gray-800">{member.name}</div>
-
-              {/* Role */}
-              <div className="w-40 px-16 text-gray-500">{member.role}</div>
-
-              {/* Description */}
-              <div className="flex-1 px-16 text-gray-600 text-sm">{member.description}</div>
+              {/* Name & Role/Desc block */}
+              <div className="flex flex-col sm:flex-row sm:items-center w-full sm:gap-6">
+                <div className="w-full sm:w-48 text-gray-800 font-medium">{member.name}</div>
+                <div className="w-full sm:w-48 text-gray-500">{member.role}</div>
+                <div className="text-gray-600 text-sm">{member.description}</div>
+              </div>
             </div>
           ))}
         </div>
