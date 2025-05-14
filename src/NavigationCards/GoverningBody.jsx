@@ -19,39 +19,45 @@ const topImages = [
 const bodyMembers = [
   {
     img: "https://static.toiimg.com/thumb/msid-72050900,width-1070,height-580,imgsize-60422,resizemode-75,overlay-toi_sw,pt-32,y_pad-40/photo.jpg",
-    name: "Ravi Kishan",
-    role: "Finance Head",
-    description: "Responsible for managing the overall finances of the board.",
+    name: "Sri Pranav Kumar, IAS",
+    role: "Managing Director Cum Secretary (Art,Culture & Youth Dept.)",
+    description: "0612-2219213",
   },
   {
     img: "https://img.mensxp.com/media/content/2023/Mar/image-7-credit--IMDB_641950eb0fb3f.jpeg?w=780&h=1272&cc=1",
-    name: "Jane Smith",
-    role: "Public Relations",
-    description: "Handles external communications and media outreach.",
+    name: "Sri Arvind Ranjan Das",
+    role: "Consultant(Film)",
+    description: "0612-2219213",
   },
   {
     img: "https://img.mensxp.com/media/content/2023/Mar/main-image-credit--Manoj-Bajpayee_6419b0388bfdd.png",
-    name: "Alex Carter",
-    role: "Tech Lead",
-    description: "Oversees the technical aspects and digital transformation.",
+    name: "V.D.Mishra",
+    role: "	Consultant (Fin. & Account)",
+    description: "7482075777",
   },
   {
     img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Pankaj_Tripathi_World_Premiere_Newton_Zoopalast_Berlinale_2017_06.jpg/640px-Pankaj_Tripathi_World_Premiere_Newton_Zoopalast_Berlinale_2017_06.jpg",
-    name: "Emily White",
-    role: "Legal Advisor",
-    description: "Advises the team on legal matters and compliance.",
+    name: "	Sonika Kumari",
+    role: "Assistant Section Officer",
+    description: "",
   },
   {
     img: "https://m.media-amazon.com/images/M/MV5BMjExOTEyNDcwMl5BMl5BanBnXkFtZTgwMjM3NzM0OTE@._V1_.jpg",
-    name: "Sam Wilson",
-    role: "Event Manager",
-    description: "Coordinates and plans official film-related events.",
+    name: "Moniza Hafizee",
+    role: "Junior Consultant (Communication and Networking)",
+    description: "",
   },
   {
     img: "https://hindi.cdn.zeenews.com/hindi/sites/default/files/2024/07/21/3069269-bihar-top-actors-4.jpeg",
-    name: "Linda Green",
-    role: "Content Lead",
-    description: "Leads all content initiatives including publications.",
+    name: "Leela Kumari Prasad",
+    role: "Data Entry Operator",
+    description: "",
+  },
+  {
+    img: "https://hindi.cdn.zeenews.com/hindi/sites/default/files/2024/07/21/3069269-bihar-top-actors-4.jpeg",
+    name: "Amit Ranjan",
+    role: "Data Entry Operator",
+    description: "",
   },
 ];
 
@@ -83,30 +89,42 @@ const GoverningComponent = () => {
 
       {/* Member Table */}
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
-        <div className="divide-y divide-gray-200">
-          {bodyMembers.map((member, index) => (
-            <div
-              key={index}
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-0 sm:justify-start px-6 sm:px-10 lg:px-16 py-4 hover:bg-gray-100 transition"
-            >
-              {/* Profile Image */}
-              <div className="w-12 h-12 rounded-full overflow-hidden mr-0 sm:mr-4">
-                <img
-                  src={member.img}
-                  alt={member.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+        <table className=" table-auto divide-y divide-gray-200">
+          <tbody>
+            {bodyMembers.map((member, index) => (
+              <tr
+                key={index}
+                className="hover:bg-gray-100 transition"
+              >
+                {/* Profile Image */}
+                <td className="px-6 sm:px-10 lg:px-16 py-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden">
+                    <img
+                      src={member.img}
+                      alt={member.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </td>
 
-              {/* Name & Role/Desc block */}
-              <div className="flex flex-col sm:flex-row sm:items-center w-full sm:gap-6">
-                <div className="w-full sm:w-48 text-gray-800 font-medium">{member.name}</div>
-                <div className="w-full sm:w-48 text-gray-500">{member.role}</div>
-                <div className="text-gray-600 text-sm">{member.description}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+                {/* Name */}
+                <td className="px-1 py-4 text-gray-800 font-medium w-full sm:w-48">
+                  {member.name}
+                </td>
+
+                {/* Role */}
+                <td className="px-6 py-4 text-gray-500 w-full sm:w-48 whitespace-nowrap">
+                  {member.role}
+                </td>
+
+                {/* Description */}
+                <td className="px-6 py-4 text-gray-600 text-sm">
+                  {member.description}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
