@@ -4,40 +4,48 @@ import Signupimg from "../assets/Signupimg.svg";
 import Adminsvgg from "../assets/Adminsvgg.svg";
 import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
+import axios from "axios";
+
 
 const SignupPage = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState("");
 
-  const handleSignup = (e) => {
-    e.preventDefault();
+  const handleSignup = async (e) => {
+  e.preventDefault();
 
-    const email = e.target.email.value;
-    const password = e.target.password.value;
-    const confirmPassword = e.target.confirmPassword.value;
+  const email = e.target.email.value;
+  const password = e.target.password.value;
+  const confirmPassword = e.target.confirmPassword.value;
 
-    if (!selectedRole) {
-      alert("Please select a role before signing up.");
-      return;
-    }
+  if (!selectedRole) {
+    alert("Please select a role before signing up.");
+    return;
+  }
 
-    if (password !== confirmPassword) {
-      alert("Passwords do not match!");
-      return;
-    }
+  if (password !== confirmPassword) {
+    alert("Passwords do not match!");
+    return;
+  }
 
-    // Store user details in localStorage
-    const newUser = {
+  try {
+    const res = await axios.post("http://localhost:3000/api/auth/signup", {
       email,
       password,
       role: selectedRole,
-    };
+    });
 
-    localStorage.setItem("userData", JSON.stringify(newUser));
-    localStorage.setItem("authToken", `${selectedRole}_token`);
-
-    navigate("/dashboard-user"); // All go to common dashboard
-  };
+    if (res.data.token) {
+      localStorage.setItem("authToken", res.data.token);
+      localStorage.setItem("userData", JSON.stringify(res.data.user));
+      alert("Signup successful!");
+      navigate("/dashboard-user");
+    }
+  } catch (error) {
+    console.error(error);
+    alert(error.response?.data?.message || "Signup failed");
+  }
+};
 
   return (
     <div className="flex h-screen w-full items-center justify-center px-4 relative">
@@ -75,7 +83,7 @@ const SignupPage = () => {
           <form onSubmit={handleSignup}>
             {/* Role Selection */}
             <div className="flex gap-4 mb-4">
-              {["User", "Wender", "Artist"].map((role) => (
+              {["filmmaker", "vendor", "Artist"].map((role) => (
                 <label key={role} className="flex items-center gap-2 text-sm text-gray-700">
                   <input
                     type="radio"

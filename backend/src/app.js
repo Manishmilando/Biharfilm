@@ -28,7 +28,7 @@ const port = process.env.PORT || 3000;
 // ✅ 5. Route setup
 app.use("/api/auth", authRoutes);
 app.use("/api", nocFormRoute);
-app.use("/api", artistRoutes);
+app.use("/api/artist", artistRoutes);
 
 // ✅ 6. DB connection (use .catch for safety)
 const mongodbURL = process.env.MONGODB_URL || "hello world";

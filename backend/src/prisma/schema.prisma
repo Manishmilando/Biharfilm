@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql" 
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  district_admin
+  filmmaker
+  vendor
+  artist
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String   @unique
+  password  String
+  role      UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+enum ArtistRole {
+  Actor
+  Actress
+  Musician
+  Director
+  Dancer
+  Other
+}
+
+
+model Artist {
+  id          Int      @id @default(autoincrement())
+  image       String
+  fullName    String
+  role        ArtistRole
+  phoneNumber String
+  email       String
+  dob         DateTime
+  district    String
+  description String?   @db.VarChar(300)
+  bestFilm    String?
+  imdbLink    String?
+  createdAt   DateTime @default(now())
+}
+
+

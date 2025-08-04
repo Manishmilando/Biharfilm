@@ -27,9 +27,12 @@ import Notice from "./NavigationCards/Notice";
 import ShootingLocationPage from "./NavigationCards/ShootingLocationPage";
 import ArtistForm from "../src/NavigationCards/ArtistForm";
 import VendorForm from "../src/NavigationCards/VendorForm ";
+
 import Notification from "./NavigationCards/Notification";
 import Tender from "./NavigationCards/Tender";
 import Vrpage from "../src/NavigationCards/pages/Vrpage";
+
+import Artist from "./Components/Artist";
 // Home Page
 function Home() {
   return (
@@ -77,9 +80,13 @@ export default function App() {
    
       <Route path="/filmclub/chatarpatar" element={<Chatarpatar />} />
       <Route path="/filmclub/coffee-with-film" element={<CoffeeWithFilm />} />
+
       <Route path="/vrpage" element={<Vrpage />} />
 
 
+
+
+      <Route path="artist" element={<Artist />} />
 
     </Routes>
   );

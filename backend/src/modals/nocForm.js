@@ -29,10 +29,10 @@ const nocFormSchema = new mongoose.Schema({
 
   numberOfShootingLocations: { type: Number, required: true }, // Annexure A
 
-  dronePermissionRequired: { type: Boolean, required: true },
-  animalPartOfShooting: { type: Boolean, required: true },
-  fireOrBlastingScene: { type: Boolean, required: true },
-  temporaryStructureCreation: { type: Boolean, required: true },
+  dronePermissionRequired: { type: String, required: true },
+  animalPartOfShooting: { type: String, required: true },
+  fireOrBlastingScene: { type: String, required: true },
+  temporaryStructureCreation: { type: String, required: true },
 
   otherDetails: { type: String }, // e.g., roadblocks etc.
 
@@ -68,21 +68,31 @@ const nocFormSchema = new mongoose.Schema({
   forestType: { type: String },
   forestDetails: { type: String },
 
-  status: {
+ forwarding: {
+  forwardedTo: {
+    type: Map,
+    of: [String], // e.g., { Patna: ["DM", "SP"], Gaya: ["DOP", "DTO"] }
+    default: {},
+  },
+  forwardedAt: {
+    type: Date,
+  },
+  rejectedAt: {
+    type: Date,
+  },
+  rejectedBy: {
+    type: String,
+  },
+},
+status: {
   type: String,
   enum: ["submitted", "forwarded", "approved", "rejected"],
-  default: "submitted"
+  default: "submitted",
 },
 remarks: {
-  type: String // optional rejection reason or internal note
+  type: String,
 },
-forwarding: {
-  district: { type: String },
-  departments: [{ type: String }],
-  forwardedAt: { type: Date },
-  rejectedAt: { type: Date },
-  rejectedBy: { type: String },
-},
+
 
 
   date: { type: Date, required: true, default: Date.now },

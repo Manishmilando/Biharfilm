@@ -106,3 +106,5 @@ public/uploads/
 coverage/
 *.lcov
 *.lcov.info
+
+/src/generated/prisma
