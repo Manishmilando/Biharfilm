@@ -7,6 +7,7 @@ const uploadToCloudinary = async (filePath, folder = "noc_files") => {
   const result = await cloudinary.uploader.upload(filePath, {
     folder: "nocForms",
     resource_type: "auto",
+    type: "upload", // ensures public access
   });
   // Remove local file after uploading to the cloud (cloudinary) unlinkSync() => delete
   fs.unlinkSync(filePath);
@@ -67,6 +68,8 @@ export const addNocForm = async (req, res) => {
       forestType,
       forestDetails
     } = req.body;
+
+    console.log(req.body);
 
     // Upload files to Cloudinary (check if they exist in req.files)
     const files = req.files;
@@ -275,21 +278,21 @@ export const deleteNocFormById = async (req, res) => {
 
 export const forwardNocForm = async (req, res) => {
   try {
-    const { district, departments } = req.body;
+    const { forwardedTo } = req.body; // Example: { Patna: ["DM", "DTO"], Gaya: ["DOP"] }
     const { id } = req.params;
 
-    if (!district || !departments || !departments.length) {
-      return res.status(400).json({ message: "District and departments are required" });
+    console.log(forwardedTo);
+    console.log(id);
+
+    if (!forwardedTo || typeof forwardedTo !== 'object' || Object.keys(forwardedTo).length === 0) {
+      return res.status(400).json({ message: "At least one district with departments is required" });
     }
 
     const updatedForm = await NocForm.findByIdAndUpdate(
       id,
       {
-        forwarding: {
-          district,
-          departments,
-          forwardedAt: new Date(),
-        },
+        "forwarding.forwardedTo": forwardedTo,
+        "forwarding.forwardedAt": new Date(),
         status: "forwarded",
       },
       { new: true }
@@ -344,5 +347,23 @@ export const rejectNocForm = async (req, res) => {
   } catch (error) {
     console.error("Error rejecting NOC form:", error);
     res.status(500).json({ success: false, message: "Failed to reject form" });
+  }
+};
+
+
+// noc form getbyDistcrict
+
+export const getFormsByDistrict = async (req, res) => {
+  try {
+    const { districtName } = req.params;
+
+    const forms = await NocForm.find({
+      "forwarding.district": districtName,
+    });
+
+    res.status(200).json(forms);
+  } catch (error) {
+    console.error("Error fetching forwarded forms:", error);
+    res.status(500).json({ message: "Server Error" });
   }
 };

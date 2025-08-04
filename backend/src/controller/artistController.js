@@ -1,4 +1,5 @@
-import Artist from "../modals/artist.js";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 import cloudinary from "../config/cloudinary.js";
 import fs from "fs";
 
@@ -26,22 +27,22 @@ export const addArtist = async (req, res) => {
       folder: "artists",
     });
 
-    fs.unlinkSync(file.path); // ✅ delete from local after upload
+    fs.unlinkSync(file.path); // delete from local folder after upload to the cloudinary
 
-    const newArtist = new Artist({
-      image: result.secure_url,
-      fullName,
-      role,
-      phoneNumber,
-      email,
-      dob,
-      district,
-      description,
-      bestFilm,
-      imdbLink,
+    const newArtist = await prisma.artist.create({
+      data: {
+        image: result.secure_url,
+        fullName,
+        role,
+        phoneNumber,
+        email,
+        dob : new Date(dob), // Ensure dob is a Date object
+        district,
+        description,
+        bestFilm,
+        imdbLink,
+      },
     });
-
-    await newArtist.save();
 
     res.status(201).json({
       success: true,
@@ -58,7 +59,12 @@ export const addArtist = async (req, res) => {
 
 export const getAllArtists = async (req, res) => {
   try {
-    const artists = await Artist.find().sort({ createdAt: -1 }); // latest first
+    const artists = await prisma.artist.findMany({
+      orderBy: {
+        createdAt: "desc", // this line of code sorts the artists by creation date in descending order
+      },
+    });
+
     res.status(200).json({
       success: true,
       count: artists.length,
@@ -75,30 +81,40 @@ export const getAllArtists = async (req, res) => {
 };
 
 
+
 export const getArtistById = async (req, res) => {
   try {
-    const artist = await Artist.findById(req.params.id);
+    const artist = await prisma.artist.findUnique({
+      where: {
+        id: parseInt(req.params.id), // Prisma uses numeric IDs if your schema is `Int`
+      },
+    });
+
     if (!artist) {
       return res.status(404).json({ success: false, message: "Artist not found" });
     }
+
     res.status(200).json({ success: true, data: artist });
   } catch (error) {
     res.status(500).json({ success: false, message: "Failed to fetch artist", error: error.message });
   }
 };
 
+
 export const updateArtistById = async (req, res) => {
   try {
-    const updatedArtist = await Artist.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (!updatedArtist) {
-      return res.status(404).json({ success: false, message: "Artist not found" });
-    }
+    const id = parseInt(req.params.id);
+    
+    const updatedArtist = await prisma.artist.update({
+      where: { id },
+      data: req.body,
+    });
+
     res.status(200).json({ success: true, message: "Artist updated", data: updatedArtist });
   } catch (error) {
+    if (error.code === 'P2025') {
+      return res.status(404).json({ success: false, message: "Artist not found" });
+    }
     res.status(500).json({ success: false, message: "Failed to update artist", error: error.message });
   }
 };
@@ -106,12 +122,18 @@ export const updateArtistById = async (req, res) => {
 
 export const deleteArtistById = async (req, res) => {
   try {
-    const deletedArtist = await Artist.findByIdAndDelete(req.params.id);
-    if (!deletedArtist) {
-      return res.status(404).json({ success: false, message: "Artist not found" });
-    }
+    const id = parseInt(req.params.id);
+
+    await prisma.artist.delete({
+      where: { id },
+    });
+
     res.status(200).json({ success: true, message: "Artist deleted successfully" });
   } catch (error) {
+    if (error.code === 'P2025') {
+      return res.status(404).json({ success: false, message: "Artist not found" });
+    }
     res.status(500).json({ success: false, message: "Failed to delete artist", error: error.message });
   }
 };
+

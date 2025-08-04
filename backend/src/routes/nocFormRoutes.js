@@ -26,8 +26,9 @@ router.get("/getForms/:email", getAllFormsByEmail); // get form by email id [wor
 router.put("/updateNocForm/:id", updateNocFormById);
 router.delete("/deleteNocForm/:id", deleteNocFormById);
 
-router.patch("/forward/:id", authenticate, authorizeRoles("admin"), forwardNocForm);
-router.patch("/reject/:id", authenticate, authorizeRoles("admin", "district_admin"), rejectNocForm);
+// router.put("/forward/:id", authenticate, authorizeRoles("admin"), forwardNocForm);
+router.put("/forward/:id", forwardNocForm);
+router.put("/reject/:id", authenticate, authorizeRoles("admin", "district_admin"), rejectNocForm);
 
 
 export default router;
