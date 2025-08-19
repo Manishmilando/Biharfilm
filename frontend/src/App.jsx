@@ -3,7 +3,6 @@ import { Routes, Route, useParams } from "react-router-dom";
 
 // Components
 import VideoSection from "./Components/VideoSection";
-import Location from "./NavigationCards/Location";
 import Vr from "./NavigationCards/Vr";
 import Cinemaecosystem from "./NavigationCards/Cinemaecosystem";
 import FilmClubUI from "./NavigationCards/FilmClub";

@@ -87,17 +87,21 @@ const CoffeeWithFilm = () => {
           {sessions.map((item, index) => (
             <div
               key={index}
-              className="bg-[#1a1a1a] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
+              className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl 
+                         transition-transform duration-300 hover:scale-105"
             >
-              <img
-                src={item.url}
-                alt={item.title}
-                className="w-full h-52 object-cover"
-              />
-              <div className="p-4">
-                <h2 className="text-lg font-semibold text-white">
-                  {item.title}
-                </h2>
+              <div className="relative h-74">
+                <img
+                  src={item.url}
+                  alt={item.title}
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                />
+                {/* Glass Effect Overlay */}
+                <div className="absolute bottom-0 left-0 w-full p-4 bg-black/50 backdrop-blur-md">
+                  <h2 className="text-lg font-semibold text-white">
+                    {item.title}
+                  </h2>
+                </div>
               </div>
             </div>
           ))}

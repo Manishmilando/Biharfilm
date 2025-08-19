@@ -30,7 +30,18 @@ function Cinemaecosystem() {
 
   return (
     <div id="Cinemaecosystem" className="pt-12 bg-[#380e1a] overflow-hidden px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32">
-      {/* ...header and description... */}
+      
+      {/* ===== Heading and Description ===== */}
+      <div className="text-center text-white max-w-3xl mx-auto">
+        <h2 className="text-3xl md:text-7xl tapestry-regular mb-4">Cinema Ecosystem</h2>
+        <p className="text-base md:text-lg text-gray-300">
+          Explore the vibrant ecosystem that supports filmmaking — from props and production 
+          assets to local artists and security services. Each element plays a crucial role 
+          in shaping authentic cinematic experiences.
+        </p>
+      </div>
+
+      {/* ===== Cards Section ===== */}
       <motion.div
         initial={{ opacity: 0.8, scale: 0.95 }}
         whileInView={{
@@ -62,24 +73,24 @@ function Cinemaecosystem() {
         />
 
         <Longcards
-          imageUrl="https://img.freepik.com/premium-photo/hengdian-world-studio-shooting-film-studio-ancient-village-chinese-screen_1048944-4451696.jpg"
+          imageUrl="https://www.gramvikas.org/wp-content/uploads/2021/05/WhatsApp-Image-2021-05-03-at-10.23.14-PM.jpeg"
           title="Local Artists"
           description="A historical film set blending traditional architecture with cinematic creativity."
           onClick={() => handleCardClick('localArtist')}
         />
 
         <Longcards
-          imageUrl="https://www.gramvikas.org/wp-content/uploads/2021/05/WhatsApp-Image-2021-05-03-at-10.23.14-PM.jpeg"
+          imageUrl="https://img.freepik.com/premium-photo/hengdian-world-studio-shooting-film-studio-ancient-village-chinese-screen_1048944-4451696.jpg"
           title="Security & Safety Services"
           description="Documenting cultural narratives from rural India — real stories, real locations."
           onClick={() => handleCardClick('security')}
         />
       </motion.div>
 
-      {/* Modal Popup for each card */}
+      {/* ===== Modal Popup ===== */}
       {activePopup && (
-        <div className="fixed inset-0  backdrop-blur-xs flex items-center justify-center z-50">
-          <div className=" rounded-lg p-4 border-2 border-white  relative max-w-5xl w-full">
+        <div className="fixed inset-0 backdrop-blur-xs flex items-center justify-center z-50">
+          <div className="rounded-lg p-4 border-2 border-white relative max-w-5xl w-full">
             <button
               className="absolute top-2 right-4 text-red-600 text-3xl font-bold"
               onClick={handleClose}

@@ -427,8 +427,17 @@ return (
   >
     <Navbar />
 
+
+    {/* Explore Section */}
+    <div className="bg-[#190108] w-full pt-10 px-2 sm:px-6 lg:px-10">
+      {/* Title */}
+      <h2 className="text-white text-4xl sm:text-6xl carter-one-regular text-center mb-12">
+        Explore Locations
+      </h2>
+
+     
     {/* Filter Buttons */}
-    <div className="flex flex-wrap justify-center gap-4 mt-4">
+    <div className="flex flex-wrap justify-center gap-4 mt-4 pb-10">
       {Object.keys(categories).map((category) => (
         <button
           key={category}
@@ -446,15 +455,6 @@ return (
         </button>
       ))}
     </div>
-
-    {/* Explore Section */}
-    <div className="bg-[#190108] w-full pt-10 px-2 sm:px-6 lg:px-10">
-      {/* Title */}
-      <h2 className="text-white text-4xl sm:text-6xl carter-one-regular text-center mb-12">
-        Explore Locations
-      </h2>
-
-      {/* Grid Layout */}
       {/* Grid Layout with image and details */}
 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start mb-16">
   {/* VR Section (Main Image) */}

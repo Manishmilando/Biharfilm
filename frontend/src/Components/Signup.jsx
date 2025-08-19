@@ -29,7 +29,7 @@ const SignupPage = () => {
   }
 
   try {
-    const res = await axios.post("http://localhost:3000/api/auth/signup", {
+    const res = await axios.post("https://biharfilmbackend-production.up.railway.app/api/auth/signup", {
       email,
       password,
       confirmPassword,

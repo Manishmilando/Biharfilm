@@ -135,20 +135,21 @@ const Navbar = () => {
             >
               Notification <ChevronDown size={16} className="ml-1" />
               {isNoticeDropdownOpen && (
-                <ul className="absolute top-full left-0  w-40 bg-white text-black shadow-lg rounded-md overflow-hidden z-50">
+                <ul className="absolute top-full left-0 w-40 bg-white text-black shadow-lg rounded-md overflow-hidden z-50">
                   <li
-                    onClick={() => {navigate("/notification");
-                    setIsMobileMenuOpen(false);
-                  }}
+                    onClick={() => {
+                      navigate("/notification");
+                      setIsMobileMenuOpen(false);
+                    }}
                     className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
                   >
                     Notifications
                   </li>
                   <li
-                    onClick={() => {navigate("/tender");
-                    setIsMobileMenuOpen(false);
-                  }}
-
+                    onClick={() => {
+                      navigate("/tender");
+                      setIsMobileMenuOpen(false);
+                    }}
                     className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
                   >
                     Tenders
@@ -165,50 +166,64 @@ const Navbar = () => {
             </li>
           </ul>
 
-          {/* Mobile Toggle */}
-          <div className="md:hidden absolute top-5 right-5 z-[9999]">
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`transition-colors duration-300 ${
-                navbarVisible && hasScrolled ? "text-black" : "text-white"
-              }`}
-            >
-              {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
+          {/* Mobile Toggle (Hamburger only) */}
+          <div className="md:hidden relative z-[60]">
+            {!isMobileMenuOpen && (
+              <button
+                onClick={() => setIsMobileMenuOpen(true)}
+                className={`p-2 rounded-md focus:outline-none transition-colors duration-300 ${
+                  navbarVisible && hasScrolled ? "text-black" : "text-white"
+                }`}
+              >
+                <Menu size={28} />
+              </button>
+            )}
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <ul className="md:hidden absolute top-full left-0 w-full flex flex-col items-start gap-4 bg-black text-white p-6 z-40 shadow-xl transition-all duration-300">
+        <div
+          className={`md:hidden fixed top-0 left-0 w-full h-screen bg-black text-white p-6 z-[70] shadow-xl transform transition-transform duration-500 ease-in-out ${
+            isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+          }`}
+        >
+          {/* Close Button inside menu */}
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="absolute top-5 right-5 text-white hover:text-red-500"
+          >
+            <X size={32} />
+          </button>
+
+          <ul className="flex flex-col gap-6 mt-16 text-lg font-semibold">
             {menuItems.map((item) => (
               <li
                 key={item.id}
                 onClick={() => handleLocationClick(item.id)}
-                className="cursor-pointer hover:text-red-600 font-semibold transition"
+                className="cursor-pointer hover:text-red-500 transition-colors"
               >
                 {item.label}
               </li>
             ))}
 
             {/* Notice Dropdown in Mobile */}
-            <li className="font-semibold mt-2">Notice</li>
-            <ul className="ml-4">
+            <li className="mt-2">Notice</li>
+            <ul className="ml-4 flex flex-col gap-3">
               <li
-                onClick={() => { navigate("/notification");
-                setIsMobileMenuOpen(false);
-              }}
-
-                className="cursor-pointer hover:text-red-600 font-semibold transition"
+                onClick={() => {
+                  navigate("/notification");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
               >
                 Notifications
               </li>
               <li
-               onClick={() => {navigate("/tender");
-               setIsMobileMenuOpen(false);
-              }}
-
-                className="cursor-pointer hover:text-red-600 font-semibold transition"
+                onClick={() => {
+                  navigate("/tender");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
               >
                 Tenders
               </li>
@@ -216,12 +231,12 @@ const Navbar = () => {
 
             <li
               onClick={handleApplyClick}
-              className="cursor-pointer hover:text-red-600 font-semibold transition mt-2"
+              className="cursor-pointer hover:text-red-500 transition-colors mt-4"
             >
               Apply for NOC
             </li>
           </ul>
-        )}
+        </div>
       </div>
     </nav>
   );

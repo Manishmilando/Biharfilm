@@ -117,9 +117,9 @@ function Vr() {
 
   return (
     <div id="Vr" className="bg-[#190108] pt-16 px-4 md:px-10 pb-24">
-      <h2 className="text-white text-5xl archivo-black-regular pl-4 md:pl-24">
-        Virtual Reality (VR)
-      </h2>
+      <h2 className="text-white text-2xl sm:text-3xl md:text-5xl archivo-black-regular pl-4 md:pl-24">
+  Virtual Reality (VR)
+</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-10 mb-12">
         {/* Text Section */}
