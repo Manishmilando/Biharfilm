@@ -1,7 +1,7 @@
 import React from 'react';
 import "../App.css";
 import Logo1 from "../assets/Logo1.png";
-import Adminmam from "../assets/AdminMam.svg";
+import Adminmam from "../assets/adminmam.svg";
 import { IoIosLogOut } from "react-icons/io";
 import { FiSettings, FiTrash, FiShare2, FiClock, FiHeart } from "react-icons/fi";
 import { MdSpaceDashboard } from "react-icons/md";
