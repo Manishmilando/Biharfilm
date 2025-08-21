@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"; // ✅ axios import
 import Bgpatter from "../assets/Bgpatter.svg";
-import Adminsvgg from "../assets/Adminsvgg.svg";
+import Adminsvgg from "../assets/adminsvgg.svg";
 import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Signupimg from "../assets/Signupimg.svg";
-import Adminsvgg from "../assets/Adminsvgg.svg";
+import Adminsvgg from "../assets/adminsvgg.svg";
 import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
 import axios from "axios";
