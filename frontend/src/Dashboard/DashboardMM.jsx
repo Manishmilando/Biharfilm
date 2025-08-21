@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../App.css";
 import Logo1 from "/src/assets/Logo1.png";
-import Adminmam from "/src/assets/Adminmam.svg";
+import Adminmam from "/src/assets/adminmam.svg";
 import { IoIosLogOut } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
 import { LuCircleArrowOutUpRight, LuShare2, LuTrash2 } from "react-icons/lu";
