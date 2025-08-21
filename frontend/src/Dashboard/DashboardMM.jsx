@@ -7,7 +7,7 @@ import { IoMdSettings } from "react-icons/io";
 import { LuCircleArrowOutUpRight, LuShare2, LuTrash2 } from "react-icons/lu";
 import { MdSpaceDashboard } from "react-icons/md";
 import { FaRegHeart, FaRegUser } from "react-icons/fa";
-import Dashboardactivity from "./dashboardactivity";
+import Dashboardactivity from "./Dashboardactivity";
 import Artist from "../NavigationCards/Artist";
 
 const Dashboard = () => {
