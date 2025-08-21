@@ -22,7 +22,7 @@ const Vrpage = () => {
         muted
         playsInline
       >
-        <source src={Vr} type="video/mp4" />
+        <source src="https://res.cloudinary.com/dgra109xv/video/upload/v1755760966/Vrpage_cj0a7w.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 

@@ -55,7 +55,7 @@ const LoginPage = () => {
   return (
     <div className="flex h-screen w-full items-center justify-center px-4 relative">
       <img
-        src="/Bgg.svg"
+        src="https://res.cloudinary.com/dgra109xv/image/upload/v1755760897/Bgg_m1ikjp.svg"
         alt="Background"
         className="fixed inset-0 w-full h-full object-cover opacity-60 z-[-1]"
       />

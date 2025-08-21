@@ -38,7 +38,7 @@ const FilmClubUI = () => {
       {/* Background Video */}
       <video
         className="absolute top-0 left-0 w-full h-full object-cover opacity-20 z-0"
-        src={Filmclub}
+        src="https://res.cloudinary.com/dgra109xv/video/upload/v1755760928/Filmclub_xrdco0.mp4"
         autoPlay
         loop
         muted

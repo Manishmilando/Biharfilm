@@ -21,84 +21,84 @@ import VrvideoLQ6 from "/VrvideoLQ6.mp4";
 // Video list
 const videoList = [
   {
-    high: VrvideoHQ,
-    low: VrvideoLQ,
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761042/VrvideoHQ_at7jsx.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761058/VrvideoLQ_vfhxdm.mp4",
     title: "Glass Bridge, Rajgir",
     description:
       "Embark on a breathtaking virtual journey across the Glass Bridge of Rajgir, a marvel suspended between the hills. This architectural feat offers panoramic views of the lush valley and serene landscape below, giving the sensation of walking amidst the clouds. Perfect for thrill-seekers and nature lovers, the experience captures the tranquil grandeur of Rajgir’s natural beauty combined with the thrill of height and modern engineering.",
   },
   {
-    high: VrvideoHQ2,
-    low: VrvideoLQ2,
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761047/VrvideoHQ2_wg40nf.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761061/VrvideoLQ2_rpiik4.mp4",
     title: "Ghora Katora, Rajgir",
     description:
       "Immerse yourself in the peaceful aura of Ghora Katora, a natural horse-shaped lake nestled among the hills of Rajgir. Surrounded by lush forests and often graced by migratory birds, this sacred and scenic waterbody is a hidden gem of Bihar. The VR experience lets you witness the stillness of the lake, the chirping of birds, and the gentle whispers of the wind through surrounding trees—ideal for those seeking serenity in nature’s lap.",
   },
   {
-    high: VrvideoHQ3,
-    low: VrvideoLQ3,
+  high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761046/VrvideoHQ3_ratnxr.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761064/VrvideoLQ3_kn3jiq.mp4",
     title: "Jungle Safari Entry, Rajgir",
     description:
       "Begin your adventure through the gateway of Rajgir’s Jungle Safari, where the wilderness greets you with open arms. This VR experience captures the excitement of entering a dense forest reserve with curated animal zones, nature trails, and eco-friendly walkways. Feel the anticipation build as you cross into an area teeming with wildlife, blending education, conservation, and adventure into one memorable virtual journey.",
   },
   {
-    high: VrvideoHQ4,
-    low: VrvideoLQ4,
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761048/VrvideoHQ4_kvvp9j.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761078/VrvideoLQ4_rad5bh.mp4",
     title: "Pawapuri, Nalanda",
     description:
       "Take a spiritual deep dive into the sacred town of Pawapuri in Nalanda, where Lord Mahavira, the 24th Jain Tirthankara, attained nirvana. In this VR experience, float virtually to the heart of Jal Mandir—a marble temple surrounded by a lotus-filled lake. Feel the holiness, heritage, and tranquility as you walk across the stone bridge leading to the temple, immersed in centuries-old devotion and peace.",
   },
   {
-    high: VrvideoHQ5,
-    low: VrvideoLQ5,
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761054/VrvideoHQ5_sorgxl.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761071/VrvideoLQ5_udkbsp.mp4",
     title: "Bapu Tower, Patna",
     description:
       "Relive Bihar’s revolutionary spirit through the towering structure of Bapu Tower in Patna, a tribute to Mahatma Gandhi’s influence on the freedom movement in Bihar. The VR experience walks you through the symbolic architecture, plaques, and scenic surroundings, letting you sense the historic weight and inspiring atmosphere. It’s more than a monument—it’s a reminder of struggle, unity, and vision.",
   },
   {
-    high: VrvideoHQ6,
-    low: VrvideoLQ6,
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761055/VrvideoHQ6_lk1cdp.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761074/VrvideoLQ6_njgnih.mp4",
     title: "Hiuen Tsang Memorial Hall, Nalanda",
     description:
       "Travel back in time to the ancient seat of learning through the Hiuen Tsang Memorial Hall in Nalanda. This VR journey narrates the story of the legendary Chinese traveler and scholar who spent years absorbing the teachings of Nalanda University. Walk through intricately carved corridors, ancient manuscripts, and statues that reflect Indo-Chinese cultural synergy. A tribute to knowledge and global exchange, this memorial is both artistic and intellectually enriching.",
   }, {
-    high: VrvideoHQ,
-    low: VrvideoLQ,
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761042/VrvideoHQ_at7jsx.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761058/VrvideoLQ_vfhxdm.mp4",
     title: "Glass Bridge, Rajgir",
     description:
       "Embark on a breathtaking virtual journey across the Glass Bridge of Rajgir, a marvel suspended between the hills. This architectural feat offers panoramic views of the lush valley and serene landscape below, giving the sensation of walking amidst the clouds. Perfect for thrill-seekers and nature lovers, the experience captures the tranquil grandeur of Rajgir’s natural beauty combined with the thrill of height and modern engineering.",
   },
   {
-    high: VrvideoHQ2,
-    low: VrvideoLQ2,
+high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761047/VrvideoHQ2_wg40nf.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761061/VrvideoLQ2_rpiik4.mp4",
     title: "Ghora Katora, Rajgir",
     description:
       "Immerse yourself in the peaceful aura of Ghora Katora, a natural horse-shaped lake nestled among the hills of Rajgir. Surrounded by lush forests and often graced by migratory birds, this sacred and scenic waterbody is a hidden gem of Bihar. The VR experience lets you witness the stillness of the lake, the chirping of birds, and the gentle whispers of the wind through surrounding trees—ideal for those seeking serenity in nature’s lap.",
   },
   {
-    high: VrvideoHQ3,
-    low: VrvideoLQ3,
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761046/VrvideoHQ3_ratnxr.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761064/VrvideoLQ3_kn3jiq.mp4",
     title: "Jungle Safari Entry, Rajgir",
     description:
       "Begin your adventure through the gateway of Rajgir’s Jungle Safari, where the wilderness greets you with open arms. This VR experience captures the excitement of entering a dense forest reserve with curated animal zones, nature trails, and eco-friendly walkways. Feel the anticipation build as you cross into an area teeming with wildlife, blending education, conservation, and adventure into one memorable virtual journey.",
   },
   {
-    high: VrvideoHQ4,
-    low: VrvideoLQ4,
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761048/VrvideoHQ4_kvvp9j.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761078/VrvideoLQ4_rad5bh.mp4",
     title: "Pawapuri, Nalanda",
     description:
       "Take a spiritual deep dive into the sacred town of Pawapuri in Nalanda, where Lord Mahavira, the 24th Jain Tirthankara, attained nirvana. In this VR experience, float virtually to the heart of Jal Mandir—a marble temple surrounded by a lotus-filled lake. Feel the holiness, heritage, and tranquility as you walk across the stone bridge leading to the temple, immersed in centuries-old devotion and peace.",
   },
   {
-    high: VrvideoHQ5,
-    low: VrvideoLQ5,
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761054/VrvideoHQ5_sorgxl.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761071/VrvideoLQ5_udkbsp.mp4",
     title: "Bapu Tower, Patna",
     description:
       "Relive Bihar’s revolutionary spirit through the towering structure of Bapu Tower in Patna, a tribute to Mahatma Gandhi’s influence on the freedom movement in Bihar. The VR experience walks you through the symbolic architecture, plaques, and scenic surroundings, letting you sense the historic weight and inspiring atmosphere. It’s more than a monument—it’s a reminder of struggle, unity, and vision.",
   },
   {
-    high: VrvideoHQ6,
-    low: VrvideoLQ6,
+  high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761055/VrvideoHQ6_lk1cdp.mp4",
+    low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761074/VrvideoLQ6_njgnih.mp4",
     title: "Hiuen Tsang Memorial Hall, Nalanda",
     description:
       "Travel back in time to the ancient seat of learning through the Hiuen Tsang Memorial Hall in Nalanda. This VR journey narrates the story of the legendary Chinese traveler and scholar who spent years absorbing the teachings of Nalanda University. Walk through intricately carved corridors, ancient manuscripts, and statues that reflect Indo-Chinese cultural synergy. A tribute to knowledge and global exchange, this memorial is both artistic and intellectually enriching.",

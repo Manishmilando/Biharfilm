@@ -9,7 +9,7 @@ import Vrvideo from "/Vrvideo.mp4";
 import { motion } from "framer-motion";
 import "../App.css";
 
-const videos = [Snowtrain, Snow, Watertemp, Mountain, Vrvideo];
+const videos = ["https://res.cloudinary.com/dgra109xv/video/upload/v1755760469/Snowtrain_uhyz1u.mp4", "https://res.cloudinary.com/dgra109xv/video/upload/v1755760406/Snow_s8nj0n.mp4", "https://res.cloudinary.com/dgra109xv/video/upload/v1755760514/watertemp_dxxjyl.mp4","https://res.cloudinary.com/dgra109xv/video/upload/v1755760270/mountain_wh9xkz.mp4", "https://res.cloudinary.com/dgra109xv/video/upload/v1755761000/Vrvideo_tv1ioj.mp4"];
 
 const textOverlays = [
   [
