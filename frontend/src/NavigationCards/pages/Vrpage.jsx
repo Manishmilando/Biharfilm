@@ -1,6 +1,6 @@
 import React from "react";
 import Vr from "/Vrpage.mp4";
-import "../../app.css";
+import "../../App.css";
 
 // Sample data (extend as needed)
 const vrExperiences = [
