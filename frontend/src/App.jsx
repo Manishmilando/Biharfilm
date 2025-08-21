@@ -20,8 +20,8 @@ import DasboardUser from "./Dashboard/DashboardUser";
 import DistrictDashboard from "./Dashboard/DistrictDashboard";
 // import DistrictList from "./Dashboard/DistrictList"
 import CineSamvad from "./NavigationCards/pages/CineSamvad";
-import Chatarpatar from "./NavigationCards/Pages/Chatarpatar";
-import CoffeeWithFilm from "./NavigationCards/Pages/CoffeeWithFilm";
+import Chatarpatar from "./NavigationCards/pages/Chatarpatar";
+import CoffeeWithFilm from "./NavigationCards/pages/CoffeeWithFilm";
 // import Notice from "./NavigationCards/Notice";
 import ShootingLocationPage from "./NavigationCards/ShootingLocationPage";
 import ArtistForm from "../src/NavigationCards/AddArtistForm";
