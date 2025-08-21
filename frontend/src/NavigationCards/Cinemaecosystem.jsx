@@ -29,7 +29,7 @@ function Cinemaecosystem() {
   };
 
   return (
-    <div id="Cinemaecosystem" className="pt-12 bg-[#380e1a] overflow-hidden px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32">
+    <div id="Cinemaecosystem" className="pt-12 bg-[#380e1a] overflow-hidden px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 pb-18">
       
       {/* ===== Heading and Description ===== */}
       <div className="text-center text-white max-w-3xl mx-auto">

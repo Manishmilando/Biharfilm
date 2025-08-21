@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { motion } from "framer-motion";
-import "../App.css";
+import "../app.css";
 
 const people = [
   {
@@ -34,7 +34,7 @@ const people = [
     dob: "27 February 1952",
     district: "Bettiah, West Champaran",
     img: "https://m.media-amazon.com/images/M/MV5BMTc1NjMwNDE4Ml5BMl5BanBnXkFtZTgwODA1ODA0OTE@._V1_.jpg",
-    description: "Renowned filmmaker known for his political and socio-political films like Raajneeti, Gangaajal and Apaharan.",
+    description: "Renowned filmmaker known for his political and socio-political films.",
     bestWork: "Crook",
     imdb: "https://www.imdb.com/name/nm2777281/?ref_=ext_shr_lnk",
   },
@@ -84,24 +84,36 @@ const people = [
     district: "Patna",
     img: "https://www.filmibeat.com/wimg/desktop/2019/08/neetu-chandra_10.jpg",
     description: "Indian actress known for her roles in Hindi, Tamil, and Telugu cinema. ",
-    bestWork: "Garam Masala (2005), Traffic Signal (2007)",
+    bestWork: "Garam Masala (2005)",
     imdb: "https://www.imdb.com/name/nm1911617/?ref_=ext_shr_lnk",
   },
   {
-     id:8,
+    id: 8,
+    name: "Vinay Pathak",
+    occupation: "Actor",
+    dob: "27 July 1968",
+    district: "Bhojpur, Bihar ",
+    img: "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201808/Vinay_Pathak-BAN-08052018.jpeg",
+    description: "Actor known for comedy roles in Bheja Fry and Khosla Ka Ghosla. ",
+    bestWork: "Bheja Fry (2007)",
+    imdb: "https://www.imdb.com/name/nm0665555/?ref_=ext_shr_lnk",
+  },
+  
+  {
+     id:9,
      name: "Imtiaz Ali",
      occupation: "Film Director & Writer",
      dob: "16 June 1971",
-     district: "Jamshedpur (then Bihar, now Jharkhand)",
+     district: "Jamshedpur (then Bihar)",
     img: "https://m.media-amazon.com/images/M/MV5BMTYwOTUwMTk3MF5BMl5BanBnXkFtZTgwMjA1NDEzMTE@._V1_.jpg",
-     description: "Renowned Indian film director, producer, and writer known for his work on romantic dramas with emotional depth.",
+     description: "Renowned Indian film director, producer, and writer known for his brilliant work",
      bestWork: "Jab We Met",
     imdb: "https://www.imdb.com/name/nm2777281/?ref_=ext_shr_lnk",
   },
   
   
   {
-    id:9,
+    id:10,
     name: "Sanjay Mishra",
     occupation: "Actor",
     dob: "6 October 1963",
@@ -112,19 +124,19 @@ const people = [
     imdb: "https://www.imdb.com/name/nm0592799/?ref_=ext_shr_lnk",
   },
    {
-    id: 10,
+    id: 11,
     name: "Arunabh Kumar",
     occupation: "Entrepreneur, Producer, Director, Actor",
     dob: "26 November 1982",
     district: "Muzaffarpur",
     img: "https://www.iwmbuzz.com/wp-content/uploads/2025/06/arunabh-kumar-shares-a-heartfelt-note-on-his-wedding-anniversary-15.jpg",
-    description: "Founder of The Viral Fever (TVF), known for popular web series like 'Permanent Roommates' and 'Pitchers'.",
+    description: "Founder of TVF, known for web series like 'Permanent Roommates' and 'Pitchers'.",
     bestWork: "TVF Pitchers",
     imdb: "https://www.imdb.com/name/nm2837311/?ref_=ext_shr_lnk",
   },
 
   {
-    id:11,
+    id:12,
     name: "Gurmeet Choudhary",
     occupation: "Actor",
     dob: "22 February 1984",
@@ -136,7 +148,7 @@ const people = [
   },
  
   {
-    id:12,
+    id:13,
     name: "Chandan Roy",
     occupation: "Actor",
     dob: "20 December 1995",
@@ -147,56 +159,56 @@ const people = [
     imdb: "https://www.imdb.com/name/nm0788686/?ref_=ext_shr_lnk",
   },
   {
-    id: 13,
+    id: 14,
     name: "Ashok Yadav",
     occupation: "Actor",
     dob: "3 January 1985",
     district: "Darveshpur, near Siwan",
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbBuxF26RW4NAbH3bAhnym5oFJpbXEu4bfpw&s",
-    description: "Bihari-born actor who rose from selling cotton to winning hearts as 'Binod' in Panchayat.",
+    description: "Bihari-born actor known for winning hearts as 'Binod' in Panchayat.",
     bestWork: "Panchayat (web series)",
     imdb: "https://www.imdb.com/name/nm9859083/?ref_=ext_shr_lnk",
   },
   {
-    id: 14,
+    id: 15,
     name: "Pankaj Jha",
     occupation: "Actor, Painter, Writer, Director",
     dob: "2 February 1970",
     district: "Saharsa",
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh1qXBXYNfRXOj44qO6zQ5A_S8XqZ9tuWDQw&s",
-    description: "Actor, painter, writer, and director, acclaimed for his grounded portrayal of MLA Chandu Singh in Panchayat",
+    description: "Actor, acclaimed for his grounded portrayal of MLA Chandu Singh in Panchayat",
     bestWork: "Panchayat (web series)",
     imdb: "https://www.imdb.com/name/nm13792834/?ref_=ext_shr_lnk",
   },
    {
-    id: 15,
+    id: 16,
     name: "Durgesh Kumar",
     occupation: "Actor",
     dob: "21 October 1984",
     district: "Darbhanga, Bihar",
     img: "https://static.toiimg.com/thumb/msid-110440378,width-400,resizemode-4/110440378.jpg",
    
-    description: "Actor known for playing Bhushan in Panchayat; originally from Darbhanga, Bihar.",
+    description: "Actor known for playing Bhushan in Panchayat .",
 
     bestWork: "Panchayat (web series)",
     imdb: "https://www.imdb.com/name/nm6294201/?ref_=ext_shr_lnk",
   },
 
   {
-    id: 16,
+    id: 17,
     name: "Bulloo Kumar",
     occupation: "Actor",
     dob: "5 February 1986",
     district: "Nawada",
     img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAtnRcu4PHPQgiqJxR60fwzozDEYf76VJm3w&s",
-    description: "Actor and farmer’s son from Bihar, known for his comical role as Madhav in Seasons 2–3 of Panchayat.",
+    description: "Actor from Bihar, known for his comical role as Madhav in  Panchayat.",
 
     bestWork: "Panchayat (web series)",
     imdb: "https://www.imdb.com/name/nm12872303/?ref_=ext_shr_lnk",
   },
   
   {
-    id: 17,
+    id: 18,
     name: "Ustad Bismillah Khan",
     occupation: "Shehnai Maestro",
     dob: "21 March 1916",
@@ -207,7 +219,7 @@ const people = [
     imdb: "https://www.imdb.com/name/nm0451190/?ref_=ext_shr_lnk",
   },
   {
-    id: 18,
+    id: 19,
     name: "Sharda Sinha",
     occupation: "Folk Singer",
     dob: "1 October 1952",
@@ -218,7 +230,7 @@ const people = [
     imdb: "https://www.imdb.com/name/nm0788686/?ref_=ext_shr_lnk",
   },
   {
-    id: 19,
+    id: 20,
     name: "Maithili Thakur",
     occupation: "Folk/Classic Singer",
     dob: "25 July 2000",
@@ -229,7 +241,7 @@ const people = [
     imdb: "https://www.imdb.com/name/nm9859083/?ref_=ext_shr_lnk",
   },
   {
-    id: 20,
+    id: 21,
     name: "Chandan Tiwari",
     occupation: "Folk Singer",
     dob: "15 August 1985",

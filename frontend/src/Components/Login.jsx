@@ -29,15 +29,15 @@ const LoginPage = () => {
 
         // Save token or flag (you can store JWT from res if available)
         localStorage.setItem("authToken", user.id);
-        localStorage.setItem("userRole", user.role);
+  localStorage.setItem("userData", JSON.stringify(user)); // ✅ save full user object
 
         // Redirecting users based on there role
         if (user.role === "filmmaker") {
           navigate("/dashboard-user");
         } else if (user.role === "artist") {
-          navigate("/dashboard-artist");
+          navigate("/dashboard-user");
         } else if (user.role === "vendor") {
-          navigate("/dashboard-vendor");
+          navigate("/dashboard-user");
         } else if (user.role === "admin") {
           navigate("/dashboard");
         } else if (user.role === "district_admin") {
@@ -98,7 +98,7 @@ const LoginPage = () => {
                   type="email"
                   id="email"
                   name="email"
-                  className="w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-2 pl-10 text-sm text-gray-700 focus:border-[#a43f5c] focus:outline-none"
+                  className="w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-2 pl-10 text-sm text-gray-700 focus:border-[#a43f5c] focus:outline-one"
                   placeholder="example@gmail.com"
                   required
                 />
