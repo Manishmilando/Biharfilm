@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Filmclub from "/Filmclub.mp4";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../Components/Navbar";
 
 const imageData = [
   {
