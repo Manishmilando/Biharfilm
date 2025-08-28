@@ -43,7 +43,7 @@ function Home() {
       <Vr />
       <FilmClubUI />
       <Actors />
-      <ShootingLocationPage/>
+      {/* <ShootingLocationPage/> */}
       <Cinemaecosystem />
       <GoverningComponent />
       <FilemPolicyPage />
@@ -69,7 +69,7 @@ export default function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/apply-noc" element={<ShootingPermissionForm />} />
       <Route path="/dashboard" element={<DashboardMM />} />
-
+      <Route path="/ShootingLocation" element={<ShootingLocationPage />} />
       <Route path="/dashboard-user" 
       element={
       <ProtectedRoute allowedRole="filmmaker">

@@ -21,7 +21,7 @@ const Artist = () => {
 
   const fetchArtists = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/artist/getAllArtists");
+      const res = await axios.get("https://biharfilmbackend-production.up.railway.app/api/artist/getAllArtists");
       setArtists(res.data.data);
     } catch (err) {
       console.error("Failed to fetch artists:", err);

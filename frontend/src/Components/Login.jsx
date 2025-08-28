@@ -19,19 +19,22 @@ const LoginPage = () => {
 
     try {
       // ✅ API call to backend
-      const res = await axios.post("https://biharfilmbackend-production.up.railway.app/api/auth/login", {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        "https://biharfilmbackend-production.up.railway.app/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
 
       if (res.data.success) {
         const user = res.data.user;
 
         // Save token or flag (you can store JWT from res if available)
         localStorage.setItem("authToken", user.id);
-  localStorage.setItem("userData", JSON.stringify(user)); // ✅ save full user object
+        localStorage.setItem("userData", JSON.stringify(user)); // ✅ save full user object
 
-        // Redirecting users based on there role
+        // Redirecting users based on their role
         if (user.role === "filmmaker") {
           navigate("/dashboard-user");
         } else if (user.role === "artist") {
@@ -71,27 +74,53 @@ const LoginPage = () => {
 
         {/* Right Form */}
         <div className="w-full md:w-1/2 p-8 md:p-14">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm font-medium text-gray-700">
-              {isAdmin ? "Admin/District" : "User/Artist/Vendor"} Login
-            </span>
-            <button
-              type="button"
-              onClick={() => setIsAdmin(!isAdmin)}
-              className="text-sm px-4 py-1 border rounded-full text-gray-700 border-gray-300 hover:bg-gray-100"
-            >
-              Switch to {isAdmin ? "User" : "Admin"}
-            </button>
-          </div>
+          <div className="flex flex-col items-center mb-6">
+            {/* Logo */}
+            <img
+              src="/Logo1.png"
+              alt="Startup Bihar Logo"
+              className="w-32 mb-4"
+            />
 
-          <h2 className="text-2xl font-bold text-gray-800">Welcome back!</h2>
-          <p className="mb-6 text-gray-500">Enter your email and password</p>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              Login in to your account
+            </h2>
+
+            {/* Two Toggle Buttons */}
+            <div className="flex gap-4 mb-6">
+              <button
+                type="button"
+                onClick={() => setIsAdmin(false)}
+                className={`px-6 py-2 rounded-full border text-sm font-medium transition ${
+                  !isAdmin
+                    ? "border-[#a92b43] text-[#a92b43]"
+                    : "border-gray-300 text-gray-600"
+                }`}
+              >
+                User
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsAdmin(true)}
+                className={`px-6 py-2 rounded-full border text-sm font-medium transition ${
+                  isAdmin
+                    ? "border-[#a92b43] text-[#a92b43]"
+                    : "border-gray-300 text-gray-600"
+                }`}
+              >
+                Admin
+              </button>
+            </div>
+          </div>
 
           {/* ✅ Form uses handleLogin */}
           <form onSubmit={handleLogin}>
             <div className="mb-4">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                Email
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
+                User ID
               </label>
               <div className="relative mt-1">
                 <input
@@ -109,7 +138,10 @@ const LoginPage = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="relative mt-1">

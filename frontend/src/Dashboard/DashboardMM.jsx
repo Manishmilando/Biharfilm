@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import "../App.css";
 import Logo1 from "/src/assets/Logo1.png";
-import Adminmam from "/src/assets/adminmam.svg";
+import Adminmam from "/src/assets/Adminmam.svg";
 import { IoIosLogOut } from "react-icons/io";
 import { IoMdSettings } from "react-icons/io";
 import { LuCircleArrowOutUpRight, LuShare2, LuTrash2 } from "react-icons/lu";
 import { MdSpaceDashboard } from "react-icons/md";
 import { FaRegHeart, FaRegUser } from "react-icons/fa";
-import Dashboardactivity from "./Dashboardactivity";
+import Dashboardactivity from "./dashboardactivity";
 import Artist from "../NavigationCards/Artist";
+import AddNotification from "../NavigationCards/AddNotification";
+import { RiContractFill } from "react-icons/ri";
+import TenderMain from "../NavigationCards/TenderMain";
+import NotificationMain from "../NavigationCards/NotificationMain";
+
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("Overview");
@@ -24,9 +29,8 @@ const Dashboard = () => {
         return (
           <>
             {/* Metrics Cards */}
-            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
               <MetricCard title="Total NOC" value="256" change="+12.5%" />
-              <MetricCard title="New Users" value="58" change="+3.2%" />
               <MetricCard title="Completed NOC" value="28" change="+8.7%" />
               <MetricCard title="Pending NOC" value="4" change="-2.1%" />
             </section>
@@ -37,10 +41,10 @@ const Dashboard = () => {
         );
       case "Artist":
         return <Artist />;
-      case "Recent":
-      case "Shared":
-      case "Favorites":
-      case "Settings":
+      case "Notifications":
+        return <NotificationMain />;  
+      case "Tender":
+        return <TenderMain />;    
       case "Deleted":
         return (
           <div className="text-gray-600 text-lg">
@@ -65,10 +69,14 @@ const Dashboard = () => {
           <nav className="mt-6 px-4 space-y-1 text-sm font-medium">
             {[
               { label: "Overview", icon: <MdSpaceDashboard /> },
-              { label: "Recent", icon: <LuCircleArrowOutUpRight /> },
-              { label: "Shared", icon: <LuShare2 /> },
-              { label: "Favorites", icon: <FaRegHeart /> },
               { label: "Artist", icon: <FaRegUser /> },
+              { label: "Notifications", icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+  <path d="M5.85 3.5a.75.75 0 0 0-1.117-1 9.719 9.719 0 0 0-2.348 4.876.75.75 0 0 0 1.479.248A8.219 8.219 0 0 1 5.85 3.5ZM19.267 2.5a.75.75 0 1 0-1.118 1 8.22 8.22 0 0 1 1.987 4.124.75.75 0 0 0 1.48-.248A9.72 9.72 0 0 0 19.266 2.5Z" />
+  <path fillRule="evenodd" d="M12 2.25A6.75 6.75 0 0 0 5.25 9v.75a8.217 8.217 0 0 1-2.119 5.52.75.75 0 0 0 .298 1.206c1.544.57 3.16.99 4.831 1.243a3.75 3.75 0 1 0 7.48 0 24.583 24.583 0 0 0 4.83-1.244.75.75 0 0 0 .298-1.205 8.217 8.217 0 0 1-2.118-5.52V9A6.75 6.75 0 0 0 12 2.25ZM9.75 18c0-.034 0-.067.002-.1a25.05 25.05 0 0 0 4.496 0l.002.1a2.25 2.25 0 1 1-4.5 0Z" clipRule="evenodd" />
+</svg>
+ },
+
+              { label: "Tender", icon: <RiContractFill />},
             ].map((item) => (
               <SidebarItem
                 key={item.label}
@@ -161,15 +169,26 @@ const SidebarItem = ({ icon, label, active, onClick }) => (
 
 const MetricCard = ({ title, value, change }) => {
   const isPositive = change.startsWith("+");
+
   return (
-    <div className="bg-white p-4 rounded-lg border shadow-sm">
-      <p className="text-sm text-gray-500 mb-1">{title}</p>
-      <p className="text-xl font-bold">{value}</p>
-      <p className={`text-xs mt-1 ${isPositive ? "text-green-600" : "text-red-500"}`}>
-        {change} from last week
-      </p>
+    <div className="bg-white border border-gray-200/60 rounded-xl p-6 flex items-center justify-between hover:shadow-2xl transition-shadow duration-300">
+      <div>
+        <div className="flex items-center gap-2 text-green-600 mb-1">
+          <h3 className="text-sm font-semibold">{title}</h3>
+        </div>
+        <p className="text-3xl font-bold text-gray-800">{value}</p>
+        <p className="text-xs text-gray-500 mt-1">{isPositive ? "Positive growth" : "Negative growth"}</p>
+      </div>
+      <div
+        className={`${
+          isPositive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+        } text-xs font-semibold px-2 py-1 rounded-full`}
+      >
+        {change}
+      </div>
     </div>
   );
 };
+
 
 export default Dashboard;

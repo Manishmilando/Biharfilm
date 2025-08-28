@@ -1,21 +1,12 @@
-
-import React, { useState, useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getDistance } from "geolib";
-import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Polyline, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "../App.css"; // Import your CSS file for styles
 
 import Navbar from "../Components/Navbar";
-
-import { useMap } from "react-leaflet";
-
-
-
-
-
 
 
 const categories = {
@@ -376,180 +367,159 @@ description: "A grand fort built on the Kaimur hills in Rohtas district, known f
 const Location = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("Hills & Caves");
-  const [index, setIndex] = useState(0);
   const [mainImage, setMainImage] = useState(categories[selectedCategory][0]);
   const [thumbnails, setThumbnails] = useState(categories[selectedCategory].slice(1));
 
- 
-const MapUpdater = ({ lat, lng }) => {
-  const map = useMap();
+  const MapUpdater = ({ lat, lng }) => {
+    const map = useMap();
+    useEffect(() => {
+      if (map && lat && lng) {
+        map.setView([lat, lng], map.getZoom(), {
+          animate: true,
+          duration: 1,
+        });
+      }
+    }, [lat, lng, map]);
+    return null;
+  };
 
+  // ✅ Update when category changes (with safety check)
   useEffect(() => {
-    if (map && lat && lng) {
-      map.setView([lat, lng], map.getZoom(), {
-        animate: true,
-        duration: 1,
-      });
+    if (categories[selectedCategory] && categories[selectedCategory].length > 0) {
+      setMainImage(categories[selectedCategory][0]);
+      setThumbnails(categories[selectedCategory].slice(1));
     }
-  }, [lat, lng, map]);
+  }, [selectedCategory]);
 
-  return null;
-};
+  // ✅ Fix handleImageClick
+  const handleImageClick = (clickedImg, idx) => {
+    if (!thumbnails.length) return;
+    const currentMain = mainImage;
+    const updatedThumbs = [...thumbnails];
+    const thumbIndex = idx % thumbnails.length;
+    updatedThumbs[thumbIndex] = currentMain;
 
-  useEffect(() => {
-  setMainImage(categories[selectedCategory][0]);
-  setThumbnails(categories[selectedCategory].slice(1));
-}, [selectedCategory]);
+    setMainImage(clickedImg);
+    setThumbnails(updatedThumbs);
+  };
 
-  const handleImageClick = (clickedImg, index) => {
-  const currentMain = mainImage;
-  const updatedThumbs = [...thumbnails];
-  updatedThumbs[index] = currentMain;
+  const patnaCoords = { latitude: 25.611, longitude: 85.144 };
+  let distanceFromPatna = null;
 
-  setMainImage(clickedImg);
-  setThumbnails(updatedThumbs);
-};
+  if (mainImage && mainImage.lat && mainImage.lng) {
+    const locationCoords = { latitude: mainImage.lat, longitude: mainImage.lng };
+    distanceFromPatna = getDistance(patnaCoords, locationCoords) / 1000;
+  }
 
-const patnaCoords = { latitude: 25.611, longitude: 85.144 };
-let distanceFromPatna = null;
+  return (
+    <motion.div
+      className="w-full min-h-screen flex flex-col items-center bg-[#190108] pt-24 px-4 sm:px-8 md:px-12 lg:px-16 pb-20"
+      id="Shooting-location"
+    >
+      <Navbar />
 
-if (mainImage && mainImage.lat && mainImage.lng) {
-  const locationCoords = { latitude: mainImage.lat, longitude: mainImage.lng };
-  distanceFromPatna = getDistance(patnaCoords, locationCoords) / 1000;
-}
+      {/* Explore Section */}
+      <div className="bg-[#190108] w-full pt-10 px-2 sm:px-6 lg:px-10">
+        {/* Title */}
+        <h2 className="text-white text-4xl sm:text-6xl carter-one-regular text-center mb-12">
+          Explore Locations
+        </h2>
 
-
-
-return (
-  <motion.div
-    className="w-full min-h-screen flex flex-col items-center bg-[#190108] pt-24 px-4 sm:px-8 md:px-12 lg:px-16 pb-20"
-    id="Shooting-location"
-  >
-    <Navbar />
-
-
-    {/* Explore Section */}
-    <div className="bg-[#190108] w-full pt-10 px-2 sm:px-6 lg:px-10">
-      {/* Title */}
-      <h2 className="text-white text-4xl sm:text-6xl carter-one-regular text-center mb-12">
-        Explore Locations
-      </h2>
-
-     
-    {/* Filter Buttons */}
-    <div className="flex flex-wrap justify-center gap-4 mt-4 pb-10">
-      {Object.keys(categories).map((category) => (
-        <button
-          key={category}
-          className={`px-4 py-2 rounded-lg text-sm sm:text-base transition duration-300 ${
-            selectedCategory === category
-              ? "bg-red-600 text-white"
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-          }`}
-          onClick={() => {
-            setSelectedCategory(category);
-            setIndex(0);
-          }}
-        >
-          {category}
-        </button>
-      ))}
-    </div>
-      {/* Grid Layout with image and details */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start mb-16">
-  {/* VR Section (Main Image) */}
-  <motion.div
-    initial={{ opacity: 0.8, scale: 0.95 }}
-    whileInView={{
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 1.2, ease: "easeInOut" },
-    }}
-    className="w-full h-[25rem] rounded-2xl border-4 border-[#a92b4e] shadow-xl overflow-hidden"
-  >
-    <img
-      src={mainImage.img}
-      alt={mainImage.title}
-      className="w-full h-full object-cover"
-    />
-  </motion.div>
-
-  {/* Detail Section */}
-  <div className="px-2 md:px-6">
-    <h3 className="text-[#a92b4e] text-3xl font-semibold mb-4">
-      {mainImage.title}
-    </h3>
-    <p className="text-white text-base leading-relaxed text-justify">
-      {mainImage.description || "No description available for this location."}
-    </p>
-    <p className="text-white">
-  <strong>Distance from Patna:</strong>{" "}
-  {distanceFromPatna ? `${distanceFromPatna.toFixed(2)} km` : "N/A"}
-</p>
-
-
-  <div className="mt-4">
-    <p className="text-white font-semibold mb-1">How to Reach:</p>
-   
-  </div>
-
-
-<div className="mt-6 w-full max-w-md h-48 rounded-xl overflow-hidden shadow-lg">
-  <MapContainer
-  center={[mainImage.lat, mainImage.lng]}
-  zoom={9}
-  className="w-full h-full -z-[-10]"
->
-  <TileLayer
-    attribution='&copy; OpenStreetMap contributors'
-    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-  />
-  <Marker position={[mainImage.lat, mainImage.lng]}>
-    <Popup>{mainImage.title}</Popup>
-  </Marker>
-  <Polyline
-    positions={[
-      [25.611, 85.144], // Patna
-      [mainImage.lat, mainImage.lng],
-    ]}
-    color="#a92b4e"
-  />
-
-  {/* This forces the map to pan on click */}
-  <MapUpdater lat={mainImage.lat} lng={mainImage.lng} />
-</MapContainer>
-
-</div>
-
-
-  </div>
-</div>
-     
-
-      {/* Auto-scrolling Thumbnail Row */}
-      <div className="overflow-hidden group px-4 mt-4">
-        <div className="flex w-max space-x-4 animate-scrollImages group-hover:pause-scroll">
-          {[...thumbnails, ...thumbnails].map((item, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ scale: 1.05 }}
-              className="cursor-pointer rounded-xl overflow-hidden shadow-md border border-gray-600 w-60 h-36"
-              onClick={() => handleImageClick(item, index % thumbnails.length)}
+        {/* Filter Buttons */}
+        <div className="flex flex-wrap justify-center gap-4 mt-4 pb-10">
+          {Object.keys(categories).map((category) => (
+            <button
+              key={category}
+              className={`px-4 py-2 rounded-lg text-sm sm:text-base transition duration-300 ${
+                selectedCategory === category
+                  ? "bg-red-600 text-white"
+                  : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+              }`}
+              onClick={() => setSelectedCategory(category)}
             >
-              <img
-                src={item.img}
-                alt={item.title}
-                className="w-full h-full object-cover"
-              />
-            </motion.div>
+              {category}
+            </button>
           ))}
         </div>
+
+        {/* Grid Layout with image and details */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start mb-16">
+          {/* VR Section (Main Image) */}
+          <motion.div
+            key={mainImage.title} // 🔑 ensures animation when main image changes
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="w-full h-[25rem] rounded-2xl border-4 border-[#a92b4e] shadow-xl overflow-hidden"
+          >
+            <img
+              src={mainImage.img}
+              alt={mainImage.title}
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
+
+          {/* Detail Section */}
+          <div className="px-2 md:px-6">
+            <h3 className="text-[#a92b4e] text-3xl font-semibold mb-4">
+              {mainImage.title}
+            </h3>
+            <p className="text-white text-base leading-relaxed text-justify">
+              {mainImage.description || "No description available for this location."}
+            </p>
+            <p className="text-white">
+              <strong>Distance from Patna:</strong>{" "}
+              {distanceFromPatna ? `${distanceFromPatna.toFixed(2)} km` : "N/A"}
+            </p>
+
+            <div className="mt-6 w-full max-w-md h-48 rounded-xl overflow-hidden shadow-lg">
+              <MapContainer
+                center={[mainImage.lat, mainImage.lng]}
+                zoom={9}
+                className="w-full h-full -z-[-10]"
+              >
+                <TileLayer
+                  attribution='&copy; OpenStreetMap contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[mainImage.lat, mainImage.lng]}>
+                  <Popup>{mainImage.title}</Popup>
+                </Marker>
+                <Polyline
+                  positions={[
+                    [25.611, 85.144], // Patna
+                    [mainImage.lat, mainImage.lng],
+                  ]}
+                  color="#a92b4e"
+                />
+                <MapUpdater lat={mainImage.lat} lng={mainImage.lng} />
+              </MapContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* Auto-scrolling Thumbnail Row */}
+        <div className="overflow-hidden group px-4 mt-4">
+          <div className="flex w-max space-x-4 animate-scrollImages group-hover:pause-scroll">
+            {[...thumbnails, ...thumbnails].map((item, index) => (
+              <motion.div
+                key={`${item.title}-${index}`} // ✅ unique key
+                whileHover={{ scale: 1.05 }}
+                className="cursor-pointer rounded-xl overflow-hidden shadow-md border border-gray-600 w-60 h-36"
+                onClick={() => handleImageClick(item, index)}
+              >
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  className="w-full h-full object-cover"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
-  </motion.div>
-);
-
-
+    </motion.div>
+  );
 };
 
 export default Location;

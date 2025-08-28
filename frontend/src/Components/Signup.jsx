@@ -2,51 +2,54 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Signupimg from "../assets/Signupimg.svg";
 import Adminsvgg from "../assets/adminsvgg.svg";
+import Logo from "/Logo1.png"; // ✅ your logo here
 import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
 import axios from "axios";
-
 
 const SignupPage = () => {
   const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState("");
 
   const handleSignup = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const email = e.target.email.value;
-  const password = e.target.password.value;
-  const confirmPassword = e.target.confirmPassword.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    const confirmPassword = e.target.confirmPassword.value;
 
-  if (!selectedRole) {
-    alert("Please select a role before signing up.");
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    alert("Passwords do not match!");
-    return;
-  }
-
-  try {
-    const res = await axios.post("https://biharfilmbackend-production.up.railway.app/api/auth/signup", {
-      email,
-      password,
-      confirmPassword,
-      role: selectedRole,
-    });
-
-    if (res.data.token) {
-      localStorage.setItem("authToken", res.data.token);
-      localStorage.setItem("userData", JSON.stringify(res.data.user));
-      alert("Signup successful!");
-      navigate("/dashboard-user");
+    if (!selectedRole) {
+      alert("Please select a role before signing up.");
+      return;
     }
-  } catch (error) {
-    console.error(error);
-    alert(error.response?.data?.message || "Signup failed");
-  }
-};
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        "https://biharfilmbackend-production.up.railway.app/api/auth/signup",
+        {
+          email,
+          password,
+          confirmPassword,
+          role: selectedRole,
+        }
+      );
+
+      if (res.data.token) {
+        localStorage.setItem("authToken", res.data.token);
+        localStorage.setItem("userData", JSON.stringify(res.data.user));
+        alert("Signup successful!");
+        navigate("/dashboard-user");
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || "Signup failed");
+    }
+  };
 
   return (
     <div className="flex h-screen w-full items-center justify-center px-4 relative">
@@ -68,40 +71,39 @@ const SignupPage = () => {
 
         {/* Right Form */}
         <div className="w-full md:w-1/2 p-8 md:p-14">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm font-medium text-gray-700">Signup</span>
-            <Link
-              to="/login"
-              className="rounded-full border border-gray-300 px-4 py-1 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              Login
-            </Link>
+          {/* ✅ Centered Logo instead of headings */}
+          <div className="flex justify-center mb-6">
+            <img src={Logo} alt="Logo" className="w-28 object-contain" />
           </div>
-
-          <h2 className="text-2xl font-bold text-gray-800">Create an Account</h2>
-          <p className="mb-4 text-gray-500">Fill in your details to get started</p>
+           <h2 className="text-2xl font-bold text-gray-800 mb-2 pl-14">
+              SignUp in to your account
+            </h2>
 
           <form onSubmit={handleSignup}>
-            {/* Role Selection */}
-            <div className="flex gap-4 mb-4">
-              {["filmmaker", "vendor", "artist"].map((role) => (
-                <label key={role} className="flex items-center gap-2 text-sm text-gray-700">
-                  <input
-                    type="radio"
-                    name="role"
-                    value={role}
-                    checked={selectedRole === role}
-                    onChange={() => setSelectedRole(role)}
-                    className="accent-[#a92b43]"
-                  />
+            {/* Role Selection - Toggle Buttons */}
+            <div className="flex gap-4 mb-6 justify-center">
+              {["Filmmaker", "Vendor", "Artist"].map((role) => (
+                <button
+                  key={role}
+                  type="button"
+                  onClick={() => setSelectedRole(role)}
+                  className={`px-6 py-2 rounded-full border text-sm font-medium transition ${
+                    selectedRole === role
+                      ? "border-[#a92b43] text-[#a92b43]"
+                      : "border-gray-300 text-gray-600"
+                  }`}
+                >
                   {role}
-                </label>
+                </button>
               ))}
             </div>
 
             {/* Email Field */}
             <div className="mb-4">
-              <label htmlFor="email" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <div className="relative mt-1">
@@ -121,7 +123,10 @@ const SignupPage = () => {
 
             {/* Password Field */}
             <div className="mb-4">
-              <label htmlFor="password" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <div className="relative mt-1">
@@ -141,7 +146,10 @@ const SignupPage = () => {
 
             {/* Confirm Password Field */}
             <div className="mb-6">
-              <label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor="confirmPassword"
+                className="text-sm font-medium text-gray-700"
+              >
                 Confirm Password
               </label>
               <div className="relative mt-1">

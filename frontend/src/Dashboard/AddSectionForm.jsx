@@ -8,6 +8,7 @@ const AddSectionForm = ({ onClose, onSave }) => {
   const [willingToWork, setWillingToWork] = useState("");
   const [specialization, setSpecialization] = useState("");
   const [contactDetails, setContactDetails] = useState({
+    name: "", 
     email: "",
     phone: "",
     district: "",

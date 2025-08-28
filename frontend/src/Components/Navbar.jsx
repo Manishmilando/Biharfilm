@@ -88,21 +88,19 @@ const Navbar = () => {
     { id: "home", label: "Home" },
     { id: "Vr", label: "VR" },
     { id: "FilmClub", label: "Film Club" },
-    { id: "Shooting-location", label: "Shooting Location" },
+    // { id: "Shooting-location", label: "Shooting Location" },
     { id: "GoverningBody", label: "Governing Body" },
     { id: "FilmPolicy", label: "Film Policy" },
   ];
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 ${
-        showNavbar ? "opacity-100" : "opacity-0"
-      } ${navbarVisible ? "transform-none" : "-translate-y-full"} group`}
+      className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 ${showNavbar ? "opacity-100" : "opacity-0"
+        } ${navbarVisible ? "transform-none" : "-translate-y-full"} group`}
     >
       <div
-        className={`px-4 sm:px-6 lg:px-16 py-3 relative transition-colors duration-300 ${
-          navbarVisible && hasScrolled ? "bg-white" : "bg-transparent"
-        }`}
+        className={`px-4 sm:px-6 lg:px-16 py-3 relative transition-colors duration-300 ${navbarVisible && hasScrolled ? "bg-white" : "bg-transparent"
+          }`}
       >
         <div className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-100 z-0 pointer-events-none transition-opacity duration-300"></div>
 
@@ -113,9 +111,8 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <ul
-            className={`hidden md:flex items-center gap-10 text-lg relative z-10 transition-colors duration-300 ${
-              navbarVisible && hasScrolled ? "text-black" : "text-white"
-            } group-hover:text-black`}
+            className={`hidden md:flex items-center gap-10 text-lg relative z-10 transition-colors duration-300 ${navbarVisible && hasScrolled ? "text-black" : "text-white"
+              } group-hover:text-black`}
           >
             {menuItems.map((item) => (
               <li
@@ -126,6 +123,17 @@ const Navbar = () => {
                 {item.label}
               </li>
             ))}
+            <div>
+              <li
+                className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
+                onClick={() => {
+                  navigate("/ShootingLocation");
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                Shooting Location
+              </li>
+            </div>
 
             {/* Notice Dropdown */}
             <li
@@ -157,13 +165,30 @@ const Navbar = () => {
                 </ul>
               )}
             </li>
+            <div className="flex items-center gap-1">
+              <li
+                onClick={handleApplyClick}
+                className="flex items-center gap-1 cursor-pointer hover:text-red-600 font-semibold transition"
+              >
+                Login
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
+                  />
+                </svg>
+              </li>
+            </div>
 
-            <li
-              onClick={handleApplyClick}
-              className="cursor-pointer hover:text-red-600 font-semibold transition"
-            >
-              Apply for NOC
-            </li>
+
           </ul>
 
           {/* Mobile Toggle (Hamburger only) */}
@@ -171,9 +196,8 @@ const Navbar = () => {
             {!isMobileMenuOpen && (
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className={`p-2 rounded-md focus:outline-none transition-colors duration-300 ${
-                  navbarVisible && hasScrolled ? "text-black" : "text-white"
-                }`}
+                className={`p-2 rounded-md focus:outline-none transition-colors duration-300 ${navbarVisible && hasScrolled ? "text-black" : "text-white"
+                  }`}
               >
                 <Menu size={28} />
               </button>
@@ -183,9 +207,8 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden fixed top-0 left-0 w-full h-screen bg-black text-white p-6 z-[70] shadow-xl transform transition-transform duration-500 ease-in-out ${
-            isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
-          }`}
+          className={`md:hidden fixed top-0 left-0 w-full h-screen bg-black text-white p-6 z-[70] shadow-xl transform transition-transform duration-500 ease-in-out ${isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+            }`}
         >
           {/* Close Button inside menu */}
           <button
@@ -205,6 +228,17 @@ const Navbar = () => {
                 {item.label}
               </li>
             ))}
+
+            {/* Added Shooting Location for Mobile */}
+            <li
+              onClick={() => {
+                navigate("/ShootingLocation");
+                setIsMobileMenuOpen(false);
+              }}
+              className="cursor-pointer hover:text-red-500 transition-colors"
+            >
+              Shooting Location
+            </li>
 
             {/* Notice Dropdown in Mobile */}
             <li className="mt-2">Notice</li>
@@ -233,7 +267,7 @@ const Navbar = () => {
               onClick={handleApplyClick}
               className="cursor-pointer hover:text-red-500 transition-colors mt-4"
             >
-              Apply for NOC
+             Login
             </li>
           </ul>
         </div>

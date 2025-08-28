@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaShareAlt, FaTimesCircle, FaTimes } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
+import { RefreshCw } from 'lucide-react';
+
 function Dashboardactivity() {
   const [selectedRow, setSelectedRow] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -16,12 +18,12 @@ function Dashboardactivity() {
       try {
         setLoading(true);
         const response = await axios.get(
-          "http://localhost:3000/api/getAllNocFroms"
+          "https://biharfilmbackend-production.up.railway.app/api/noc/getAllNocForms"
         ); // api
         setCases(response.data.data);
         setError(null);
       } catch (err) {
-        setError("Failed to load data. Please ensure the server is running.");
+        setError("🛜 Failed to load data. Please ensure the server is running.");
         console.error("Failed to fetch NOC forms:", err);
       } finally{
         setLoading(false);
@@ -70,9 +72,17 @@ function Dashboardactivity() {
 
   return (
 
-
+    <>
+    <button onClick={() => window.location.reload()} className="mb-4 px-2 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition">
+          <RefreshCw size={15} />
+    </button>
+    <div>
+      
+    </div>
     <div className="relative">
-      <div className="overflow-x-auto rounded-2xl border border-gray-200 min-h-96">
+      {/* Table Container */}
+      
+      <div className="overflow-x-auto rounded-2xl bg-white border border-gray-200 min-h-96">
 
        {error ? (
   <>
@@ -95,7 +105,7 @@ function Dashboardactivity() {
     </div>
     </div>
 ) : (
- <table className="min-w-full table-auto border rounded-2xl">
+ <table className="min-w-full table-auto  rounded-2xl">
           <thead>
             <tr className="bg-gray-200 text-xs text-gray-600">
               <th className="px-4 py-2 text-left">Sr. No</th>
@@ -414,6 +424,7 @@ function Dashboardactivity() {
         </div>
       )}
     </div>
+    </>
   );
 }
 

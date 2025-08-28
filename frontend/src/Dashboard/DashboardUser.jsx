@@ -48,7 +48,7 @@ const UserDashboard = () => {
 
   const sidebarItems = {
     filmmaker: ["Overview", "Apply NOC"],
-    artist: ["Overview", "Artist Registration"],
+    artist: ["Overview"],
     vendor: ["Overview", "Vendor Registration"],
   };
 
