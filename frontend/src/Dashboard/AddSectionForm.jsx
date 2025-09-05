@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
 
 const AddSectionForm = ({ onClose, onSave }) => {
   const [openSection, setOpenSection] = useState(null);
@@ -48,6 +49,7 @@ const AddSectionForm = ({ onClose, onSave }) => {
   const handleSubmit = () => {
     if (openSection === "about") {
       onSave({ aboutUs });
+      console.log(aboutUs);
     } else if (openSection === "experience") {
       onSave({ experience });
     } else if (openSection === "willing") {
@@ -98,17 +100,35 @@ const AddSectionForm = ({ onClose, onSave }) => {
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden p-3"
                 >
+
+                  <div className="flex items-center">
+                    <label className="w-24 text-xs text-gray-700 font-medium">
+                      Enter Your Full Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="John Doe"
+                      className="flex-1 px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+                      value={contactDetails.name || ""}
+                      onChange={(e) =>
+                        setContactDetails({
+                          ...contactDetails,
+                          name: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
                   <div className="flex items-center">
                     <label className="w-24 text-xs text-gray-700 font-medium">
                       Phone Number
                     </label>
                     <input
-                      type="url"
-                      placeholder="https://instagram.com/yourprofile"
+                      type="number"
+                      placeholder="+91 12345 67890"
                       className="flex-1 px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
                       value={contactDetails.phone || ""}
                       onChange={(e) =>
-                        setSocialLinks({
+                        setContactDetails({
                           ...contactDetails,
                           phone: e.target.value,
                         })
@@ -120,12 +140,12 @@ const AddSectionForm = ({ onClose, onSave }) => {
                       Email
                     </label>
                     <input
-                      type="url"
+                      type="text"
                       placeholder="example@mail.com"
                       className="flex-1 px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
                       value={contactDetails.email || ""}
                       onChange={(e) =>
-                        setSocialLinks({
+                        setContactDetails({
                           ...contactDetails,
                           email: e.target.value,
                         })
@@ -137,12 +157,12 @@ const AddSectionForm = ({ onClose, onSave }) => {
                       District
                     </label>
                     <input
-                      type="url"
+                      type="text"
                       placeholder="Patna"
                       className="flex-1 px-3 py-2 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
                       value={contactDetails.district || ""}
                       onChange={(e) =>
-                        setSocialLinks({
+                        setContactDetails({
                           ...contactDetails,
                           district: e.target.value,
                         })

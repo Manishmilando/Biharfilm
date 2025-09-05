@@ -33,7 +33,7 @@ import Vrpage from "./NavigationCards/pages/Vrpage";
 import ProtectedRoute from './Components/ProtectedRoute';;
 
 
-import Artist from "../src/NavigationCards/Artist";
+import Artist from "../src/Dashboard/Artist";
 // Home Page
 function Home() {
   return (
