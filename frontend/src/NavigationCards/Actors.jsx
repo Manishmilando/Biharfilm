@@ -15,6 +15,7 @@ const people = [
     bestWork: "The Family Man",
     imdb: "https://www.imdb.com/name/nm0048075/?ref_=ext_shr_lnk",
   },
+  // ... rest of your people array remains the same
   {
     id: 2,
     name: "Pankaj Tripathi",
@@ -75,7 +76,6 @@ const people = [
     imdb: "https://www.imdb.com/name/nm2777281/?ref_=ext_shr_lnk",
   },
   
-
   {
     id: 7,
     name: "Neetu Chandra",
@@ -110,7 +110,6 @@ const people = [
      bestWork: "Jab We Met",
     imdb: "https://www.imdb.com/name/nm2777281/?ref_=ext_shr_lnk",
   },
-  
   
   {
     id:10,
@@ -154,7 +153,7 @@ const people = [
     dob: "20 December 1995",
     district: "Mahnar (Vaishali district)",
     img: "https://images.filmibeat.com/img/popcorn/profile_photos/chandanroy-20240530112240-60861.jpg",
-    description: "Known for his warm, authentic portrayal of Vikas Shukla in ‘Panchayat’..",
+    description: "Known for his warm, authentic portrayal of Vikas Shukla in 'Panchayat'..",
     bestWork: "Panchayat (web series)",
     imdb: "https://www.imdb.com/name/nm0788686/?ref_=ext_shr_lnk",
   },
@@ -225,7 +224,7 @@ const people = [
     dob: "1 October 1952",
     district: "Samastipur",
     img: "https://cf-img-a-in.tosshub.com/sites/visualstory/wp/2024/11/India-Today_Sharda-Sinha-YIM6937-1-1-scaled.jpg?size=*:900",
-    description: "Voice of Bihar’s folk heritage, especially during Chhath.",
+    description: "Voice of Bihar's folk heritage, especially during Chhath.",
     bestWork: "Maine Pyar Kiya (singer)",
     imdb: "https://www.imdb.com/name/nm0788686/?ref_=ext_shr_lnk",
   },
@@ -254,103 +253,163 @@ const people = [
 ];
 
 const CarouselOfCelebs = () => {
-  const [index, setIndex] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(4);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [flippedCard, setFlippedCard] = useState(null); // Track which card is flipped for mobile
+  const scrollRef = useRef(null);
   const total = people.length;
 
   useEffect(() => {
-    const updateItemsPerPage = () => {
-      if (window.innerWidth < 640) {
-        setItemsPerPage(1);
-      } else if (window.innerWidth < 768) {
-        setItemsPerPage(2);
-      } else if (window.innerWidth < 1024) {
-        setItemsPerPage(3);
-      } else {
-        setItemsPerPage(4);
+    const updateScreenSize = () => {
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+      
+      // Reset to first item when switching between mobile/desktop
+      if (mobile && currentIndex >= total) {
+        setCurrentIndex(0);
       }
+      
+      // Reset flipped card when switching screen sizes
+      setFlippedCard(null);
     };
 
-    updateItemsPerPage();
-    window.addEventListener("resize", updateItemsPerPage);
-    return () => window.removeEventListener("resize", updateItemsPerPage);
-  }, []);
+    updateScreenSize();
+    window.addEventListener("resize", updateScreenSize);
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, [currentIndex, total]);
 
+  // Mobile navigation functions
   const nextSlide = () => {
-    setIndex((prev) => (prev + itemsPerPage >= total ? 0 : prev + itemsPerPage));
+    if (isMobile) {
+      setCurrentIndex((prev) => (prev + 1) % total);
+      setFlippedCard(null); // Reset flip when navigating
+    } else {
+      scrollRef.current?.scrollBy({ left: 340, behavior: "smooth" });
+    }
   };
 
   const prevSlide = () => {
-    setIndex((prev) => (prev - itemsPerPage < 0 ? total - itemsPerPage : prev - itemsPerPage));
+    if (isMobile) {
+      setCurrentIndex((prev) => (prev - 1 + total) % total);
+      setFlippedCard(null); // Reset flip when navigating
+    } else {
+      scrollRef.current?.scrollBy({ left: -340, behavior: "smooth" });
+    }
   };
 
-  const scrollRef = useRef(null);
+  // Handle card click for mobile flip functionality
+  const handleCardClick = (cardId) => {
+    if (isMobile) {
+      setFlippedCard(flippedCard === cardId ? null : cardId);
+    }
+  };
+
+  // Touch event handlers for mobile swipe
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && isMobile) {
+      nextSlide();
+    }
+    if (isRightSwipe && isMobile) {
+      prevSlide();
+    }
+  };
 
   return (
-    <div className="w-full flex flex-col items-center justify-center bg-[#190108] py-10">
-      <h2 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl playwrite-mx-guides-regular mb-10 pt-10 pb-8 text-center">
+    <div className="w-full flex flex-col items-center justify-center bg-[#190108] py-10 h-screen">
+      <h2 className="text-white text-3xl sm:text-3xl md:text-4xl lg:text-5xl playwrite-mx-guides-regular mb-10 pt-10 pb-8 text-center px-4">
         Celebrities of Bihar
       </h2>
 
       <div className="relative mx-auto max-w-full px-4 sm:px-6 md:px-8 lg:px-10">
-        <div className="pointer-events-none absolute left-0 top-0 h-full w-8 sm:w-12 bg-gradient-to-r from-[#190108] to-transparent z-10" />
-        <div className="pointer-events-none absolute right-0 top-0 h-full w-8 sm:w-12 bg-gradient-to-l from-[#190108] to-transparent z-10" />
+        {/* Gradient overlays for desktop */}
+        {!isMobile && (
+          <>
+            <div className="pointer-events-none absolute left-0 top-0 h-full w-8 sm:w-12 bg-gradient-to-r from-[#190108] to-transparent z-10" />
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-8 sm:w-12 bg-gradient-to-l from-[#190108] to-transparent z-10" />
+          </>
+        )}
 
-        <div
-          ref={scrollRef}
-          className="flex gap-4 sm:gap-6 overflow-x-auto overflow-y-hidden scroll-smooth pb-4 no-scrollbar px-4 sm:px-6 md:px-8"
-        >
-          {people.map((person) => (
+        {/* Mobile View - Single Card */}
+        {isMobile ? (
+          <div 
+            className="flex justify-center items-center"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <motion.div
-              key={person.id}
-              className="w-[220px] sm:w-[240px] md:w-[280px] lg:w-[300px] xl:w-[320px] h-80 sm:h-96 flex-shrink-0"
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
+              key={currentIndex}
+              className="w-[280px] h-96 flex-shrink-0 cursor-pointer"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => handleCardClick(people[currentIndex].id)}
             >
               <div className="w-full h-full perspective group">
                 <div className="card-animated-border w-full h-full">
-                  <div className="relative w-full h-full transition-transform duration-700 transform-style preserve-3d group-hover:rotate-y-180">
+                  <div className={`relative w-full h-full transition-transform duration-700 transform-style preserve-3d ${
+                    flippedCard === people[currentIndex].id ? 'rotate-y-180' : ''
+                  }`}>
+                    {/* Front of card */}
                     <div className="absolute w-full h-full backface-hidden bg-white/40 backdrop-blur-3xl text-white rounded-2xl overflow-hidden">
                       <img
-                        src={person.img}
-                        alt={person.name}
+                        src={people[currentIndex].img}
+                        alt={people[currentIndex].name}
                         className="w-full h-full object-cover rounded-2xl"
                       />
-                      <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-24 bg-gradient-to-t from-black/70 to-transparent z-10" />
-                      <div className="absolute bottom-3 left-3 z-20 text-xs sm:text-sm">
-                        <h3 className="font-semibold">{person.name}</h3>
-                        <p>{person.occupation}</p>
+                      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/70 to-transparent z-10" />
+                      <div className="absolute bottom-3 left-3 z-20 text-sm">
+                        <h3 className="font-semibold">{people[currentIndex].name}</h3>
+                        <p>{people[currentIndex].occupation}</p>
                       </div>
                     </div>
 
-                    <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-[#0a1020] text-white rounded-2xl p-2 sm:p-4 flex flex-col justify-start items-center text-left text-xs sm:text-sm">
-                      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-[96px] sm:w-[132px] h-[96px] sm:h-[132px] rounded-full bg-white/90 flex items-center justify-center shadow-md">
+                    {/* Back of card */}
+                    <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-[#0a1020] text-white rounded-2xl p-4 flex flex-col justify-start items-center text-left text-sm">
+                      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-32 h-32 rounded-full bg-white/90 flex items-center justify-center shadow-md">
                         <img
-                          src={person.img}
-                          alt={person.name}
-                          className="w-[88px] sm:w-32 h-[88px] sm:h-32 rounded-full object-cover"
+                          src={people[currentIndex].img}
+                          alt={people[currentIndex].name}
+                          className="w-[120px] h-[120px] rounded-full object-cover"
                         />
                       </div>
-                      <div className="mt-28 sm:mt-40 w-full px-1 sm:px-2">
-                        <p className="mb-1 italic">{person.occupation}</p>
-                        <p className="mb-1">Date of Birth: {person.dob}</p>
-                        <p className="mb-1">District: {person.district}</p>
-                        <p className="mb-1">{person.description}</p>
+                      <div className="mt-40 w-full px-2">
+                        <p className="mb-1 italic">{people[currentIndex].occupation}</p>
+                        <p className="mb-1">Date of Birth: {people[currentIndex].dob}</p>
+                        <p className="mb-1">District: {people[currentIndex].district}</p>
+                        <p className="mb-1">{people[currentIndex].description}</p>
                         <p className="font-semibold mb-1">
-                          Best Film: {person.bestWork}
+                          Best Work: {people[currentIndex].bestWork}
                         </p>
                         <a
-                          href={person.imdb}
+                          href={people[currentIndex].imdb}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="mt-2 inline-block"
+                          onClick={(e) => e.stopPropagation()}
                         >
                           <img
                             src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg"
                             alt="IMDb"
-                            className="w-12 sm:w-16 h-auto mt-2 sm:mt-4"
+                            className="w-16 h-auto mt-4"
                           />
                         </a>
                       </div>
@@ -359,24 +418,92 @@ const CarouselOfCelebs = () => {
                 </div>
               </div>
             </motion.div>
-          ))}
-        </div>
+          </div>
+        ) : (
+          /* Desktop View - Scrollable Cards */
+          <div
+            ref={scrollRef}
+            className="flex gap-6 overflow-x-auto overflow-y-hidden scroll-smooth pb-4 no-scrollbar px-8"
+          >
+            {people.map((person) => (
+              <motion.div
+                key={person.id}
+                className="w-[240px] md:w-[280px] lg:w-[300px] xl:w-[320px] h-80 sm:h-96 flex-shrink-0"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+              >
+                <div className="w-full h-full perspective group">
+                  <div className="card-animated-border w-full h-full">
+                    <div className="relative w-full h-full transition-transform duration-700 transform-style preserve-3d group-hover:rotate-y-180">
+                      <div className="absolute w-full h-full backface-hidden bg-white/40 backdrop-blur-3xl text-white rounded-2xl overflow-hidden">
+                        <img
+                          src={person.img}
+                          alt={person.name}
+                          className="w-full h-full object-cover rounded-2xl"
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-24 bg-gradient-to-t from-black/70 to-transparent z-10" />
+                        <div className="absolute bottom-3 left-3 z-20 text-xs sm:text-sm">
+                          <h3 className="font-semibold">{person.name}</h3>
+                          <p>{person.occupation}</p>
+                        </div>
+                      </div>
 
+                      <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-[#0a1020] text-white rounded-2xl p-2 sm:p-4 flex flex-col justify-start items-center text-left text-xs sm:text-sm">
+                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-[96px] sm:w-[132px] h-[96px] sm:h-[132px] rounded-full bg-white/90 flex items-center justify-center shadow-md">
+                          <img
+                            src={person.img}
+                            alt={person.name}
+                            className="w-[88px] sm:w-32 h-[88px] sm:h-32 rounded-full object-cover"
+                          />
+                        </div>
+                        <div className="mt-28 sm:mt-40 w-full px-1 sm:px-2">
+                          <p className="mb-1 italic">{person.occupation}</p>
+                          <p className="mb-1">Date of Birth: {person.dob}</p>
+                          <p className="mb-1">District: {person.district}</p>
+                          <p className="mb-1">{person.description}</p>
+                          <p className="font-semibold mb-1">
+                            Best Film: {person.bestWork}
+                          </p>
+                          <a
+                            href={person.imdb}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2 inline-block"
+                          >
+                            <img
+                              src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg"
+                              alt="IMDb"
+                              className="w-12 sm:w-16 h-auto mt-2 sm:mt-4"
+                            />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* Navigation Arrows */}
         <div className="absolute left-1 sm:left-2 top-1/2 transform -translate-y-1/2 z-20">
           <button
-            onClick={() => scrollRef.current.scrollBy({ left: -340, behavior: "smooth" })}
-            className="p-2 sm:p-3 bg-gray-800 text-white rounded-full hover:bg-gray-600"
+            onClick={prevSlide}
+            className="p-2 sm:p-3 bg-gray-800 text-white rounded-full hover:bg-gray-600 transition-colors duration-200"
           >
-            <IoIosArrowBack size={24} />
+            <IoIosArrowBack size={isMobile ? 20 : 24} />
           </button>
         </div>
 
         <div className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 z-20">
           <button
-            onClick={() => scrollRef.current.scrollBy({ left: 340, behavior: "smooth" })}
-            className="p-2 sm:p-3 bg-gray-800 text-white rounded-full hover:bg-gray-600"
+            onClick={nextSlide}
+            className="p-2 sm:p-3 bg-gray-800 text-white rounded-full hover:bg-gray-600 transition-colors duration-200"
           >
-            <IoIosArrowForward size={24} />
+            <IoIosArrowForward size={isMobile ? 20 : 24} />
           </button>
         </div>
       </div>

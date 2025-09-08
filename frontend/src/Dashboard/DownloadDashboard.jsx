@@ -1,8 +1,9 @@
 // src/Dashboard/DownloadDashboard.jsx
 import React from "react";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable"; 
+import autoTable from "jspdf-autotable";
 import logo from "/Logo1.png"; // from public folder
+import { Download } from "lucide-react";
 
 const DownloadDashboard = ({ selectedRow }) => {
   const handleDownload = () => {
@@ -61,12 +62,14 @@ const DownloadDashboard = ({ selectedRow }) => {
   };
 
   return (
-    <button
-      onClick={handleDownload}
-      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-    >
-      Download PDF
-    </button>
+   <button
+  onClick={handleDownload}
+  className="w-10 h-10 bg-gray-100 hover:bg-[#c9e3ff] rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer"
+>
+  <Download className="text-gray-600 hover:text-[#0096FF] text-lg transition-colors duration-200" />
+  
+</button>
+
   );
 };
 

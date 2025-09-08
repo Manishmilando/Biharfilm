@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../Components/Navbar";
+import NavbarB from "../Components/NavbarB";
 
 const tenders = [
   { title: "Camera Equipment Tender", date: "2025-06-10", description: "Vendors invited to supply camera equipment." },
@@ -21,7 +21,7 @@ const Notifications = () => {
 
   return (
     <div className="min-h-screen bg-[#190108] px-4 sm:px-10 lg:px-20 py-10 text-white font-[Poppins] animate-fade">
-      <Navbar />
+      <NavbarB />
 
       {/* Back Button */}
       <div className="mb-10 mt-18">

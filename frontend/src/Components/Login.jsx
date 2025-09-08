@@ -18,21 +18,44 @@ const LoginPage = () => {
     const password = e.target.password.value;
 
     try {
-      // ✅ API call to backend
       const res = await axios.post(
         "https://biharfilmbackend-production.up.railway.app/api/auth/login",
         {
           email,
           password,
+          loginType: isAdmin ? "admin" : "user" // ✅ Added login type validation
         }
       );
 
       if (res.data.success) {
         const user = res.data.user;
+        const token = res.data.token; // ✅ Get JWT token from response
 
-        // Save token or flag (you can store JWT from res if available)
-        localStorage.setItem("authToken", user.id);
-        localStorage.setItem("userData", JSON.stringify(user)); // ✅ save full user object
+        // ✅ Added validation to ensure the login type matches user role
+        if (isAdmin && !["admin", "district_admin"].includes(user.role)) {
+          alert("Invalid credentials for admin login");
+          return;
+        }
+        
+        if (!isAdmin && ["admin", "district_admin"].includes(user.role)) {
+          alert("Admin users cannot login through user portal");
+          return;
+        }
+
+        // ✅ CORRECT - Store the actual JWT token
+        localStorage.setItem("authToken", token);
+        
+        // ✅ Enhanced user data storage
+        localStorage.setItem("user", JSON.stringify({
+          id: user.id,
+          name: user.name || user.email,
+          role: user.role,
+          districtId: user.districtId || user.district_id,
+          districtName: user.districtName || user.district,
+          email: user.email
+        }));
+        
+        localStorage.setItem("userData", JSON.stringify(user));
 
         // Redirecting users based on their role
         if (user.role === "filmmaker") {
@@ -44,7 +67,7 @@ const LoginPage = () => {
         } else if (user.role === "admin") {
           navigate("/dashboard");
         } else if (user.role === "district_admin") {
-          navigate(`/district/${user.district?.toLowerCase() || "default"}`);
+          navigate("/MainDash");
         } else {
           navigate("/login");
         }
@@ -174,7 +197,7 @@ const LoginPage = () => {
 
             <p className="text-center text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link to="/signup" className="text-[#802d44] hover:underline">
+              <Link to="/signup" className="text-[#a92b43] hover:underline">
                 Sign up
               </Link>
             </p>

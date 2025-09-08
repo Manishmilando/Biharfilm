@@ -9,7 +9,7 @@ import {
     useMap,
 } from "react-leaflet";
 import L from "leaflet";
-import { motion } from "framer-motion";
+import { FiSearch, FiMapPin, FiArrowLeft } from "react-icons/fi";
 import "leaflet/dist/leaflet.css";
 
 const customIcon = new L.Icon({
@@ -49,7 +49,6 @@ const places = [
     { name: "Classic Props Gallery", type: "Props Vendor", lat: 25.66817, lng: 86.1777 },
 ];
 
-
 const categories = ["All", "Film Production", "Props Vendor"];
 
 const FlyToLocation = ({ lat, lng }) => {
@@ -76,136 +75,187 @@ const Map = () => {
     );
 
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            setUserLocation({
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-            });
-        });
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setUserLocation({
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                });
+            },
+            (error) => console.log("Geolocation error:", error)
+        );
     }, []);
 
-    // Handler for clicking a card
     const handlePlaceClick = (place) => {
         setFocusedPlace(place);
         setShowMap(true);
     };
 
-    // Handler for going back to list
     const handleBack = () => {
         setShowMap(false);
         setFocusedPlace(null);
     };
 
     return (
-        <div className="max-h-[38rem] bg-[#190108] text-white py-6 px-3 sm:px-4 md:px-6 flex flex-col lg:flex-row gap-6 mt-0 overflow-x-hidden rounded-2xl ">
+        <div className="w-full max-w-7xl mx-auto min-h-[38rem] max-h-[38rem] bg-gray-900 text-white flex rounded-xl overflow-hidden">
+            
             {/* Sidebar */}
-            <div className="lg:w-1/4 w-full max-h-[80vh] overflow-y-auto bg-[#2a2a39] rounded-xl p-4 sm:p-5 border border-gray-700 shadow-md">
-                <h2 className="text-2xl font-bold mb-4 sticky top-0 bg-[#2a2a39] z-10 py-2"> Props</h2>
-                <input
-                    type="text"
-                    placeholder="🔍 Search Props..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="w-full mb-5 p-2 rounded-lg bg-gray-800 border border-gray-600 text-white"
-                />
-                <div className="mb-6">
-                    {categories.map((type) => (
-                        <button
-                            key={type}
-                            onClick={() => {
-                                setSelectedType(type);
-                                setShowMap(false);
-                                setFocusedPlace(null);
-                            }}
-                            className={`block w-full mb-2 px-4 py-2 rounded-lg transition font-medium  ${selectedType === type
-                                ? "bg-[#380e1a] text-white shadow-md"
-                                : "bg-gray-700 hover:bg-[#380e1a]"
+            <div className={`${showMap ? 'hidden md:block md:w-80' : 'w-full md:w-80'} bg-gray-800 flex flex-col`}>
+                <div className="p-4 border-b border-gray-700">
+                    <h2 className="text-lg font-semibold text-purple-300 mb-3">Props & Studios</h2>
+                    
+                    {/* Search */}
+                    <div className="relative mb-3">
+                        <FiSearch className="absolute left-3 top-3 text-gray-400 text-sm" />
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="w-full pl-9 pr-3 py-2 text-sm rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
+                        />
+                    </div>
+                    
+                    {/* Categories */}
+                    <div className="flex flex-wrap gap-2">
+                        {categories.map((type) => (
+                            <button
+                                key={type}
+                                onClick={() => {
+                                    setSelectedType(type);
+                                    setShowMap(false);
+                                    setFocusedPlace(null);
+                                }}
+                                className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
+                                    selectedType === type
+                                        ? "bg-purple-600 text-white"
+                                        : "bg-gray-700 hover:bg-gray-600 text-gray-300"
                                 }`}
-                        >
-                            {type}
-                        </button>
-                    ))}
+                            >
+                                {type}
+                            </button>
+                        ))}
+                    </div>
                 </div>
-            </div>
 
-            {/* Main Content */}
-            <div className="flex-1 flex flex-col">
-                {!showMap ? (
-                    // List/Grid of cards
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-                        {filtered.length === 0 && (
-                            <div className="text-center text-gray-400 col-span-full">No places found.</div>
-                        )}
-                        {filtered.map((place, i) => (
+                {/* Places List */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                    <p className="text-xs text-gray-400 mb-3">
+                        {filtered.length} locations
+                    </p>
+                    
+                    {filtered.length === 0 ? (
+                        <div className="text-center text-gray-400 py-8">
+                            <FiMapPin className="text-2xl mx-auto mb-2 opacity-50" />
+                            <p className="text-sm">No locations found</p>
+                        </div>
+                    ) : (
+                        filtered.map((place, i) => (
                             <div
                                 key={i}
                                 onClick={() => handlePlaceClick(place)}
-                                className="cursor-pointer bg-[#2a2a39] hover:bg-[#380e1a] rounded-xl p-4 shadow-md border border-gray-700 transition"
+                                className="cursor-pointer bg-gray-700/50 hover:bg-gray-700 rounded-lg p-3 border border-gray-600/50 hover:border-purple-500/50 transition-all duration-200 group"
                             >
-                                <div className="font-semibold text-lg">{place.name}</div>
-                                <div className="text-sm text-gray-300 mt-1">📍 {place.type}</div>
-                                <div className="text-xs text-gray-500 mt-2">Click to view on map</div>
+                                <h4 className="font-medium text-sm text-white group-hover:text-purple-200 truncate">
+                                    {place.name}
+                                </h4>
+                                <p className="text-xs text-gray-400 mt-1 flex items-center">
+                                    <FiMapPin className="mr-1 text-xs" />
+                                    {place.type}
+                                </p>
                             </div>
-                        ))}
-                    </div>
-                ) : (
-                    // Map view for selected place
-                    <div className="flex-grow rounded-2xl border border-gray-600 shadow-lg relative">
+                        ))
+                    )}
+                </div>
+            </div>
+
+            {/* Map Section */}
+            {showMap && (
+                <div className="flex-1 flex flex-col">
+                    {/* Map Header */}
+                    <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-gray-800/50">
                         <button
-                            className="absolute top-4 left-4 z-10 bg-[#380e1a] text-white px-4 py-2 rounded-lg shadow hover:bg-[#2a2a39] transition"
                             onClick={handleBack}
+                            className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                         >
-                            ← Back to List
+                            <FiArrowLeft className="text-sm" />
+                            <span className="hidden sm:inline">Back</span>
                         </button>
+                        
+                        {focusedPlace && (
+                            <div className="bg-gray-700/50 px-3 py-2 rounded-lg">
+                                <p className="text-sm font-medium text-purple-300 truncate max-w-48">
+                                    {focusedPlace.name}
+                                </p>
+                                <p className="text-xs text-gray-400">{focusedPlace.type}</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Map Container */}
+                    <div className="flex-1 relative">
                         <MapContainer
                             center={focusedPlace ? [focusedPlace.lat, focusedPlace.lng] : [25.43, 86.1]}
                             zoom={focusedPlace ? 14 : 11}
                             scrollWheelZoom={true}
-                            className="rounded-2xl w-full h-[60vh] sm:h-[70vh] lg:h-full"
-                            style={{ minHeight: "400px", width: "100%" }}
+                            className="w-full h-full"
                         >
                             <LayersControl position="topright">
-                                <LayersControl.BaseLayer checked name="Street View">
+                                <LayersControl.BaseLayer checked name="Street">
                                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                                 </LayersControl.BaseLayer>
-                                <LayersControl.BaseLayer name="Satellite View">
+                                <LayersControl.BaseLayer name="Satellite">
                                     <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
                                 </LayersControl.BaseLayer>
-                                <LayersControl.BaseLayer name="Topographic View">
-                                    <TileLayer url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png" />
-                                </LayersControl.BaseLayer>
                             </LayersControl>
+
                             {filtered.map((place, i) => (
                                 <Marker key={i} position={[place.lat, place.lng]} icon={customIcon}>
                                     <Popup>
-                                        <strong>{place.name}</strong>
-                                        <br />📍 {place.type}
+                                        <div className="text-center">
+                                            <h4 className="font-semibold text-gray-800">{place.name}</h4>
+                                            <p className="text-sm text-gray-600">{place.type}</p>
+                                        </div>
                                     </Popup>
-                                    <Tooltip permanent direction="top" offset={[0, -30]}>
-                                        <motion.div
-                                            initial={{ y: -10, opacity: 0 }}
-                                            animate={{ y: 0, opacity: 1 }}
-                                            className={`bg-white px-3 py-1 rounded-full text-sm font-semibold shadow-md border ${
-                                                focusedPlace?.name === place.name
-                                                    ? "text-purple-900 border-purple-600"
-                                                    : "text-purple-800"
-                                            }`}
-                                        >
+                                    <Tooltip direction="top" offset={[0, -30]} permanent>
+                                        <div className={`px-2 py-1 rounded text-xs font-medium ${
+                                            focusedPlace?.name === place.name
+                                                ? "bg-purple-600 text-white"
+                                                : "bg-white text-gray-800"
+                                        }`}>
                                             {place.name}
-                                        </motion.div>
+                                        </div>
                                     </Tooltip>
                                 </Marker>
                             ))}
+                            
                             {focusedPlace && <FlyToLocation lat={focusedPlace.lat} lng={focusedPlace.lng} />}
+                            
                             {userLocation && (
                                 <Marker position={[userLocation.lat, userLocation.lng]} icon={redIcon}>
-                                    <Popup>📍 You are here</Popup>
+                                    <Popup>
+                                        <div className="text-center">
+                                            <h4 className="font-semibold text-gray-800">Your Location</h4>
+                                        </div>
+                                    </Popup>
                                 </Marker>
                             )}
                         </MapContainer>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
+
+            {/* Custom Styles */}
+            <style jsx global>{`
+                .leaflet-tooltip {
+                    background: transparent !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+                .leaflet-popup-content-wrapper {
+                    border-radius: 8px;
+                }
+            `}</style>
         </div>
     );
 };

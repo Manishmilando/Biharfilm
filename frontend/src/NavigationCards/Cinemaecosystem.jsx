@@ -3,8 +3,8 @@ import Longcards from '../Cards/Longcards';
 import { IoIosArrowRoundForward } from 'react-icons/io';
 import { motion } from 'framer-motion';
 import Map from './Map';
-import LocalArtist from '../Cards/LocalArtist'; // Adjust path if needed
-import Security from '../Cards/Security'; // Adjust path if needed
+import LocalArtist from '../Cards/LocalArtist';
+import Security from '../Cards/Security';
 import '../App.css';
 
 function Cinemaecosystem() {
@@ -26,6 +26,13 @@ function Cinemaecosystem() {
 
   const handleClose = () => {
     setActivePopup(null);
+  };
+
+  // Close modal when clicking outside
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      handleClose();
+    }
   };
 
   return (
@@ -89,18 +96,28 @@ function Cinemaecosystem() {
 
       {/* ===== Modal Popup ===== */}
       {activePopup && (
-        <div className="fixed inset-0 backdrop-blur-xs flex items-center justify-center z-50">
-          <div className="rounded-lg p-4 border-2 border-white relative max-w-5xl w-full">
+        <div 
+          className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4"
+          onClick={handleBackdropClick}
+        >
+          <div className="relative bg-gray-900 rounded-2xl border border-gray-700 shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
+            {/* Close Button */}
             <button
-              className="absolute top-2 right-4 text-red-600 text-3xl font-bold"
+              className="absolute top-4 right-4 z-20 p-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 rounded-full text-red-400 hover:text-red-300 transition-all duration-300 backdrop-blur-sm"
               onClick={handleClose}
-              aria-label="Close"
+              aria-label="Close modal"
             >
-              &times;
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
-            {activePopup === 'map' && <Map />}
-            {activePopup === 'localArtist' && <LocalArtist />}
-            {activePopup === 'security' && <Security />}
+            
+            {/* Modal Content */}
+            <div className="h-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
+              {activePopup === 'map' && <Map />}
+              {activePopup === 'localArtist' && <LocalArtist />}
+              {activePopup === 'security' && <Security />}
+            </div>
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Filmclub from "/Filmclub.mp4";
-import Navbar from "../../Components/Navbar";
+import NavbarB from "../../Components/NavbarB";
 
 const sessions = [
   {
@@ -55,7 +55,7 @@ const CoffeeWithFilm = () => {
 
   return (
     <div className="relative w-full min-h-screen bg-black text-white overflow-hidden pt-20">
-      <Navbar />
+      <NavbarB />
 
       {/* Background Video */}
       <video

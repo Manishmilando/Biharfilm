@@ -1,7 +1,9 @@
 import React from 'react';
 import { CiMail } from "react-icons/ci";
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
-
+import { FaLocationArrow } from "react-icons/fa6";
+import Logo1 from "/src/assets/Logo1.png";
+          
 const Footer = () => {
   return (
     <footer className="bg-gray-150 text-gray-700" id="about">
@@ -61,7 +63,18 @@ const Footer = () => {
               <li> <a href="https://film.bihar.gov.in/">Bihar State Film Development and Finance Corporation Limited</a></li>
               <li>0612-2219213</li>
               <li>biharfilmnigam@gmail.com</li>
-              <li className="hover:text-red-500 transition-colors cursor-pointer">Get Location</li>
+              <li className="cursor-pointer">
+  <a
+    href="https://www.google.com/maps/place/Vikas-Bhawan-New-Secretariat/@25.6056047,85.1160926,17z/data=!3m1!4b1!4m6!3m5!1s0x39ed5822abfea4b3:0x294c847495e62f9d!8m2!3d25.6056047!4d85.1160926!16s%2Fg%2F1xgrlb_2?entry=ttu"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex items-center gap-2 text-blue-500  hover:text-red-500 transition-colors"
+  >
+    <FaLocationArrow />
+    <span>Get Location</span>
+  </a>
+</li>
+
             </ul>
           </div>
         </div>
@@ -70,26 +83,48 @@ const Footer = () => {
       <hr className="border-gray-300"/>
 
    
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-6 md:space-y-0">
           
 
-          <div className="w-full md:w-1/3">
-            <h4 className="text-lg font-semibold mb-3">Register Yourself</h4>
-            <button className="flex items-center space-x-2 bg-red-500 text-white text-sm sm:text-base font-medium py-2 px-4 sm:px-6 rounded-full hover:bg-red-600 transition">
-              <CiMail className="text-xl" />
-              <span>film's Actor registration</span>
-            </button>
-          </div>
+          <div className="w-full md:w-1/3 flex flex-col items-start">
+  <img
+    src={Logo1}
+    alt="Logo"
+    className="h-16 w-auto  text-black"
+  />
+ 
+</div>
 
+      
    
-          <div className="w-full md:w-2/3">
+          <div className="w-full md:w-2/3   ">
             <h4 className="text-lg font-semibold mb-3">Follow us</h4>
             <div className="flex space-x-4 text-2xl">
-              <a href="#" className="text-gray-500 hover:text-blue-600 transition"><FaFacebook /></a>
-              <a href="#" className="text-gray-500 hover:text-pink-500 transition"><FaInstagram /></a>
-              <a href="#" className="text-gray-500 hover:text-blue-400 transition"><FaTwitter /></a>
-              <a href="#" className="text-gray-500 hover:text-red-500 transition"><FaYoutube /></a>
+              <a
+                href="https://www.facebook.com/BSFDFCL/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-blue-600 transition"
+              >
+                < FaFacebook />
+              </a>
+              <a 
+                href="https://www.instagram.com/artcultureyouth?igsh=YWI1aG9rNGOyaTZy" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-pink-500 transition"><FaInstagram /></a>
+              <a
+               href="https://x.com/bfilmnigam"
+               target="_blank"
+               rel="noopener noreferrer"
+                
+              className="text-gray-500 hover:text-blue-400 transition"><FaTwitter /></a>
+              <a 
+              href="https://www.youtube.com/@ArtCultureYouth"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-red-500 transition"><FaYoutube /></a>
             </div>
           </div>
         </div>

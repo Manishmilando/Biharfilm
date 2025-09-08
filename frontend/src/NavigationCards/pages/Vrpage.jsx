@@ -4,11 +4,11 @@ import "../../App.css";
 
 // Sample data (extend as needed)
 const vrExperiences = [
-  { id: 1, image: "/image1.jpg", link: "https://vr-link-1.com", title: "Glass Bridge, Rajgir" },
-  { id: 2, image: "/image2.jpg", link: "https://vr-link-2.com", title: "Pawapuri, Nalanda" },
-  { id: 3, image: "/image3.jpg", link: "https://vr-link-3.com", title: "Jungle Safari, Rajgir" },
-  { id: 4, image: "/image4.jpg", link: "https://vr-link-4.com", title: "Bodh Gaya Temple" },
-  { id: 5, image: "/image5.jpg", link: "https://vr-link-5.com", title: "Maner Sharif, Patna" },
+  { id: 1, image: "https://media1.thrillophilia.com/filestore/zdxzzqjsjj1q6voya50tb8n16jy8_1608640626_shutterstock_1441359566.jpg?w=400&dpr=2", link: "https://youtu.be/8HV1JVgqPM0", title: "Glass Bridge, Rajgir" },
+  { id: 2, image: "https://content.jdmagicbox.com/comp/nalanda/m2/9999p6112.6112.141211170801.c4m2/catalogue/jalmandir-temple-pawapuri-nalanda-tourist-attraction-6iv2a3s.jpg", link: "https://youtu.be/8HV1JVgqPM0", title: "Pawapuri, Nalanda" },
+  { id: 3, image: "https://rajgirsafari.bihar.gov.in/frontend/images/slider/2.jpg", link: "https://youtu.be/8HV1JVgqPM0", title: "Jungle Safari, Rajgir" },
+  { id: 4, image: "https://www.oyorooms.com/travel-guide/wp-content/uploads/2019/12/shutterstock_402120757-1.jpg", link: "https://youtu.be/8HV1JVgqPM0", title: "Bodh Gaya Temple" },
+  { id: 5, image: "https://s7ap1.scene7.com/is/image/incredibleindia/maner-sharif-dargah-patna-bihar-2-musthead-hero?qlt=82&ts=1742185150302", link: "https://youtu.be/8HV1JVgqPM0", title: "Maner Sharif, Patna" },
 ];
 
 const Vrpage = () => {

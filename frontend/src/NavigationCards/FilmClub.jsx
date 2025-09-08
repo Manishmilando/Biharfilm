@@ -32,7 +32,7 @@ const FilmClubUI = () => {
 
   return (
     <div
-      id="FilmClub"
+      id="FilmClubUI"
       className="relative w-full min-h-screen bg-[#190108] flex items-center justify-center px-4 py-16 overflow-hidden"
     >
       {/* Background Video */}

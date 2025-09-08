@@ -11,7 +11,7 @@ import {
   ExternalLink,
   X
 } from "lucide-react";
-import AddArtistForm from "../NavigationCards/AddArtistForm";
+import AddArtistForm from "./AddArtistForm";
 
 const Artist = () => {
   const [artists, setArtists] = useState([]);

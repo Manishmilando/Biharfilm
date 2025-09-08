@@ -99,14 +99,15 @@ const Navbar = () => {
         } ${navbarVisible ? "transform-none" : "-translate-y-full"} group`}
     >
       <div
-        className={`px-4 sm:px-6 lg:px-16 py-3 relative transition-colors duration-300 ${navbarVisible && hasScrolled ? "bg-white" : "bg-transparent"
+        className={`px-4 sm:px-6 lg:px-16 py-2 md:py-3 relative transition-colors duration-300 ${navbarVisible && hasScrolled ? "bg-white" : "bg-transparent"
+
           }`}
       >
         <div className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-100 z-0 pointer-events-none transition-opacity duration-300"></div>
 
         <div className="flex justify-between items-center relative z-10">
           <div className="flex items-center">
-            <img src={Logo1} alt="logo" className="h-16 w-24" />
+            <img src={Logo1} alt="logo" className="h-14 w-20 md:h-16 md:w-24" />
           </div>
 
           {/* Desktop Menu */}
@@ -207,7 +208,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden fixed top-0 left-0 w-full h-screen bg-black text-white p-6 z-[70] shadow-xl transform transition-transform duration-500 ease-in-out ${isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+          className={`md:hidden fixed top-0 left-0 w-full h-screen bg-black text-white p-6 z-[40] shadow-xl transform transition-transform duration-500 ease-in-out ${isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
             }`}
         >
           {/* Close Button inside menu */}
@@ -241,7 +242,7 @@ const Navbar = () => {
             </li>
 
             {/* Notice Dropdown in Mobile */}
-            <li className="mt-2">Notice</li>
+            <li className="mt-2">Notifications</li>
             <ul className="ml-4 flex flex-col gap-3">
               <li
                 onClick={() => {
