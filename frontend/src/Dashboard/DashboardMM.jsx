@@ -10,8 +10,6 @@ import { RiContractFill } from "react-icons/ri";
 import TenderMain from "../Dashboard/TenderMain";
 import NotificationMain from "./NotificationMain";
 
-
-
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("Overview");
 

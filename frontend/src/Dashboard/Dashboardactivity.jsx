@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaShareAlt, FaTimesCircle, FaTimes, FaSearch } from "react-icons/fa";
+import { FaShareAlt, FaTimesCircle, FaTimes } from "react-icons/fa";
 import { RefreshCw } from "lucide-react";
 import DownloadDashboard from "./DownloadDashboard";
 import { FaExternalLinkAlt } from "react-icons/fa";
-import {
-  FaMapMarkerAlt
-} from "react-icons/fa";
 
 function Dashboardactivity() {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -14,127 +11,67 @@ function Dashboardactivity() {
   const [showForwardModal, setShowForwardModal] = useState(false);
 
   const [cases, setCases] = useState([]);
-  const [filteredCases, setFilteredCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedDistricts, setSelectedDistricts] = useState([]);
-  const [selectedDepartments, setSelectedDepartments] = useState([]);
+const [selectedDepartments, setSelectedDepartments] = useState([]);
 
-  // Search/Filter states
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterBy, setFilterBy] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
+const [adminEmail, setAdminEmail] = useState('');
+const [adminRemarks, setAdminRemarks] = useState('');
+const [isForwarding, setIsForwarding] = useState(false);
 
-  const [adminEmail, setAdminEmail] = useState('');
-  const [adminRemarks, setAdminRemarks] = useState('');
-  const [isForwarding, setIsForwarding] = useState(false);
+
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
 
-        // ✅ Get token from localStorage
-        const token = localStorage.getItem('authToken');
-        
-        if (!token) {
-          setError("🔐 Please login to view data.");
-          setLoading(false);
-          // Redirect to login
-          window.location.href = '/login';
-          return;
-        }
-
-        const response = await axios.get(
-          "https://biharfilmbackend-production.up.railway.app/api/noc/getAllNocForms", // ✅ Updated endpoint
-          {
-            headers: {
-              'Authorization': `Bearer ${token}` // ✅ Add Authorization header
-            },
-            withCredentials: true,
-          }
-        );
-
-        const fetchedData = response.data.data || [];
-        setCases(fetchedData);
-        setFilteredCases(fetchedData);
-        setError(null);
-      } catch (err) {
-        // ✅ Better error handling
-        if (err.response?.status === 401) {
-          setError("🔐 Session expired. Please login again.");
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('user');
-          window.location.href = '/login';
-        } else if (err.response?.status === 403) {
-          setError("🚫 Access denied. You don't have permission to view this data.");
-        } else {
-          setError("🛜 Failed to load data. Please ensure the server is running.");
-        }
-        console.error("Failed to fetch NOC forms:", err);
-      } finally {
+      // ✅ Get token from localStorage
+      const token = localStorage.getItem('authToken');
+      
+      if (!token) {
+        setError("🔐 Please login to view data.");
         setLoading(false);
+        // Redirect to login
+        window.location.href = '/login';
+        return;
       }
-    };
 
-    fetchData();
-  }, []);
-
-  // Filter and search functionality
-  useEffect(() => {
-    let filtered = [...cases];
-
-    // Apply search filter
-    if (searchTerm) {
-      filtered = filtered.filter(item => {
-        const searchableFields = [
-          'title', 'typeOfProject', 'genre', 'representativeName', 
-          'emailOfProductionHouse', 'producerHouse', 'language',
-          'directorAndMainCast', 'location'
-        ];
-
-        return searchableFields.some(field => 
-          item[field]?.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      });
-    }
-
-    // Apply field-specific filter
-    if (filterBy !== 'all') {
-      filtered = filtered.filter(item => {
-        switch (filterBy) {
-          case 'title':
-            return item.title?.toLowerCase().includes(searchTerm.toLowerCase());
-          case 'type':
-            return item.typeOfProject?.toLowerCase().includes(searchTerm.toLowerCase());
-          case 'genre':
-            return item.genre?.toLowerCase().includes(searchTerm.toLowerCase());
-          case 'representative':
-            return item.representativeName?.toLowerCase().includes(searchTerm.toLowerCase());
-          case 'email':
-            return item.emailOfProductionHouse?.toLowerCase().includes(searchTerm.toLowerCase());
-          default:
-            return true;
+      const response = await axios.get(
+        "https://biharfilmbackend-production.up.railway.app/api/noc/getAllNocForms", // ✅ Updated endpoint
+        {
+          headers: {
+            'Authorization': `Bearer ${token}` // ✅ Add Authorization header
+          },
+          withCredentials: true,
         }
-      });
-    }
-
-    // Apply status filter
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(item => 
-        item.status?.toLowerCase() === statusFilter.toLowerCase()
       );
+
+      setCases(response.data.data || []);
+      setError(null);
+    } catch (err) {
+      // ✅ Better error handling
+      if (err.response?.status === 401) {
+        setError("🔐 Session expired. Please login again.");
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      } else if (err.response?.status === 403) {
+        setError("🚫 Access denied. You don't have permission to view this data.");
+      } else {
+        setError("🛜 Failed to load data. Please ensure the server is running.");
+      }
+      console.error("Failed to fetch NOC forms:", err);
+    } finally {
+      setLoading(false);
     }
-
-    setFilteredCases(filtered);
-  }, [searchTerm, filterBy, statusFilter, cases]);
-
-  // Clear all filters
-  const clearFilters = () => {
-    setSearchTerm('');
-    setFilterBy('all');
-    setStatusFilter('all');
   };
+
+  fetchData();
+}, []);
+
+
 
   const handleRowClick = (caseDetail) => {
     setSelectedRow(caseDetail);
@@ -146,85 +83,16 @@ function Dashboardactivity() {
     setSelectedRow(null);
   };
 
+
   return (
     <>
-      {/* Controls Section */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
-        
-        {/* Refresh Button */}
-        <button
-          onClick={() => window.location.reload()}
-          className="px-3 py-2 bg-[#800000] text-white rounded-lg hover:bg-[#600000] transition flex items-center gap-2"
-          title="Refresh Data"
-        >
-          <RefreshCw size={16} />
-          <span className="hidden sm:inline">Refresh</span>
-        </button>
-
-        {/* Search Input */}
-        <div className="relative flex-1 min-w-0">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <FaSearch className="text-gray-400 text-sm" />
-          </div>
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search applications..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#800000] focus:border-transparent text-sm"
-          />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-            >
-              <FaTimes className="text-sm" />
-            </button>
-          )}
-        </div>
-
-        {/* Filter by Field */}
-        <select
-          value={filterBy}
-          onChange={(e) => setFilterBy(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#800000] focus:border-transparent text-sm"
-        >
-          <option value="all">All Fields</option>
-          <option value="title">Title</option>
-          <option value="type">Project Type</option>
-          <option value="genre">Genre</option>
-          <option value="representative">Representative</option>
-          <option value="email">Email</option>
-        </select>
-
-        {/* Status Filter */}
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#800000] focus:border-transparent text-sm"
-        >
-          <option value="all">All Status</option>
-          <option value="pending">Pending</option>
-          <option value="approved">Approved</option>
-          <option value="rejected">Rejected</option>
-          <option value="forwarded">Forwarded</option>
-        </select>
-
-        {/* Clear Filters */}
-        {(searchTerm || filterBy !== 'all' || statusFilter !== 'all') && (
-          <button
-            onClick={clearFilters}
-            className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded-lg transition"
-          >
-            Clear All
-          </button>
-        )}
-
-        {/* Results Count */}
-        <div className="text-sm text-gray-600 whitespace-nowrap">
-          {filteredCases.length} of {cases.length} results
-        </div>
-      </div>
+      {/* Reload Button */}
+      <button
+        onClick={() => window.location.reload()}
+        className="mb-4 px-2 py-2 bg-[#800000] text-white rounded-full hover:bg-[#600000] transition"
+      >
+        <RefreshCw size={15} />
+      </button>
 
       <div className="relative">
         {/* Table Container */}
@@ -239,24 +107,6 @@ function Dashboardactivity() {
                 <div className="h-2 bg-gray-200 rounded-full mb-2.5"></div>
                 <div className="h-2 bg-gray-200 rounded-full max-w-[330px] mb-2.5"></div>
               </div>
-            </div>
-          ) : filteredCases.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-gray-400 text-lg mb-2">📋</div>
-              <div className="text-gray-600 font-medium">No applications found</div>
-              <div className="text-gray-500 text-sm mt-1">
-                {searchTerm || filterBy !== 'all' || statusFilter !== 'all' 
-                  ? 'Try adjusting your search or filters' 
-                  : 'No applications have been submitted yet'}
-              </div>
-              {(searchTerm || filterBy !== 'all' || statusFilter !== 'all') && (
-                <button
-                  onClick={clearFilters}
-                  className="mt-3 px-4 py-2 text-sm bg-[#800000] text-white rounded-lg hover:bg-[#600000] transition"
-                >
-                  Clear Filters
-                </button>
-              )}
             </div>
           ) : (
             <table className="min-w-full table-auto rounded-2xl">
@@ -275,79 +125,19 @@ function Dashboardactivity() {
                 </tr>
               </thead>
               <tbody>
-                {filteredCases.map((caseDetail, index) => (
+                {cases.map((caseDetail, index) => (
                   <tr
                     key={caseDetail._id}
                     className="border-t text-xs border-gray-200 cursor-pointer hover:bg-gray-50"
                     onClick={() => handleRowClick(caseDetail)}
                   >
                     <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">
-                      {/* Highlight search terms */}
-                      {searchTerm && (filterBy === 'all' || filterBy === 'type') ? (
-                        <span dangerouslySetInnerHTML={{
-                          __html: caseDetail.typeOfProject?.replace(
-                            new RegExp(`(${searchTerm})`, 'gi'),
-                            '<mark class="bg-yellow-200">$1</mark>'
-                          )
-                        }} />
-                      ) : (
-                        caseDetail.typeOfProject
-                      )}
-                    </td>
+                    <td className="px-4 py-2">{caseDetail.typeOfProject}</td>
                     <td className="px-4 py-2">{caseDetail.duration}</td>
-                    <td className="px-4 py-2">
-                      {/* Highlight search terms */}
-                      {searchTerm && (filterBy === 'all' || filterBy === 'title') ? (
-                        <span dangerouslySetInnerHTML={{
-                          __html: caseDetail.title?.replace(
-                            new RegExp(`(${searchTerm})`, 'gi'),
-                            '<mark class="bg-yellow-200">$1</mark>'
-                          )
-                        }} />
-                      ) : (
-                        caseDetail.title
-                      )}
-                    </td>
-                    <td className="px-4 py-2">
-                      {/* Highlight search terms */}
-                      {searchTerm && (filterBy === 'all' || filterBy === 'genre') ? (
-                        <span dangerouslySetInnerHTML={{
-                          __html: caseDetail.genre?.replace(
-                            new RegExp(`(${searchTerm})`, 'gi'),
-                            '<mark class="bg-yellow-200">$1</mark>'
-                          )
-                        }} />
-                      ) : (
-                        caseDetail.genre
-                      )}
-                    </td>
-                    <td className="px-4 py-2">
-                      {/* Highlight search terms */}
-                      {searchTerm && (filterBy === 'all' || filterBy === 'representative') ? (
-                        <span dangerouslySetInnerHTML={{
-                          __html: caseDetail.representativeName?.replace(
-                            new RegExp(`(${searchTerm})`, 'gi'),
-                            '<mark class="bg-yellow-200">$1</mark>'
-                          )
-                        }} />
-                      ) : (
-                        caseDetail.representativeName
-                      )}
-                    </td>
-                    <td className="px-4 py-2">
-                      {/* Highlight search terms */}
-                      {searchTerm && (filterBy === 'all' || filterBy === 'email') ? (
-                        <span dangerouslySetInnerHTML={{
-                          __html: caseDetail.emailOfProductionHouse?.replace(
-                            new RegExp(`(${searchTerm})`, 'gi'),
-                            '<mark class="bg-yellow-200">$1</mark>'
-                          )
-                        }} />
-                      ) : (
-                        caseDetail.emailOfProductionHouse
-                      )}
-                    </td>
+                    <td className="px-4 py-2">{caseDetail.title}</td>
+                    <td className="px-4 py-2">{caseDetail.genre}</td>
+                    <td className="px-4 py-2">{caseDetail.representativeName}</td>
+                    <td className="px-4 py-2">{caseDetail.emailOfProductionHouse}</td>
                     <td className="px-4 py-2">
                       {caseDetail.startDateTime
                         ? new Date(caseDetail.startDateTime).toLocaleDateString()
@@ -358,17 +148,7 @@ function Dashboardactivity() {
                         ? new Date(caseDetail.endDateTime).toLocaleDateString()
                         : "N/A"}
                     </td>
-                    <td className="px-4 py-2">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        caseDetail.status?.toLowerCase() === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        caseDetail.status?.toLowerCase() === 'approved' ? 'bg-green-100 text-green-800' :
-                        caseDetail.status?.toLowerCase() === 'rejected' ? 'bg-red-100 text-red-800' :
-                        caseDetail.status?.toLowerCase() === 'forwarded' ? 'bg-blue-100 text-blue-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
-                        {caseDetail.status}
-                      </span>
-                    </td>
+                    <td className="px-4 py-2 capitalize">{caseDetail.status}</td>
                   </tr>
                 ))}
               </tbody>
@@ -376,7 +156,6 @@ function Dashboardactivity() {
           )}
         </div>
 
-       
         {showModal && selectedRow && (
           <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-gray-200">
@@ -808,104 +587,126 @@ function Dashboardactivity() {
           Cancel
         </button>
         <button
-          onClick={async () => {
-            // Validation
-            if (!selectedRow || !selectedRow._id) {
-              alert("No form selected.");
-              return;
-            }
+  onClick={async () => {
+    // Validation
+    if (!selectedRow) {
+      alert("No form selected.");
+      return;
+    }
 
-            if (selectedDistricts.length === 0 || selectedDepartments.length === 0) {
-              alert("Please select at least one district and one department.");
-              return;
-            }
+    if (selectedDistricts.length === 0 || selectedDepartments.length === 0) {
+      alert("Please select at least one district and one department.");
+      return;
+    }
 
-            if (!adminEmail || !adminEmail.includes('@')) {
-              alert("Please enter a valid admin email.");
-              return;
-            }
+    if (!adminEmail || !adminEmail.includes('@')) {
+      alert("Please enter a valid admin email.");
+      return;
+    }
 
-            setIsForwarding(true);
+    setIsForwarding(true);
 
-            try {
-              // Prepare payload according to backend API expectations
-              const districtsPayload = selectedDistricts.map(districtName => ({
-                id: districtName, // Using district name as ID since backend expects id field
-                name: districtName
-              }));
+    try {
+      // Prepare payload according to backend API expectations
+      const districtsPayload = selectedDistricts.map(districtName => ({
+        id: districtName, // Using district name as ID since backend expects id field
+        name: districtName
+      }));
 
-              const departmentsPayload = selectedDepartments;
+      const token = localStorage.getItem('authToken');
 
-              const response = await axios.put(
-                `https://biharfilmbackend-production.up.railway.app/api/noc/forward/${selectedRow._id}`,
-                {
-                  districts: districtsPayload,
-                  departments: departmentsPayload,
-                  adminEmail: adminEmail,
-                  adminRemarks: adminRemarks || null
-                },
-                {
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  timeout: 10000 // 10 second timeout
-                }
-              );
+      if (!token) {
+        setError("🔐 Please login to view data.");
+        setLoading(false);
+        // Redirect to login
+        window.location.href = '/login';
+        return;
+      }
 
-              if (response.data.success) {
-                alert("Form forwarded successfully!");
-                
-                // Reset state
-                setSelectedDepartments([]);
-                setSelectedDistricts([]);
-                setAdminEmail('');
-                setAdminRemarks('');
-                setShowForwardModal(false);
-                setShowModal(false);
-                
-                // Refresh data if needed
-                if (onForwardSuccess) {
-                  onForwardSuccess();
-                }
-              } else {
-                alert(`Failed to forward form: ${response.data.message || 'Unknown error'}`);
-              }
-            } catch (error) {
-              console.error("Forwarding failed:", error);
-              
-              let errorMessage = "Error forwarding the form.";
-              
-              if (error.response) {
-                // Server responded with error status
-                errorMessage = error.response.data?.message || `Server error: ${error.response.status}`;
-              } else if (error.request) {
-                // Network error
-                errorMessage = "Network error. Please check your connection.";
-              } else if (error.code === 'ECONNABORTED') {
-                // Timeout error
-                errorMessage = "Request timeout. Please try again.";
-              }
-              
-              alert(errorMessage);
-            } finally {
-              setIsForwarding(false);
-            }
-          }}
-          disabled={selectedDistricts.length === 0 || selectedDepartments.length === 0 || !adminEmail || isForwarding}
-          className="px-6 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#6e1129] rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-        >
-          {isForwarding ? (
-            <>
-              <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
-              Forwarding...
-            </>
-          ) : (
-            <>
-              <FaShareAlt className="text-xs" />
-              Forward
-            </>
-          )}
-        </button>
+      const departmentsPayload = selectedDepartments;
+
+      // Add this before the API call to debug:
+console.log("Selected row:", selectedRow);
+console.log("ID:", selectedRow.id);
+console.log("ID type:", typeof selectedRow.id);
+console.log("ID length:", selectedRow.id?.length);
+
+
+      const response = await axios.put(
+
+        `https://biharfilmbackend-production.up.railway.app/api/noc/forward/${selectedRow.id}`, // Ensure selectedRow.id is correct
+
+        {
+          districts: districtsPayload,  
+          departments: departmentsPayload,
+          adminEmail: adminEmail,
+          adminRemarks: adminRemarks || null
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true,
+          timeout: 10000 // 10 seconds timeout
+        }
+      );
+
+      if (response.data.success) {
+        alert("Form forwarded successfully!");
+        
+        // Reset state
+        setSelectedDepartments([]);
+        setSelectedDistricts([]);
+        setAdminEmail('');
+        setAdminRemarks('');
+        setShowForwardModal(false);
+        setShowModal(false);
+        
+        // Refresh data if needed
+        if (onForwardSuccess) {
+          onForwardSuccess();
+        }
+      } else {
+        alert(`Failed to forward form: ${response.data.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error("Forwarding failed:", error);
+      
+      let errorMessage = "Error forwarding the form.";
+      
+      if (error.response) {
+        // Server responded with error status
+        errorMessage = error.response.data?.message || `Server error: ${error.response.status}`;
+      } else if (error.request) {
+        // Network error
+        errorMessage = "Network error. Please check your connection.";
+      } else if (error.code === 'ECONNABORTED') {
+        // Timeout error
+        errorMessage = "Request timeout. Please try again.";
+      }
+      
+      alert(errorMessage);
+    } finally {
+      setIsForwarding(false);
+    }
+  }}
+  disabled={selectedDistricts.length === 0 || selectedDepartments.length === 0 || !adminEmail || isForwarding}
+  className="px-6 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#6e1129] rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+>
+  {isForwarding ? (
+    <>
+      <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
+      Forwarding...
+    </>
+  ) : (
+    <>
+      <FaShareAlt className="text-xs" />
+      Forward
+    </>
+  )}
+</button>
+
       </div>
     </div>
   </div>

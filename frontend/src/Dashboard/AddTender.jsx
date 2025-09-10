@@ -1,15 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
-function Tender() {
+function Tender({ tenderData, onClose }) {
   const MAX_WORDS = 50;
-  const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
-  const [description, setDescription] = useState("");
+  // Initialize form state with tenderData if editing or defaults if creating
+  const [title, setTitle] = useState(tenderData?.title || "");
+  const [date, setDate] = useState(tenderData?.date || "");
+  const [description, setDescription] = useState(tenderData?.description || "");
   const [pdf, setPdf] = useState(null);
   const [wordCount, setWordCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  // Initialize word count when editing
+  useEffect(() => {
+    if (tenderData && tenderData.description) {
+      const words = tenderData.description.trim().split(/\s+/).filter(Boolean);
+      setWordCount(words.length);
+    }
+  }, [tenderData]);
 
   const handleDescriptionChange = (e) => {
     const text = e.target.value;
@@ -26,7 +35,8 @@ function Tender() {
   };
 
   const handleSubmit = async () => {
-    if (!title || !date || !description || !pdf) {
+    // For editing, PDF is optional (only required if creating new tender)
+    if (!title || !date || !description || (!pdf && !tenderData)) {
       alert("Please fill out all fields and upload a PDF");
       return;
     }
@@ -37,26 +47,53 @@ function Tender() {
       formData.append("title", title);
       formData.append("date", date);
       formData.append("description", description);
-      formData.append("pdf", pdf);
+      
+      // Only append PDF if a new file is selected
+      if (pdf) {
+        formData.append("pdf", pdf);
+      }
 
-      await axios.post("https://biharfilmbackend-production.up.railway.app/api/tender/createTender", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      if (tenderData) {
+        // Edit mode - PUT request
+        await axios.put(
+          `https://biharfilmbackend-production.up.railway.app/api/tender/tenders/${tenderData.id}`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+      } else {
+        // Create mode - POST request
+        await axios.post(
+          "https://biharfilmbackend-production.up.railway.app/api/tender/createTender",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+      }
 
       setLoading(false);
       setSuccess(true);
 
-      // Reset form
-      setTitle("");
-      setDate("");
-      setDescription("");
-      setPdf(null);
+      // Reset form only if creating new tender
+      if (!tenderData) {
+        setTitle("");
+        setDate("");
+        setDescription("");
+        setPdf(null);
+        setWordCount(0);
+      }
 
-      // Hide success popup after 3 seconds
-      setTimeout(() => setSuccess(false), 3000);
+      // Hide success popup and close modal
+      setTimeout(() => {
+        setSuccess(false);
+        onClose(); // Close the modal and refresh the parent component
+      }, 2000);
     } catch (err) {
       console.error("Error saving tender:", err);
       setLoading(false);
+      alert("Error saving tender. Please try again.");
     }
   };
 
@@ -65,15 +102,19 @@ function Tender() {
       {/* Success Popup */}
       {success && (
         <div className="absolute top-[-40px] left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg animate-bounce">
-          Tender Saved Successfully!
+          {tenderData ? "Tender Updated Successfully!" : "Tender Saved Successfully!"}
         </div>
       )}
 
       {/* Header */}
       <div className="flex flex-col border-b border-gray-300 pb-3 sm:flex-row sm:items-start">
         <div className="shrink-0 mr-auto sm:py-2">
-          <p className="font-medium text-lg">Tender</p>
-          <p className="text-sm text-gray-700">Fill out tender details</p>
+          <p className="font-medium text-lg">
+            {tenderData ? "Edit Tender" : "Add New Tender"}
+          </p>
+          <p className="text-sm text-gray-700">
+            {tenderData ? "Update tender details" : "Fill out tender details"}
+          </p>
         </div>
         <button
           onClick={handleSubmit}
@@ -81,7 +122,7 @@ function Tender() {
           className="hidden rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-white sm:inline focus:outline-none focus:ring"
           style={{ backgroundColor: "#891737" }}
         >
-          {loading ? "Saving..." : "Save"}
+          {loading ? "Saving..." : tenderData ? "Update" : "Save"}
         </button>
       </div>
 
@@ -134,20 +175,46 @@ function Tender() {
         <div className="flex flex-col gap-2 lg:flex-row">
           <div className="shrink-0 w-28 sm:py-2">
             <p className="mb-auto font-medium">Upload PDF</p>
-            <p className="text-xs text-gray-600">Attach Tender File</p>
+            <p className="text-xs text-gray-600">
+              {tenderData ? "Upload new file (optional)" : "Attach Tender File"}
+            </p>
+            {tenderData && tenderData.pdf && (
+              <a 
+                href={tenderData.pdf} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-xs text-blue-600 hover:underline block mt-1"
+              >
+                View current PDF
+              </a>
+            )}
           </div>
           <div className="flex h-28 w-full flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-gray-300 p-3 text-center">
             <p className="text-xs text-gray-600">
-              Drop your PDF file here or click below to upload
+              {tenderData 
+                ? "Drop new PDF file here or click below to update"
+                : "Drop your PDF file here or click below to upload"
+              }
             </p>
             <label
               htmlFor="pdfUpload"
               className="cursor-pointer rounded-lg border px-4 py-2 text-sm font-medium text-black hover:bg-gray-100"
               style={{ color: "#891737", borderColor: "#891737" }}
             >
-              Upload PDF
+              {tenderData ? "Update PDF" : "Upload PDF"}
             </label>
-            <input id="pdfUpload" type="file" accept="application/pdf" onChange={handlePdfChange} className="hidden" />
+            <input 
+              id="pdfUpload" 
+              type="file" 
+              accept="application/pdf" 
+              onChange={handlePdfChange} 
+              className="hidden" 
+            />
+            {pdf && (
+              <p className="text-xs text-green-600 mt-1">
+                New file selected: {pdf.name}
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -160,7 +227,7 @@ function Tender() {
           className="rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-white focus:outline-none focus:ring"
           style={{ backgroundColor: "#891737" }}
         >
-          {loading ? "Saving..." : "Save"}
+          {loading ? "Saving..." : tenderData ? "Update" : "Save"}
         </button>
       </div>
     </div>
