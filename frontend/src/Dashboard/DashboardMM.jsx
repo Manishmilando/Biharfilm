@@ -7,7 +7,7 @@ import { FaRegUser } from "react-icons/fa";
 import Dashboardactivity from "./Dashboardactivity";
 import Artist from "./Artist";
 import { RiContractFill } from "react-icons/ri";
-import TenderMain from "../Dashboard/TenderMain";
+import TenderMain from "./TenderMain";
 import NotificationMain from "./NotificationMain";
 
 const Dashboard = () => {
