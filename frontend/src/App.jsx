@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useParams } from "react-router-dom";
+import { Routes, Route, useParams,  useNavigate } from "react-router-dom";
 
 // Components
 import VideoSection from "./Components/VideoSection";
@@ -35,8 +35,10 @@ import MainDash from "./DistrictDahboard/MainDash";
 import VendorRegistrationForm from "./Components/VendorRegistrationForm";
 
 import Artist from "./Dashboard/Artist";
+
 // Home Page
 function Home() {
+
   return (
     <>
       <VideoSection />
@@ -58,6 +60,7 @@ function Home() {
 
 
 export default function App() {
+  const navigate = useNavigate();
   return (
     <Routes>
       {/* <Route path="/FilmClubUI" element={<FilmClubUI />} /> */}
@@ -66,19 +69,31 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/apply-noc" element={<ShootingPermissionForm />} />
-      <Route path="/dashboard" element={<DashboardMM />} />
+
+       {/* Protected Route for main Admin for their dashboard */}
+      <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <DashboardMM />
+            </ProtectedRoute>
+          }
+        />
       <Route path="/ShootingLocation" element={<ShootingLocationPage />} />
-      <Route path="/dashboard-user" 
-      element={
-      <ProtectedRoute allowedRole="filmmaker">
-      <DasboardUser />
-      </ProtectedRoute>
-      }
-      />
+
+      {/* Protected Routes for Filmmaker, Artist, Vendor */}
+      <Route
+          path="/dashboard-user"
+          element={
+            <ProtectedRoute allowedRoles={['filmmaker', 'artist', 'vendor']}>
+              <DasboardUser />
+            </ProtectedRoute>
+          }
+        />
 
           <Route path="/register-artist" element={<ArtistForm />} />
         <Route path="/register-vendor" element={<VendorForm />} />
-      {/* <Route path="/districts" element={<DistrictList />} /> */}
+     
 
       <Route path="/filmclub/cine-samvad" element={<CineSamvad />} />
       <Route path="/notification" element={<Notification />} />
@@ -90,8 +105,21 @@ export default function App() {
       <Route path="/vrpage" element={<Vrpage />} />
 
       <Route path="artist" element={<Artist />} />
-      <Route path="MainDash" element={<MainDash />} />
+
+      {/* Protected Route for District Admin for their dashboard */}
+      <Route
+          path="/MainDash"
+          element={
+            <ProtectedRoute allowedRoles={['district_admin']}>
+              <MainDash />
+            </ProtectedRoute>
+          }
+        />
+
       <Route path="vendor-registration" element={<VendorRegistrationForm />} />
+      
+
+      <Route path="*" element={<navigate to="/" replace />} />
 
     </Routes>
   );

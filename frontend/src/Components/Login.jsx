@@ -12,7 +12,7 @@ const LoginPage = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
   e.preventDefault();
   const email = e.target.email.value;
   const password = e.target.password.value;
@@ -20,51 +20,42 @@ const LoginPage = () => {
   try {
     const res = await axios.post(
       "https://biharfilmbackend-production.up.railway.app/api/auth/login",
-      {
-        email,
-        password,
-      }
+      { email, password }
     );
 
     if (res.data.success) {
       const user = res.data.user;
-      const token = res.data.token; // ✅ Get JWT token from response
+      const token = res.data.token;
 
-      // ✅ CORRECT - Store the actual JWT token
+      // Store authentication data
       localStorage.setItem("authToken", token);
-      
-      // ✅ Enhanced user data storage
       localStorage.setItem("user", JSON.stringify({
         id: user.id,
         name: user.name || user.email,
         role: user.role,
-        districtId: user.districtId || user.district_id,
-        districtName: user.districtName || user.district,
+        districtId: user.districtId,
+        districtName: user.districtName,
         email: user.email
       }));
-      
-      localStorage.setItem("userData", JSON.stringify(user));
 
-      // Redirecting users based on their role
-      if (user.role === "filmmaker") {
-        navigate("/dashboard-user");
-      } else if (user.role === "artist") {
-        navigate("/dashboard-user");
-      } else if (user.role === "vendor") {
-        navigate("/dashboard-user");
-      } else if (user.role === "admin") {
-        navigate("/dashboard");
-      } else if (user.role === "district_admin") {
-        navigate("/MainDash");
-      } else {
-        navigate("/login");
-      }
+      // Route mapping
+      const roleRoutes = {
+        filmmaker: '/dashboard-user',
+        artist: '/dashboard-user',
+        vendor: '/dashboard-user',
+        admin: '/dashboard',
+        district_admin: '/MainDash'
+      };
+
+      // Use window.location for a full page reload (ensures localStorage is ready)
+      window.location.href = roleRoutes[user.role] || '/login';
     }
   } catch (err) {
     console.error("Login failed:", err.response?.data || err.message);
     alert(err.response?.data?.message || "Invalid credentials");
   }
 };
+
 
   return (
     <div className="flex h-screen w-full items-center justify-center px-4 relative">

@@ -82,30 +82,52 @@ const Response = () => {
   });
   const [saveStatus, setSaveStatus] = useState("idle");
 
-  const onSubmit = async () => {
+const onSubmit = async () => {
   try {
     setSaveStatus("saving");
+    
+    // ✅ Get JWT token from localStorage
+    const token = localStorage.getItem("authToken");
+    
+    if (!token) {
+      setNotification({
+        show: true,
+        message: "Please login to submit the form",
+        type: "error",
+      });
+      setSaveStatus("idle");
+      return;
+    }
+
     const formToSubmit = new FormData();
 
+    // Append all form fields to FormData
     Object.entries(formData).forEach(([sectionKey, sectionData]) => {
       Object.entries(sectionData).forEach(([fieldKey, fieldValue]) => {
         if (fieldValue instanceof File) {
           formToSubmit.append(fieldKey, fieldValue);
-        } else {
+        } else if (fieldValue && fieldValue !== "") {
           formToSubmit.append(fieldKey, fieldValue);
         }
       });
     });
 
+    // ✅ Debug: Log what's being sent
+    console.log('Submitting NOC form with token:', token ? 'Present' : 'Missing');
+    
+    // ✅ Add Authorization header with JWT token
     const response = await axios.post(
       "https://biharfilmbackend-production.up.railway.app/api/noc/submit",
       formToSubmit,
       {
         headers: {
           "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`, // ✅ CRITICAL: Add JWT token
         },
       }
     );
+
+    console.log("✅ Form submitted:", response.data);
 
     setSaveStatus("success");
     setNotification({
@@ -201,22 +223,44 @@ const Response = () => {
 
     // Reset to first section
     setActiveSection("projectinformation");
+    
+    // ✅ Notify parent component if callback exists
+    if (window.onNOCSubmitSuccess) {
+      window.onNOCSubmitSuccess(response.data.data);
+    }
 
-    console.log("✅ Form submitted:", response.data);
   } catch (err) {
+    console.error("❌ Error submitting form:", err);
+    console.error("Error response:", err.response?.data);
+    
     setSaveStatus("error");
+    
+    // ✅ Better error messages based on error type
+    let errorMessage = "Failed to submit application. Please try again.";
+    
+    if (err.response?.status === 401) {
+      errorMessage = "Session expired. Please login again.";
+      // Optionally redirect to login
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 2000);
+    } else if (err.response?.status === 400) {
+      errorMessage = err.response.data?.message || "Invalid form data. Please check all fields.";
+    } else if (err.response?.data?.message) {
+      errorMessage = err.response.data.message;
+    }
+    
     setNotification({
       show: true,
-      message: "Failed to submit application. Please try again.",
+      message: errorMessage,
       type: "error",
     });
-    console.error("❌ Error:", err);
+  } finally {
+    setTimeout(() => {
+      setNotification({ show: false, message: "", type: "" });
+      setSaveStatus("idle");
+    }, 5000);
   }
-
-  setTimeout(() => {
-    setNotification({ show: false, message: "", type: "" });
-    setSaveStatus("idle");
-  }, 3000);
 };
 
 

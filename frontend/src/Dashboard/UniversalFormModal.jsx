@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { FaTimesCircle, FaShareAlt, FaTimes, FaExternalLinkAlt, FaCheckCircle, FaEye } from 'react-icons/fa';
+import { FaTimesCircle, FaShareAlt, FaTimes, FaExternalLinkAlt, FaCheckCircle, FaEye, FaDownload } from 'react-icons/fa';
+// ✅ CORRECT - Import as side effect
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
+import NOCTimeline from './NOCTimeline';
+
 
 const UniversalFormModal = ({ 
   isOpen, 
@@ -108,7 +114,7 @@ const UniversalFormModal = ({
     {
       title: "Declaration",
       fields: [
-        ["Authorized Applicant", "authApplicant"],
+        ["Authorized Applicant", "authorizedApplicantName"],
         ["Seal", "seal"],
         ["Date", "date"],
         ["Signature", "signature"],
@@ -135,6 +141,172 @@ const UniversalFormModal = ({
       ]
     }
   ];
+
+const handleDownloadPDF = () => {
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    let yPosition = 20;
+
+    // Header with Logo and Title
+    doc.setFillColor(137, 23, 55);
+    doc.rect(0, 0, pageWidth, 35, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('BSFDFC NOC Application', pageWidth / 2, 15, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Department of Art & Culture, Govt. of Bihar', pageWidth / 2, 23, { align: 'center' });
+    doc.text(`NOC ID: ${selectedRow.id ? `NOC-${selectedRow.id}` : 'Draft'}`, pageWidth / 2, 29, { align: 'center' });
+
+    yPosition = 45;
+
+    // Status Badge
+    const status = selectedRow.status || 'Pending';
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text(`Status: ${status}`, 15, yPosition);
+    yPosition += 10;
+
+    // Iterate through sections and add to PDF
+    sections.forEach((section) => {
+      const validFields = section.fields.filter(([, key]) => {
+        const value = selectedRow[key];
+        return value && value !== "" && value !== "N/A";
+      });
+
+      if (validFields.length === 0) return;
+
+      // Check if we need a new page
+      if (yPosition > pageHeight - 40) {
+        doc.addPage();
+        yPosition = 20;
+      }
+
+      // Section Title
+      doc.setFillColor(137, 23, 55);
+      doc.rect(15, yPosition - 5, pageWidth - 30, 8, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text(section.title, 17, yPosition);
+      yPosition += 10;
+
+      // Section Content - Table format
+      const tableData = validFields.map(([label, key]) => {
+        let value = selectedRow[key];
+        
+        // Handle URLs
+        if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
+          value = '[Document URL Available]';
+        }
+        
+        // Truncate long text
+        if (typeof value === 'string' && value.length > 80) {
+          value = value.substring(0, 80) + '...';
+        }
+
+        return [label, value];
+      });
+
+      // ✅ CORRECTED: Use autoTable as imported function
+      autoTable(doc, {
+        startY: yPosition,
+        head: [['Field', 'Value']],
+        body: tableData,
+        theme: 'grid',
+        headStyles: {
+          fillColor: [240, 240, 240],
+          textColor: [0, 0, 0],
+          fontStyle: 'bold',
+          fontSize: 10
+        },
+        bodyStyles: {
+          fontSize: 9,
+          textColor: [50, 50, 50]
+        },
+        columnStyles: {
+          0: { cellWidth: 60, fontStyle: 'bold' },
+          1: { cellWidth: 120 }
+        },
+        margin: { left: 15, right: 15 },
+        didDrawPage: (data) => {
+          // Footer
+          doc.setFontSize(8);
+          doc.setTextColor(128, 128, 128);
+          doc.text(
+            `Generated on: ${new Date().toLocaleString('en-IN')}`,
+            pageWidth / 2,
+            pageHeight - 10,
+            { align: 'center' }
+          );
+          doc.text(
+            `Page ${doc.internal.getNumberOfPages()}`,
+            pageWidth - 20,
+            pageHeight - 10,
+            { align: 'right' }
+          );
+        }
+      });
+
+      yPosition = doc.lastAutoTable.finalY + 8;
+    });
+
+    // Timeline Information (if available)
+    if (selectedRow.timeline && selectedRow.timeline.length > 0) {
+      if (yPosition > pageHeight - 60) {
+        doc.addPage();
+        yPosition = 20;
+      }
+
+      doc.setFillColor(137, 23, 55);
+      doc.rect(15, yPosition - 5, pageWidth - 30, 8, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Application Timeline', 17, yPosition);
+      yPosition += 10;
+
+      const timelineData = selectedRow.timeline.map((event) => [
+        event.status || 'N/A',
+        event.timestamp ? new Date(event.timestamp).toLocaleString('en-IN') : 'N/A',
+        event.remarks || '-'
+      ]);
+
+      // ✅ CORRECTED: Use autoTable as imported function
+      autoTable(doc, {
+        startY: yPosition,
+        head: [['Status', 'Timestamp', 'Remarks']],
+        body: timelineData,
+        theme: 'grid',
+        headStyles: {
+          fillColor: [240, 240, 240],
+          textColor: [0, 0, 0],
+          fontStyle: 'bold',
+          fontSize: 10
+        },
+        bodyStyles: {
+          fontSize: 9,
+          textColor: [50, 50, 50]
+        },
+        columnStyles: {
+          0: { cellWidth: 50 },
+          1: { cellWidth: 60 },
+          2: { cellWidth: 80 }
+        },
+        margin: { left: 15, right: 15 }
+      });
+    }
+
+    // Save PDF
+    const fileName = `NOC_${selectedRow.id || 'Draft'}_${selectedRow.title || 'Application'}.pdf`.replace(/\s+/g, '_');
+    doc.save(fileName);
+  };
+
 
   // Icon mapping for file/URL fields
   const getIconForField = (key) => {
@@ -199,7 +371,6 @@ const UniversalFormModal = ({
               className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
             >
               <div className="flex items-center gap-2">
-                <FaXCircle className="text-sm" />
                 <span>Reject</span>
               </div>
             </button>
@@ -233,7 +404,7 @@ const UniversalFormModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-gray-200">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden border border-gray-200 flex flex-col">
         
         {/* HEADER */}
         <div className="bg-gray-50 border-b border-gray-200 p-5">
@@ -266,12 +437,22 @@ const UniversalFormModal = ({
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Optional Download Component */}
+              {/* Download PDF Button */}
+              <button
+                onClick={handleDownloadPDF}
+                className="px-4 py-2 bg-[#891737] hover:bg-[#6e1129] text-white rounded-lg flex items-center gap-2 transition-all duration-200 shadow-sm hover:shadow-md font-semibold"
+                title="Download NOC as PDF"
+              >
+                <FaDownload className="text-sm" />
+                <span className="hidden sm:inline">Download PDF</span>
+              </button>
+
+              {/* Optional View Button */}
               {onView && (
                 <button
                   onClick={() => onView(selectedRow)}
                   className="w-10 h-10 bg-blue-100 hover:bg-blue-200 rounded-full flex items-center justify-center transition-colors duration-200"
-                  title="Download PDF"
+                  title="View External"
                 >
                   <FaExternalLinkAlt className="text-blue-600 text-sm" />
                 </button>
@@ -288,9 +469,11 @@ const UniversalFormModal = ({
           </div>
         </div>
 
-        {/* CONTENT */}
-        <div className="overflow-y-auto max-h-[calc(90vh-160px)]">
-          <div className="p-5 space-y-5">
+        {/* CONTENT - Grid layout with 2 columns */}
+        <div className="overflow-y-auto flex-1 grid grid-cols-1 lg:grid-cols-3 gap-0">
+          
+          {/* LEFT SIDE - Form Data (2 columns) */}
+          <div className="lg:col-span-2 border-r border-gray-200 p-6 space-y-5 overflow-y-auto max-h-[calc(90vh-160px)]">
             {sections.map((section, index) => {
               // Filter out empty fields
               const validFields = section.fields.filter(([, key]) => {
@@ -304,7 +487,7 @@ const UniversalFormModal = ({
               return (
                 <div key={index} className="border border-gray-200 rounded-xl overflow-hidden">
                   {/* Section Header */}
-                  <div className="px-4 py-3 border-b border-[#891737]/20">
+                  <div className="px-4 py-3 border-b border-[#891737]/20 bg-gray-50">
                     <h3 className="text-lg font-bold text-[#891737] flex items-center gap-2">
                       <div className="w-1 h-5 bg-[#891737] rounded-full"></div>
                       {section.title}
@@ -313,7 +496,7 @@ const UniversalFormModal = ({
 
                   {/* Content Grid */}
                   <div className="p-4">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-6 gap-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
                       {validFields.map(([label, key], fieldIndex) => {
                         const value = selectedRow[key];
                         const iconInfo = getIconForField(key);
@@ -362,6 +545,11 @@ const UniversalFormModal = ({
                 </div>
               );
             })}
+          </div>
+
+          {/* RIGHT SIDE - Timeline (1 column) */}
+          <div className="lg:col-span-1 bg-gray-50 p-6 overflow-y-auto max-h-[calc(90vh-160px)]">
+            <NOCTimeline nocForm={selectedRow} />
           </div>
         </div>
 

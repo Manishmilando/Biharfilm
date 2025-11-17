@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaShareAlt, FaTimesCircle, FaTimes } from "react-icons/fa";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Clock, CheckCircle, XCircle, Send, AlertCircle } from "lucide-react";
 import DownloadDashboard from "./DownloadDashboard";
-import { FaExternalLinkAlt } from "react-icons/fa";
-import UniversalFormModal from './UniversalFormModal'; // Import the universal modal
+import UniversalFormModal from './UniversalFormModal';
 
 function Dashboardactivity() {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -21,27 +20,95 @@ function Dashboardactivity() {
   const [adminRemarks, setAdminRemarks] = useState('');
   const [isForwarding, setIsForwarding] = useState(false);
 
+  // Helper function to truncate text
+  const truncateText = (text, maxLength = 20) => {
+    if (!text) return 'N/A';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
+
+  // Get status info with colors and icons
+  const getStatusInfo = (status, forwardStatus) => {
+    if (status === 'forwarded') {
+      switch (forwardStatus) {
+        case 'approved':
+          return {
+            label: 'Approved',
+            color: 'bg-green-50 text-green-700 border-green-200',
+            icon: <CheckCircle className="h-3 w-3" />,
+            dotColor: 'bg-green-500'
+          };
+        case 'rejected':
+          return {
+            label: 'Rejected',
+            color: 'bg-red-50 text-red-700 border-red-200',
+            icon: <XCircle className="h-3 w-3" />,
+            dotColor: 'bg-red-500'
+          };
+        case 'pending':
+          return {
+            label: 'Pending Review',
+            color: 'bg-amber-50 text-amber-700 border-amber-200',
+            icon: <Clock className="h-3 w-3" />,
+            dotColor: 'bg-amber-500'
+          };
+        default:
+          return {
+            label: 'Forwarded',
+            color: 'bg-blue-50 text-blue-700 border-blue-200',
+            icon: <Send className="h-3 w-3" />,
+            dotColor: 'bg-blue-500'
+          };
+      }
+    } else if (status === 'submitted') {
+      return {
+        label: 'New',
+        color: 'bg-purple-50 text-purple-700 border-purple-200',
+        icon: <AlertCircle className="h-3 w-3" />,
+        dotColor: 'bg-purple-500'
+      };
+    } else if (status === 'approved') {
+      return {
+        label: 'Approved',
+        color: 'bg-green-50 text-green-700 border-green-200',
+        icon: <CheckCircle className="h-3 w-3" />,
+        dotColor: 'bg-green-500'
+      };
+    } else if (status === 'rejected') {
+      return {
+        label: 'Rejected',
+        color: 'bg-red-50 text-red-700 border-red-200',
+        icon: <XCircle className="h-3 w-3" />,
+        dotColor: 'bg-red-500'
+      };
+    }
+    
+    return {
+      label: status || 'Unknown',
+      color: 'bg-gray-50 text-gray-700 border-gray-200',
+      icon: <AlertCircle className="h-3 w-3" />,
+      dotColor: 'bg-gray-500'
+    };
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
-        // ✅ Get token from localStorage
         const token = localStorage.getItem('authToken');
         
         if (!token) {
           setError("🔐 Please login to view data.");
           setLoading(false);
-          // Redirect to login
           window.location.href = '/login';
           return;
         }
 
         const response = await axios.get(
-          "https://biharfilmbackend-production.up.railway.app/api/noc/getAllNocForms", // ✅ Updated endpoint
+          "https://biharfilmbackend-production.up.railway.app/api/noc/getAllNocForms",
           {
             headers: {
-              'Authorization': `Bearer ${token}` // ✅ Add Authorization header
+              'Authorization': `Bearer ${token}`
             },
             withCredentials: true,
           }
@@ -50,7 +117,6 @@ function Dashboardactivity() {
         setCases(response.data.data || []);
         setError(null);
       } catch (err) {
-        // ✅ Better error handling
         if (err.response?.status === 401) {
           setError("🔐 Session expired. Please login again.");
           localStorage.removeItem('authToken');
@@ -80,14 +146,11 @@ function Dashboardactivity() {
     setSelectedRow(null);
   };
 
-  // Handle forward action from the universal modal
   const handleForward = (formData) => {
     console.log('Opening forward modal for:', formData);
     setShowForwardModal(true);
-    // Keep the universal modal open while showing forward modal
   };
 
-  // Handle reject action from the universal modal
   const handleReject = async (formData) => {
     const remarks = prompt("Please provide remarks for rejection:");
     if (!remarks) {
@@ -113,7 +176,6 @@ function Dashboardactivity() {
         alert("Form rejected successfully!");
         setShowModal(false);
         setSelectedRow(null);
-        // Refresh the data
         window.location.reload();
       } else {
         alert("Failed to reject form.");
@@ -124,391 +186,474 @@ function Dashboardactivity() {
     }
   };
 
-  // Handle download/view action from the universal modal
   const handleView = (formData) => {
     console.log('Viewing/downloading form:', formData);
-    // You can implement download logic here or open in new tab
   };
 
-  // Handle successful forwarding
   const onForwardSuccess = () => {
-    // Refresh the data after successful forwarding
     window.location.reload();
   };
 
   return (
-    <>
-      {/* Reload Button */}
-      <button
-        onClick={() => window.location.reload()}
-        className="mb-4 px-2 py-2 bg-[#800000] text-white rounded-full hover:bg-[#600000] transition"
-      >
-        <RefreshCw size={15} />
-      </button>
+    <div className="space-y-4">
+      {/* Header with Reload Button */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">NOC Applications</h2>
+          <p className="text-xs text-gray-500 mt-1">
+            Showing {cases.length} total applications
+          </p>
+        </div>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-[#891737] text-white rounded-lg hover:bg-[#6e1129] transition flex items-center gap-2"
+        >
+          <RefreshCw size={16} />
+          <span className="text-sm font-medium">Refresh</span>
+        </button>
+      </div>
 
-      <div className="relative">
-        {/* Table Container */}
-        <div className="overflow-x-auto rounded-2xl bg-white border border-gray-200 min-h-96">
-          {error ? (
-            <div className="text-red-600 p-4 rounded-lg my-4">{error}</div>
-          ) : loading ? (
-            <div className="py-10 px-10">
-              <div role="status" className="max-w-sm animate-pulse">
-                <div className="h-2.5 bg-gray-200 rounded-full w-48 mb-4"></div>
-                <div className="h-2 bg-gray-200 rounded-full max-w-[360px] mb-2.5"></div>
-                <div className="h-2 bg-gray-200 rounded-full mb-2.5"></div>
-                <div className="h-2 bg-gray-200 rounded-full max-w-[330px] mb-2.5"></div>
-              </div>
+      {/* Status Legend */}
+      <div className="bg-white border border-gray-200 rounded-xl p-4">
+        <div className="flex flex-wrap gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+            <span className="text-xs text-gray-600">New Application</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+            <span className="text-xs text-gray-600">Forwarded</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+            <span className="text-xs text-gray-600">Pending Review</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <span className="text-xs text-gray-600">Approved</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+            <span className="text-xs text-gray-600">Rejected</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Table Container */}
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        {error ? (
+          <div className="p-8 text-center">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+              <XCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+              <p className="text-red-600 font-medium">{error}</p>
             </div>
-          ) : (
-            <table className="min-w-full table-auto rounded-2xl">
-              <thead>
-                <tr className="bg-gray-200 text-xs text-gray-600">
-                  <th className="px-4 py-2 text-left">Sr. No</th>
-                  <th className="px-4 py-2 text-left">Type of Project</th>
-                  <th className="px-4 py-2 text-left">Duration</th>
-                  <th className="px-4 py-2 text-left">Title</th>
-                  <th className="px-4 py-2 text-left">Genre</th>
-                  <th className="px-4 py-2 text-left">Representative</th>
-                  <th className="px-4 py-2 text-left">Email Id</th>
-                  <th className="px-4 py-2 text-left">Start Date</th>
-                  <th className="px-4 py-2 text-left">End Date</th>
-                  <th className="px-4 py-2 text-left">Status</th>
+          </div>
+        ) : loading ? (
+          <div className="p-8">
+            <div className="space-y-4 animate-pulse">
+              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                    #
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                    Project Type
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                    Title
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                    Genre
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                    Representative
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                    Duration
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                    Start Date
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap">
+                    Status
+                  </th>
                 </tr>
               </thead>
-              <tbody>
-                {cases.map((caseDetail, index) => (
-                  <tr
-                    key={caseDetail._id}
-                    className="border-t text-xs border-gray-200 cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleRowClick(caseDetail)}
-                  >
-                    <td className="px-4 py-2">{index + 1}</td>
-                    <td className="px-4 py-2">{caseDetail.typeOfProject}</td>
-                    <td className="px-4 py-2">{caseDetail.duration}</td>
-                    <td className="px-4 py-2">{caseDetail.title}</td>
-                    <td className="px-4 py-2">{caseDetail.genre}</td>
-                    <td className="px-4 py-2">{caseDetail.representativeName}</td>
-                    <td className="px-4 py-2">{caseDetail.emailOfProductionHouse}</td>
-                    <td className="px-4 py-2">
-                      {caseDetail.startDateTime
-                        ? new Date(caseDetail.startDateTime).toLocaleDateString()
-                        : "N/A"}
+              <tbody className="bg-white divide-y divide-gray-200">
+                {cases.length === 0 ? (
+                  <tr>
+                    <td colSpan="8" className="px-4 py-12 text-center">
+                      <AlertCircle className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                      <p className="text-gray-500 text-sm">No applications found</p>
                     </td>
-                    <td className="px-4 py-2">
-                      {caseDetail.endDateTime
-                        ? new Date(caseDetail.endDateTime).toLocaleDateString()
-                        : "N/A"}
-                    </td>
-                    <td className="px-4 py-2 capitalize">{caseDetail.status}</td>
                   </tr>
-                ))}
+                ) : (
+                  cases.map((caseDetail, index) => {
+                    const statusInfo = getStatusInfo(
+                      caseDetail.status, 
+                      caseDetail.forwardStatus || caseDetail.districtStatus
+                    );
+                    
+                    return (
+                      <tr
+                        key={caseDetail._id}
+                        className="hover:bg-gray-50 transition-colors cursor-pointer"
+                        onClick={() => handleRowClick(caseDetail)}
+                      >
+                        <td className="px-4 py-3 text-sm font-medium text-gray-900 whitespace-nowrap">
+                          {index + 1}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
+                          <span className="font-medium">
+                            {truncateText(caseDetail.typeOfProject, 15)}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-900">
+                          <div className="max-w-[200px]" title={caseDetail.title}>
+                            <span className="font-medium">
+                              {truncateText(caseDetail.title, 25)}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
+                          {truncateText(caseDetail.genre, 12)}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700">
+                          <div className="max-w-[150px]" title={caseDetail.representativeName}>
+                            {truncateText(caseDetail.representativeName, 18)}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
+                          {caseDetail.duration || 'N/A'}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
+                          {caseDetail.startDateTime
+                            ? new Date(caseDetail.startDateTime).toLocaleDateString('en-GB', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric'
+                              })
+                            : "N/A"}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-2 h-2 ${statusInfo.dotColor} rounded-full`}></div>
+                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${statusInfo.color}`}>
+                              {statusInfo.icon}
+                              {statusInfo.label}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
-          )}
-        </div>
-
-        {/* Universal Form Modal */}
-        <UniversalFormModal
-          isOpen={showModal}
-          onClose={closeModal}
-          selectedRow={selectedRow}
-          userRole="admin" // Set this based on the actual user role
-          onForward={handleForward}
-          onReject={handleReject}
-          onView={handleView}
-          showActions={true}
-        />
-
-        {/* Forward Modal (existing code) */}
-        {showForwardModal && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[85vh] overflow-hidden border border-gray-200 relative">
-
-              {/* Minimal Header */}
-              <div className="bg-white border-b border-gray-200 p-4">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900">Forward NOC Application</h2>
-                    <p className="text-sm text-gray-500">Select departments and districts</p>
-                  </div>
-                  <button
-                    onClick={() => setShowForwardModal(false)}
-                    className="w-8 h-8 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors duration-200"
-                  >
-                    <FaTimes className="text-sm" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Admin Details Section */}
-              <div className="border-b border-gray-200 p-4 bg-gray-50">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Admin Email</label>
-                    <input
-                      type="email"
-                      value={adminEmail}
-                      onChange={(e) => setAdminEmail(e.target.value)}
-                      placeholder="admin@example.com"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#891737] focus:border-transparent text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Admin Remarks (Optional)</label>
-                    <input
-                      type="text"
-                      value={adminRemarks}
-                      onChange={(e) => setAdminRemarks(e.target.value)}
-                      placeholder="Add any remarks..."
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#891737] focus:border-transparent text-sm"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Compact Content - Split Layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 max-h-[calc(85vh-200px)] overflow-y-auto">
-                
-                {/* Left Side - Departments */}
-                <div>
-                  <h3 className="text-md font-medium text-gray-800 mb-3 border-l-3 border-[#891737] pl-2">
-                    Departments
-                  </h3>
-                  
-                  <div className="space-y-2">
-                    {["DOP", "DTO", "SDPO", "DM", "SP"].map((dept) => (
-                      <label
-                        key={dept}
-                        className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-colors duration-200 ${
-                          selectedDepartments.includes(dept)
-                            ? 'bg-[#891737]/5 border-[#891737] text-gray-900'
-                            : 'bg-gray-50 border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          className="hidden"
-                          checked={selectedDepartments.includes(dept)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedDepartments(prev => [...prev, dept]);
-                            } else {
-                              setSelectedDepartments(prev => prev.filter(d => d !== dept));
-                            }
-                          }}
-                        />
-                        <div className={`w-4 h-4 rounded border flex items-center justify-center ${
-                          selectedDepartments.includes(dept)
-                            ? 'bg-[#891737] border-[#891737]'
-                            : 'border-gray-300'
-                        }`}>
-                          {selectedDepartments.includes(dept) && (
-                            <div className="w-2 h-2 bg-white rounded-sm"></div>
-                          )}
-                        </div>
-                        <div>
-                          <span className="text-sm font-medium text-gray-800">{dept}</span>
-                          <p className="text-xs text-gray-500">
-                            {dept === "DOP" && "District Officer of Police"}
-                            {dept === "DTO" && "District Transport Officer"}
-                            {dept === "SDPO" && "Sub-Divisional Police Officer"}
-                            {dept === "DM" && "District Magistrate"}
-                            {dept === "SP" && "Superintendent of Police"}
-                          </p>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right Side - Districts */}
-                <div>
-                  <h3 className="text-md font-medium text-gray-800 mb-3 border-l-3 border-[#891737] pl-2">
-                    Districts
-                  </h3>
-                  
-                  <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
-                    {[
-                      "Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Darbhanga", "Begusarai",
-                      "Purnia", "Ara", "Chapra", "Hajipur", "Katihar", "Munger",
-                      "Sasaram", "Samastipur", "Motihari", "Siwan", "Dehri", "Bettiah",
-                      "Jamalpur", "Jehanabad", "Buxar", "Sitamarhi", "Saharsa", "Araria",
-                      "Kishanganj", "Madhepura", "Sheikhpura", "Lakhisarai"
-                    ].map((district) => (
-                      <label
-                        key={district}
-                        className={`flex items-center gap-2 p-2 rounded border text-xs cursor-pointer transition-colors duration-200 ${
-                          selectedDistricts.includes(district)
-                            ? 'bg-[#891737]/5 border-[#891737] text-gray-900'
-                            : 'bg-gray-50 border-gray-200 hover:border-gray-300'
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          className="hidden"
-                          checked={selectedDistricts.includes(district)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedDistricts(prev => [...prev, district]);
-                            } else {
-                              setSelectedDistricts(prev => prev.filter(d => d !== district));
-                            }
-                          }}
-                        />
-                        <div className={`w-3 h-3 rounded-sm border flex items-center justify-center ${
-                          selectedDistricts.includes(district)
-                            ? 'bg-[#891737] border-[#891737]'
-                            : 'border-gray-300'
-                        }`}>
-                          {selectedDistricts.includes(district) && (
-                            <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
-                          )}
-                        </div>
-                        <span className="font-medium">{district}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Compact Summary */}
-              {(selectedDistricts.length > 0 || selectedDepartments.length > 0) && (
-                <div className="border-t border-gray-200 bg-gray-50 px-4 py-3">
-                  <div className="flex justify-between items-center text-xs text-gray-600">
-                    <span>
-                      <strong>{selectedDepartments.length}</strong> departments, 
-                      <strong> {selectedDistricts.length}</strong> districts
-                    </span>
-                    <span className="text-[#891737] font-medium">
-                      {selectedDepartments.length * selectedDistricts.length} total forwards
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Fixed Footer with Buttons */}
-              <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex justify-end gap-3">
-                <button
-                  onClick={() => setShowForwardModal(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={async () => {
-                    // Validation
-                    if (!selectedRow) {
-                      alert("No form selected.");
-                      return;
-                    }
-
-                    if (selectedDistricts.length === 0 || selectedDepartments.length === 0) {
-                      alert("Please select at least one district and one department.");
-                      return;
-                    }
-
-                    if (!adminEmail || !adminEmail.includes('@')) {
-                      alert("Please enter a valid admin email.");
-                      return;
-                    }
-
-                    setIsForwarding(true);
-
-                    try {
-                      // Prepare payload according to backend API expectations
-                      const districtsPayload = selectedDistricts.map(districtName => ({
-                        id: districtName, // Using district name as ID since backend expects id field
-                        name: districtName
-                      }));
-
-                      const token = localStorage.getItem('authToken');
-
-                      if (!token) {
-                        setError("🔐 Please login to view data.");
-                        setLoading(false);
-                        window.location.href = '/login';
-                        return;
-                      }
-
-                      const departmentsPayload = selectedDepartments;
-
-                      console.log("Selected row:", selectedRow);
-                      console.log("ID:", selectedRow.id);
-
-                      const response = await axios.put(
-                        `https://biharfilmbackend-production.up.railway.app/api/noc/forward/${selectedRow.id}`,
-                        {
-                          districts: districtsPayload,  
-                          departments: departmentsPayload,
-                          adminEmail: adminEmail,
-                          adminRemarks: adminRemarks || null
-                        },
-                        {
-                          headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                          },
-                          withCredentials: true,
-                          timeout: 10000
-                        }
-                      );
-
-                      if (response.data.success) {
-                        alert("Form forwarded successfully!");
-                        
-                        // Reset state
-                        setSelectedDepartments([]);
-                        setSelectedDistricts([]);
-                        setAdminEmail('');
-                        setAdminRemarks('');
-                        setShowForwardModal(false);
-                        setShowModal(false);
-                        
-                        // Refresh data
-                        onForwardSuccess();
-                      } else {
-                        alert(`Failed to forward form: ${response.data.message || 'Unknown error'}`);
-                      }
-                    } catch (error) {
-                      console.error("Forwarding failed:", error);
-                      
-                      let errorMessage = "Error forwarding the form.";
-                      
-                      if (error.response) {
-                        errorMessage = error.response.data?.message || `Server error: ${error.response.status}`;
-                      } else if (error.request) {
-                        errorMessage = "Network error. Please check your connection.";
-                      } else if (error.code === 'ECONNABORTED') {
-                        errorMessage = "Request timeout. Please try again.";
-                      }
-                      
-                      alert(errorMessage);
-                    } finally {
-                      setIsForwarding(false);
-                    }
-                  }}
-                  disabled={selectedDistricts.length === 0 || selectedDepartments.length === 0 || !adminEmail || isForwarding}
-                  className="px-6 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#6e1129] rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
-                  {isForwarding ? (
-                    <>
-                      <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
-                      Forwarding...
-                    </>
-                  ) : (
-                    <>
-                      <FaShareAlt className="text-xs" />
-                      Forward
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
           </div>
         )}
       </div>
-    </>
+
+      {/* Universal Form Modal */}
+      <UniversalFormModal
+        isOpen={showModal}
+        onClose={closeModal}
+        selectedRow={selectedRow}
+        userRole="admin"
+        onForward={handleForward}
+        onReject={handleReject}
+        onView={handleView}
+        showActions={true}
+      />
+
+      {/* Forward Modal */}
+      {showForwardModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-lg max-w-2xl w-full max-h-[85vh] overflow-hidden border border-gray-200 relative">
+            {/* Minimal Header */}
+            <div className="bg-white border-b border-gray-200 p-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">Forward NOC Application</h2>
+                  <p className="text-sm text-gray-500">Select departments and districts</p>
+                </div>
+                <button
+                  onClick={() => setShowForwardModal(false)}
+                  className="w-8 h-8 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg flex items-center justify-center transition-colors duration-200"
+                >
+                  <FaTimes className="text-sm" />
+                </button>
+              </div>
+            </div>
+
+            {/* Admin Details Section */}
+            <div className="border-b border-gray-200 p-4 bg-gray-50">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Admin Email</label>
+                  <input
+                    type="email"
+                    value={adminEmail}
+                    onChange={(e) => setAdminEmail(e.target.value)}
+                    placeholder="admin@example.com"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#891737] focus:border-transparent text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Admin Remarks (Optional)</label>
+                  <input
+                    type="text"
+                    value={adminRemarks}
+                    onChange={(e) => setAdminRemarks(e.target.value)}
+                    placeholder="Add any remarks..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#891737] focus:border-transparent text-sm"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Compact Content - Split Layout */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 max-h-[calc(85vh-200px)] overflow-y-auto">
+              {/* Left Side - Departments */}
+              <div>
+                <h3 className="text-md font-medium text-gray-800 mb-3 border-l-3 border-[#891737] pl-2">
+                  Departments
+                </h3>
+                
+                <div className="space-y-2">
+                  {["DOP", "DTO", "SDPO", "DM", "SP"].map((dept) => (
+                    <label
+                      key={dept}
+                      className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-colors duration-200 ${
+                        selectedDepartments.includes(dept)
+                          ? 'bg-[#891737]/5 border-[#891737] text-gray-900'
+                          : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="hidden"
+                        checked={selectedDepartments.includes(dept)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedDepartments(prev => [...prev, dept]);
+                          } else {
+                            setSelectedDepartments(prev => prev.filter(d => d !== dept));
+                          }
+                        }}
+                      />
+                      <div className={`w-4 h-4 rounded border flex items-center justify-center ${
+                        selectedDepartments.includes(dept)
+                          ? 'bg-[#891737] border-[#891737]'
+                          : 'border-gray-300'
+                      }`}>
+                        {selectedDepartments.includes(dept) && (
+                          <div className="w-2 h-2 bg-white rounded-sm"></div>
+                        )}
+                      </div>
+                      <div>
+                        <span className="text-sm font-medium text-gray-800">{dept}</span>
+                        <p className="text-xs text-gray-500">
+                          {dept === "DOP" && "District Officer of Police"}
+                          {dept === "DTO" && "District Transport Officer"}
+                          {dept === "SDPO" && "Sub-Divisional Police Officer"}
+                          {dept === "DM" && "District Magistrate"}
+                          {dept === "SP" && "Superintendent of Police"}
+                        </p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Side - Districts */}
+              <div>
+                <h3 className="text-md font-medium text-gray-800 mb-3 border-l-3 border-[#891737] pl-2">
+                  Districts
+                </h3>
+                
+                <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
+                  {[
+                    "Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Darbhanga", "Begusarai",
+                    "Purnia", "Ara", "Saran", "Hajipur", "Katihar", "Munger",
+                    "Sasaram", "Samastipur", "Motihari", "Siwan", "Dehri", "Bettiah",
+                    "Jamalpur", "Jehanabad", "Buxar", "Sitamarhi", "Saharsa", "Araria",
+                    "Kishanganj", "Madhepura", "Sheikhpura", "Lakhisarai"
+                  ].map((district) => (
+                    <label
+                      key={district}
+                      className={`flex items-center gap-2 p-2 rounded border text-xs cursor-pointer transition-colors duration-200 ${
+                        selectedDistricts.includes(district)
+                          ? 'bg-[#891737]/5 border-[#891737] text-gray-900'
+                          : 'bg-gray-50 border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="hidden"
+                        checked={selectedDistricts.includes(district)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedDistricts(prev => [...prev, district]);
+                          } else {
+                            setSelectedDistricts(prev => prev.filter(d => d !== district));
+                          }
+                        }}
+                      />
+                      <div className={`w-3 h-3 rounded-sm border flex items-center justify-center ${
+                        selectedDistricts.includes(district)
+                          ? 'bg-[#891737] border-[#891737]'
+                          : 'border-gray-300'
+                      }`}>
+                        {selectedDistricts.includes(district) && (
+                          <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
+                        )}
+                      </div>
+                      <span className="font-medium">{district}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Compact Summary */}
+            {(selectedDistricts.length > 0 || selectedDepartments.length > 0) && (
+              <div className="border-t border-gray-200 bg-gray-50 px-4 py-3">
+                <div className="flex justify-between items-center text-xs text-gray-600">
+                  <span>
+                    <strong>{selectedDepartments.length}</strong> departments, 
+                    <strong> {selectedDistricts.length}</strong> districts
+                  </span>
+                  <span className="text-[#891737] font-medium">
+                    {selectedDepartments.length * selectedDistricts.length} total forwards
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Fixed Footer with Buttons */}
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex justify-end gap-3">
+              <button
+                onClick={() => setShowForwardModal(false)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  if (!selectedRow) {
+                    alert("No form selected.");
+                    return;
+                  }
+
+                  if (selectedDistricts.length === 0 || selectedDepartments.length === 0) {
+                    alert("Please select at least one district and one department.");
+                    return;
+                  }
+
+                  if (!adminEmail || !adminEmail.includes('@')) {
+                    alert("Please enter a valid admin email.");
+                    return;
+                  }
+
+                  setIsForwarding(true);
+
+                  try {
+                    const districtsPayload = selectedDistricts.map(districtName => ({
+                      id: districtName,
+                      name: districtName
+                    }));
+
+                    const token = localStorage.getItem('authToken');
+
+                    if (!token) {
+                      setError("🔐 Please login to view data.");
+                      setLoading(false);
+                      window.location.href = '/login';
+                      return;
+                    }
+
+                    const departmentsPayload = selectedDepartments;
+
+                    const response = await axios.put(
+                      `https://biharfilmbackend-production.up.railway.app/api/noc/forward/${selectedRow.id}`,
+                      {
+                        districts: districtsPayload,  
+                        departments: departmentsPayload,
+                        adminEmail: adminEmail,
+                        adminRemarks: adminRemarks || null
+                      },
+                      {
+                        headers: {
+                          'Authorization': `Bearer ${token}`,
+                          'Content-Type': 'application/json'
+                        },
+                        withCredentials: true,
+                        timeout: 10000
+                      }
+                    );
+
+                    if (response.data.success) {
+                      alert("Form forwarded successfully!");
+                      
+                      setSelectedDepartments([]);
+                      setSelectedDistricts([]);
+                      setAdminEmail('');
+                      setAdminRemarks('');
+                      setShowForwardModal(false);
+                      setShowModal(false);
+                      
+                      onForwardSuccess();
+                    } else {
+                      alert(`Failed to forward form: ${response.data.message || 'Unknown error'}`);
+                    }
+                  } catch (error) {
+                    console.error("Forwarding failed:", error);
+                    
+                    let errorMessage = "Error forwarding the form.";
+                    
+                    if (error.response) {
+                      errorMessage = error.response.data?.message || `Server error: ${error.response.status}`;
+                    } else if (error.request) {
+                      errorMessage = "Network error. Please check your connection.";
+                    } else if (error.code === 'ECONNABORTED') {
+                      errorMessage = "Request timeout. Please try again.";
+                    }
+                    
+                    alert(errorMessage);
+                  } finally {
+                    setIsForwarding(false);
+                  }
+                }}
+                disabled={selectedDistricts.length === 0 || selectedDepartments.length === 0 || !adminEmail || isForwarding}
+                className="px-6 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#6e1129] rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {isForwarding ? (
+                  <>
+                    <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin"></div>
+                    Forwarding...
+                  </>
+                ) : (
+                  <>
+                    <FaShareAlt className="text-xs" />
+                    Forward
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

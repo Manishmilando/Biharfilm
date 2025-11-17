@@ -2,35 +2,159 @@ import React, { useEffect, useState } from "react";
 import "../App.css";
 import Logo1 from "/src/assets/Logo1.png";
 import UserAvatar from "/src/assets/UserAvtar.svg";
+import { IoIosLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import ApplyNOCForm from "../NavigationCards/ShootingPermissionFoam";
-import ArtistRegistrationForm from "./AddArtistForm";
+import ArtistRegistrationForm from "../Dashboard/AddArtistForm";
 import VendorRegistrationForm from "../Dashboard/VendorForm";
 import ArtistProfile from "./ArtistProfile";
-import FilmmakerOverview from "./FilmmakerOverview"; // ✅ new import
-import VendorOverview from "./VendorOverview";
+import FilmmakerOverview from "./FilmmakerOverview";
+import VendorDashboard from "./VendorDashboard";
+import AlertBox from "../Components/AlertBox"; // ✅ Import AlertBox
 
 const UserDashboard = () => {
   const [userRole, setUserRole] = useState(null);
+  const [userName, setUserName] = useState("");
   const [activeSection, setActiveSection] = useState("Overview");
   const [nocList, setNocList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // ✅ Alert state
+  const [alertConfig, setAlertConfig] = useState({
+    isOpen: false,
+    type: "info",
+    title: "",
+    message: "",
+    confirmText: "OK",
+    showCancel: false,
+    onConfirm: null,
+    autoClose: false
+  });
+
+  // ✅ Alert helper function
+  const showAlert = (config) => {
+    setAlertConfig({
+      isOpen: true,
+      type: config.type || "info",
+      title: config.title || "",
+      message: config.message || "",
+      confirmText: config.confirmText || "OK",
+      cancelText: config.cancelText || "Cancel",
+      showCancel: config.showCancel || false,
+      onConfirm: config.onConfirm || null,
+      autoClose: config.autoClose || false,
+      duration: config.duration || 3000
+    });
+  };
+
+  const closeAlert = () => {
+    setAlertConfig({ ...alertConfig, isOpen: false });
+  };
+
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    if (userData?.role) {
-      setUserRole(userData.role);
-    } else {
-      alert("No user role found. Redirecting to login.");
-      navigate("/login");
+    const userDataStr = localStorage.getItem("user");
+    const token = localStorage.getItem("authToken");
+    
+    console.log('UserDashboard - Token:', token ? 'Present' : 'Missing');
+    console.log('UserDashboard - User Data:', userDataStr);
+
+    if (!token || !userDataStr) {
+      console.error('No auth data found in UserDashboard');
+      
+      // ✅ Show alert before redirect
+      showAlert({
+        type: "error",
+        title: "Authentication Required",
+        message: "Please login to access your dashboard.",
+        confirmText: "Login",
+        onConfirm: () => {
+          navigate("/login", { replace: true });
+        }
+      });
+      return;
     }
-    const savedNOCs = JSON.parse(localStorage.getItem("nocApplications")) || [];
-    setNocList(savedNOCs);
+
+    try {
+      const userData = JSON.parse(userDataStr);
+      console.log('UserDashboard - Parsed User:', userData);
+
+      if (userData?.role) {
+        setUserRole(userData.role);
+        setUserName(userData.name || userData.email);
+        console.log('User role set to:', userData.role);
+      } else {
+        console.error('User data missing role field:', userData);
+        
+        // ✅ Show alert for missing role
+        showAlert({
+          type: "error",
+          title: "Invalid User Data",
+          message: "User role information is missing. Please login again.",
+          confirmText: "Login",
+          onConfirm: () => {
+            navigate("/login", { replace: true });
+          }
+        });
+        return;
+      }
+
+      const savedNOCs = JSON.parse(localStorage.getItem("nocApplications")) || [];
+      setNocList(savedNOCs);
+      
+    } catch (error) {
+      console.error('Failed to parse user data:', error);
+      
+      // ✅ Show alert for parse error
+      showAlert({
+        type: "error",
+        title: "Error Loading Profile",
+        message: "Failed to load your profile data. Please login again.",
+        confirmText: "Login",
+        onConfirm: () => {
+          navigate("/login", { replace: true });
+        }
+      });
+      return;
+    } finally {
+      setLoading(false);
+    }
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("userData");
-    navigate("/login");
+    // ✅ Show confirmation alert before logout
+    showAlert({
+      type: "warning",
+      title: "Logout Confirmation",
+      message: "Are you sure you want to logout?",
+      confirmText: "Yes, Logout",
+      cancelText: "Cancel",
+      showCancel: true,
+      onConfirm: () => {
+        // Clear all auth data
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("user");
+        localStorage.removeItem("userData");
+        
+        // ✅ Show success message then redirect
+        showAlert({
+          type: "success",
+          title: "Logged Out",
+          message: "You have been successfully logged out.",
+          confirmText: "OK",
+          autoClose: true,
+          duration: 2000,
+          onConfirm: () => {
+            navigate("/login", { replace: true });
+          }
+        });
+        
+        // Fallback redirect after 2 seconds
+        setTimeout(() => {
+          navigate("/login", { replace: true });
+        }, 2000);
+      }
+    });
   };
 
   const handleSubmitNOC = (newNOC) => {
@@ -39,6 +163,20 @@ const UserDashboard = () => {
     setNocList(updated);
     localStorage.setItem("nocApplications", JSON.stringify(updated));
     setActiveSection("Overview");
+    
+    // ✅ Show success alert
+    showAlert({
+      type: "success",
+      title: "NOC Submitted!",
+      message: "Your NOC application has been submitted successfully.",
+      confirmText: "Great!",
+      autoClose: true,
+      duration: 3000
+    });
+  };
+
+  const handleArtistClick = () => {
+    setActiveSection("Artist Registration");
   };
 
   const sidebarItems = {
@@ -53,27 +191,49 @@ const UserDashboard = () => {
     }
     if (activeSection === "Overview") {
       if (userRole === "filmmaker") {
-        return <FilmmakerOverview nocList={nocList} />; // ✅ use component
+        return <FilmmakerOverview nocList={nocList} />;
       } else if (userRole === "artist") {
         return <ArtistProfile />;
       } else if (userRole === "vendor") {
-        return (
-          <VendorOverview />
-        );
+        return <VendorDashboard />;
       }
     }
-    if (activeSection === "Apply NOC")
+    if (activeSection === "Apply NOC") {
       return <ApplyNOCForm onSubmit={handleSubmitNOC} />;
-    if (activeSection === "Artist Registration")
+    }
+    if (activeSection === "Artist Registration") {
       return <ArtistRegistrationForm />;
-    if (activeSection === "Vendor Registration")
+    }
+    if (activeSection === "Vendor Registration") {
       return <VendorRegistrationForm />;
+    }
 
-    return <p>Invalid section</p>;
+    return <p className="text-gray-600">Invalid section</p>;
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f9fafb]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#a92b43] mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userRole) {
+    return null;
+  }
 
   return (
     <div className="flex h-screen bg-[#f9fafb] font-sans">
+      {/* ✅ Custom Alert Component */}
+      <AlertBox
+        {...alertConfig}
+        onClose={closeAlert}
+      />
+
       {/* Sidebar */}
       <div className="w-64 bg-white shadow-sm flex flex-col justify-between">
         <div>
@@ -91,7 +251,11 @@ const UserDashboard = () => {
                         ? "text-[#a92b43] bg-[#f4e4e8]"
                         : "text-gray-700 hover:bg-gray-100"
                     }`}
-                    onClick={() => setActiveSection(item)}
+                    onClick={
+                      item === "Artist Registration"
+                        ? handleArtistClick
+                        : () => setActiveSection(item)
+                    }
                   >
                     {item}
                   </button>
@@ -100,52 +264,58 @@ const UserDashboard = () => {
             </ul>
           </nav>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col relative overflow-y-auto">
-        {/* Topbar */}
-        <div className="sticky top-0 z-20 flex items-center justify-between px-6 py-6 bg-[#f9fafb] shadow-sm border-b border-gray-300">
-          {/* Left: Logo & Title */}
-          <div className="flex items-center gap-4">
-            
-            <div>
-              <h2 className="text-black font-bold text-xl">{activeSection}</h2>
-              <h2 className="text-sm text-gray-400">
-                {new Date().toLocaleDateString("en-US", {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                })}
-              </h2>
-            </div>
-          </div>
-
-          {/* Right: Search, Avatar, Logout */}
-          <div className="flex items-center gap-4">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="px-4 py-2 rounded-md border border-gray-300 text-sm w-60 focus:outline-none focus:ring-2 focus:ring-[#a92b43]"
-            />
+        {/* User Info Section */}
+        <div className="p-4 border-t border-gray-200">
+          <div className="flex items-center gap-3 mb-4">
             <img
               src={UserAvatar}
               alt="User Avatar"
               className="w-10 h-10 rounded-full border-2 border-[#a92b43] object-cover"
             />
-            <button
-              className="group flex items-center justify-start w-9 h-9 bg-[#e7000b] rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-32 hover:rounded-full active:translate-x-1 active:translate-y-1"
-              onClick={handleLogout}
-            >
-              <div className="flex items-center justify-center w-full transition-all duration-300 group-hover:justify-start group-hover:px-3">
-                <svg className="w-4 h-4" viewBox="0 0 512 512" fill="white">
-                  <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
-                </svg>
-              </div>
-              <div className="absolute right-5 transform translate-x-full opacity-0 text-white text-lg font-semibold transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-                Logout
-              </div>
-            </button>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-gray-800 truncate">
+                {userName}
+              </p>
+              <p className="text-xs text-gray-500 capitalize">{userRole}</p>
+            </div>
+          </div>
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="w-full px-4 py-2 text-sm font-semibold text-white bg-[#e7000b] rounded-lg hover:bg-[#c1000a] transition-all duration-200 flex items-center justify-center"
+          >
+            <IoIosLogOut className="mr-2 text-lg" />
+            Logout
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col relative overflow-y-auto">
+        {/* Topbar */}
+        <div className="sticky top-0 z-20 flex items-center justify-between px-6 py-6 bg-[#f9fafb] shadow-sm border-b border-gray-200">
+          <div>
+            <h2 className="text-black font-bold text-xl">{activeSection}</h2>
+            <h2 className="text-sm text-gray-400">
+              {new Date().toLocaleDateString("en-US", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+              })}
+            </h2>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right">
+              <p className="text-sm font-semibold text-gray-800">{userName}</p>
+              <p className="text-xs text-gray-500 capitalize">{userRole}</p>
+            </div>
+            <img
+              src={UserAvatar}
+              alt="User Avatar"
+              className="w-10 h-10 rounded-full border-2 border-[#a92b43] object-cover"
+            />
           </div>
         </div>
 
