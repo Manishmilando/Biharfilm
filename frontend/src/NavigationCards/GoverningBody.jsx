@@ -3,9 +3,9 @@ import "../App.css";
 
 const topImages = [
   {
-    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSp_3U00IWSSR-omPQem2GCHZyg_Kq0DmZoGg&s",
+    src: "https://state.bihar.gov.in/yac/cache/45/HOME_IMAGES/WhatsAppImage2025-11-22at11.49.44AM.jpeg",
     alt: "Leader 1",
-    name: "Shri Motilal Prasad",
+    name: "Shri Arun Shankar Prasad",
     namee: "Hon'ble Minister",
   },
   {
