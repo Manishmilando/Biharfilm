@@ -1,11 +1,6 @@
 // App.js
 import React, { useState, useEffect } from "react";
 import Navbar from "../Components/Navbar";
-import Snow from "/Snow.mp4";
-import Snowtrain from "/Snowtrain.mp4";
-import Mountain from "/mountain.mp4";
-import Watertemp from "/watertemp.mp4";
-import Vrvideo from "/Vrvideo.mp4";
 import { motion } from "framer-motion";
 import "../App.css";
 

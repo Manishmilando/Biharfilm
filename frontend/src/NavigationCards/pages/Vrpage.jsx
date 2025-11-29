@@ -1,5 +1,5 @@
 import React from "react";
-import Vr from "/Vrpage.mp4";
+
 import "../../App.css";
 
 // Sample data (extend as needed)

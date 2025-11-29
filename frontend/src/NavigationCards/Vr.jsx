@@ -4,19 +4,7 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-// Video imports
-import VrvideoHQ from "/VrvideoHQ.mp4";
-import VrvideoLQ from "/VrvideoLQ.mp4";
-import VrvideoHQ2 from "/VrvideoHQ2.mp4";
-import VrvideoLQ2 from "/VrvideoLQ2.mp4";
-import VrvideoHQ3 from "/VrvideoHQ3.mp4";
-import VrvideoLQ3 from "/VrvideoLQ3.mp4";
-import VrvideoHQ4 from "/VrvideoHQ4.mp4";
-import VrvideoLQ4 from "/VrvideoLQ4.mp4";
-import VrvideoHQ5 from "/VrvideoHQ5.mp4";
-import VrvideoLQ5 from "/VrvideoLQ5.mp4";
-import VrvideoHQ6 from "/VrvideoHQ6.mp4";
-import VrvideoLQ6 from "/VrvideoLQ6.mp4";
+
 
 // Video list
 const videoList = [
