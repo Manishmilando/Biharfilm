@@ -24,10 +24,10 @@ const people = [
     district: "Gopalganj",
     img: "https://media.assettype.com/freepressjournal/2022-01/bdc02614-b127-4db2-a440-2f44b9f5f284/Screenshot_2022_01_25_at_5_43_01_AM.png?width=1200",
     description: "Famous for his versatility and natural acting style.",
-   bestWork: "Mirzapur",
+    bestWork: "Mirzapur",
     imdb: "https://www.imdb.com/name/nm2690647/?ref_=ext_shr_lnk",
   },
-  
+
   {
     id: 3,
     name: "Prakash Jha",
@@ -39,7 +39,7 @@ const people = [
     bestWork: "Crook",
     imdb: "https://www.imdb.com/name/nm2777281/?ref_=ext_shr_lnk",
   },
-  
+
   {
     id: 4,
     name: "Shatrughan Sinha",
@@ -51,7 +51,7 @@ const people = [
     bestWork: "Kalicharan",
     imdb: "https://www.imdb.com/name/nm0802374/?ref_=ext_shr_lnk",
   },
-   
+
   {
     id: 5,
     name: "Sushant Singh Rajput",
@@ -75,7 +75,7 @@ const people = [
     bestWork: "Crook",
     imdb: "https://www.imdb.com/name/nm2777281/?ref_=ext_shr_lnk",
   },
-  
+
   {
     id: 7,
     name: "Neetu Chandra",
@@ -98,21 +98,21 @@ const people = [
     bestWork: "Bheja Fry (2007)",
     imdb: "https://www.imdb.com/name/nm0665555/?ref_=ext_shr_lnk",
   },
-  
+
   {
-     id:9,
-     name: "Imtiaz Ali",
-     occupation: "Film Director & Writer",
-     dob: "16 June 1971",
-     district: "Jamshedpur (then Bihar)",
+    id: 9,
+    name: "Imtiaz Ali",
+    occupation: "Film Director & Writer",
+    dob: "16 June 1971",
+    district: "Jamshedpur (then Bihar)",
     img: "https://m.media-amazon.com/images/M/MV5BMTYwOTUwMTk3MF5BMl5BanBnXkFtZTgwMjA1NDEzMTE@._V1_.jpg",
-     description: "Renowned Indian film director, producer, and writer known for his brilliant work",
-     bestWork: "Jab We Met",
+    description: "Renowned Indian film director, producer, and writer known for his brilliant work",
+    bestWork: "Jab We Met",
     imdb: "https://www.imdb.com/name/nm2777281/?ref_=ext_shr_lnk",
   },
-  
+
   {
-    id:10,
+    id: 10,
     name: "Sanjay Mishra",
     occupation: "Actor",
     dob: "6 October 1963",
@@ -122,7 +122,7 @@ const people = [
     bestWork: "Ankhon Dekhi",
     imdb: "https://www.imdb.com/name/nm0592799/?ref_=ext_shr_lnk",
   },
-   {
+  {
     id: 11,
     name: "Arunabh Kumar",
     occupation: "Entrepreneur, Producer, Director, Actor",
@@ -135,7 +135,7 @@ const people = [
   },
 
   {
-    id:12,
+    id: 12,
     name: "Gurmeet Choudhary",
     occupation: "Actor",
     dob: "22 February 1984",
@@ -145,9 +145,9 @@ const people = [
     bestWork: "Khamoshiyan",
     imdb: "https://www.imdb.com/name/nm3073211/?ref_=ext_shr_lnk",
   },
- 
+
   {
-    id:13,
+    id: 13,
     name: "Chandan Roy",
     occupation: "Actor",
     dob: "20 December 1995",
@@ -179,14 +179,14 @@ const people = [
     bestWork: "Panchayat (web series)",
     imdb: "https://www.imdb.com/name/nm13792834/?ref_=ext_shr_lnk",
   },
-   {
+  {
     id: 16,
     name: "Durgesh Kumar",
     occupation: "Actor",
     dob: "21 October 1984",
     district: "Darbhanga, Bihar",
     img: "https://static.toiimg.com/thumb/msid-110440378,width-400,resizemode-4/110440378.jpg",
-   
+
     description: "Actor known for playing Bhushan in Panchayat .",
 
     bestWork: "Panchayat (web series)",
@@ -205,7 +205,7 @@ const people = [
     bestWork: "Panchayat (web series)",
     imdb: "https://www.imdb.com/name/nm12872303/?ref_=ext_shr_lnk",
   },
-  
+
   {
     id: 18,
     name: "Ustad Bismillah Khan",
@@ -263,12 +263,12 @@ const CarouselOfCelebs = () => {
     const updateScreenSize = () => {
       const mobile = window.innerWidth < 640;
       setIsMobile(mobile);
-      
+
       // Reset to first item when switching between mobile/desktop
       if (mobile && currentIndex >= total) {
         setCurrentIndex(0);
       }
-      
+
       // Reset flipped card when switching screen sizes
       setFlippedCard(null);
     };
@@ -318,7 +318,7 @@ const CarouselOfCelebs = () => {
 
   const handleTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
@@ -348,7 +348,7 @@ const CarouselOfCelebs = () => {
 
         {/* Mobile View - Single Card */}
         {isMobile ? (
-          <div 
+          <div
             className="flex justify-center items-center"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -365,9 +365,8 @@ const CarouselOfCelebs = () => {
             >
               <div className="w-full h-full perspective group">
                 <div className="card-animated-border w-full h-full">
-                  <div className={`relative w-full h-full transition-transform duration-700 transform-style preserve-3d ${
-                    flippedCard === people[currentIndex].id ? 'rotate-y-180' : ''
-                  }`}>
+                  <div className={`relative w-full h-full transition-transform duration-700 transform-style preserve-3d ${flippedCard === people[currentIndex].id ? 'rotate-y-180' : ''
+                    }`}>
                     {/* Front of card */}
                     <div className="absolute w-full h-full backface-hidden bg-white/40 backdrop-blur-3xl text-white rounded-2xl overflow-hidden">
                       <img
@@ -392,7 +391,7 @@ const CarouselOfCelebs = () => {
                         />
                       </div>
                       <div className="mt-40 w-full px-2">
-                        <p className="mb-1 italic">{people[currentIndex].occupation}</p>
+                        <p className="mb-1 italic ">{people[currentIndex].occupation}</p>
                         <p className="mb-1">Date of Birth: {people[currentIndex].dob}</p>
                         <p className="mb-1">District: {people[currentIndex].district}</p>
                         <p className="mb-1">{people[currentIndex].description}</p>
@@ -450,36 +449,81 @@ const CarouselOfCelebs = () => {
                         </div>
                       </div>
 
-                      <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-[#0a1020] text-white rounded-2xl p-2 sm:p-4 flex flex-col justify-start items-center text-left text-xs sm:text-sm">
-                        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-[96px] sm:w-[132px] h-[96px] sm:h-[132px] rounded-full bg-white/90 flex items-center justify-center shadow-md">
-                          <img
-                            src={person.img}
-                            alt={person.name}
-                            className="w-[88px] sm:w-32 h-[88px] sm:h-32 rounded-full object-cover"
-                          />
+                      <div className="absolute w-full h-full backface-hidden rotate-y-180 bg-gradient-to-br from-[#7f1130] via-[#6b122b] to-[#560b20] text-white rounded-2xl overflow-hidden">
+                        {/* Decorative background pattern */}
+                        <div className="absolute inset-0 opacity-5">
+                          <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+                          <div className="absolute bottom-0 left-0 w-48 h-48 bg-white rounded-full blur-3xl"></div>
                         </div>
-                        <div className="mt-28 sm:mt-40 w-full px-1 sm:px-2">
-                          <p className="mb-1 italic">{person.occupation}</p>
-                          <p className="mb-1">Date of Birth: {person.dob}</p>
-                          <p className="mb-1">District: {person.district}</p>
-                          <p className="mb-1">{person.description}</p>
-                          <p className="font-semibold mb-1">
-                            Best Film: {person.bestWork}
-                          </p>
-                          <a
-                            href={person.imdb}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-2 inline-block"
-                          >
+
+                        {/* Content wrapper */}
+                        <div className="relative h-full flex flex-col p-6">
+                          {/* Profile Image Section */}
+                          <div className="flex justify-center mb-4">
                             <img
-                              src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg"
-                              alt="IMDb"
-                              className="w-12 sm:w-16 h-auto mt-2 sm:mt-4"
+                              src={person.img}
+                              alt={person.name}
+                              className="w-24 h-24 rounded-full object-cover shadow-2xl"
                             />
-                          </a>
+                          </div>
+
+                          {/* Occupation */}
+                          <div className="text-center mb-4">
+                            <span className="inline-block px-3 py-1 text-xs font-medium text-blue-300 bg-blue-500/20 rounded-full">
+                              {person.occupation}
+                            </span>
+                          </div>
+
+                          {/* Info Section - Compact Grid */}
+                          <div className="flex-1 flex flex-col justify-center space-y-2.5 text-sm">
+                            {/* Date of Birth */}
+                            <div className="flex items-center gap-3">
+                              <span className="text-gray-400 text-xs w-16">DOB</span>
+                              <span className="text-white font-medium">{person.dob}</span>
+                            </div>
+
+                            {/* District */}
+                            <div className="flex items-center gap-3">
+                              <span className="text-gray-400 text-xs w-16">District</span>
+                              <span className="text-white font-medium">{person.district}</span>
+                            </div>
+
+                            {/* Description */}
+                            <div className="flex items-start gap-3">
+                              <span className="text-gray-400 text-xs w-16 pt-0.5">About</span>
+                              <p className="text-gray-200 text-xs leading-relaxed flex-1">
+                                {person.description}
+                              </p>
+                            </div>
+
+                            {/* Best Work */}
+                            <div className="flex items-center gap-3">
+                              <span className="text-gray-400 text-xs w-16">Best Film</span>
+                              <span className="text-white font-semibold text-xs">{person.bestWork}</span>
+                            </div>
+                          </div>
+
+                          {/* IMDb Link */}
+                          <div className="mt-4 pt-4 border-t border-white/10">
+                            <a
+                              href={person.imdb}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 transition-all group"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg"
+                                alt="IMDb"
+                                className="h-4 opacity-80 group-hover:opacity-100 transition-opacity"
+                              />
+                              <span className="text-xs text-yellow-200">View Profile</span>
+                            </a>
+                          </div>
                         </div>
                       </div>
+
+
                     </div>
                   </div>
                 </div>

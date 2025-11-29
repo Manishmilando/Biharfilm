@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, useParams,  useNavigate } from "react-router-dom";
+import { Routes, Route, useParams, useNavigate, useLocation } from "react-router-dom";
 
 // Components
 import VideoSection from "./Components/VideoSection";
@@ -35,9 +35,22 @@ import MainDash from "./DistrictDahboard/MainDash";
 import VendorRegistrationForm from "./Components/VendorRegistrationForm";
 
 import Artist from "./Dashboard/Artist";
+import PrivacyPolicy from "./NavigationCards/PrivacyPolicy";
+import AboutUs from "./NavigationCards/AboutUs";
+import PDFViewerPage from "./NavigationCards/PDFViewerPage";
 
 // Home Page
 function Home() {
+  const location = useLocation();
+
+  React.useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      const element = document.getElementById(location.state.scrollTo);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location]);
 
   return (
     <>
@@ -51,7 +64,7 @@ function Home() {
       <GoverningComponent />
       <FilemPolicyPage />
       <ContactUs />
-    
+
     </>
   );
 }
@@ -70,35 +83,35 @@ export default function App() {
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/apply-noc" element={<ShootingPermissionForm />} />
 
-       {/* Protected Route for main Admin for their dashboard */}
+      {/* Protected Route for main Admin for their dashboard */}
       <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute allowedRoles={['admin']}>
-              <DashboardMM />
-            </ProtectedRoute>
-          }
-        />
+        path="/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <DashboardMM />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/ShootingLocation" element={<ShootingLocationPage />} />
 
       {/* Protected Routes for Filmmaker, Artist, Vendor */}
       <Route
-          path="/dashboard-user"
-          element={
-            <ProtectedRoute allowedRoles={['filmmaker', 'artist', 'vendor']}>
-              <DasboardUser />
-            </ProtectedRoute>
-          }
-        />
+        path="/dashboard-user"
+        element={
+          <ProtectedRoute allowedRoles={['filmmaker', 'artist', 'vendor']}>
+            <DasboardUser />
+          </ProtectedRoute>
+        }
+      />
 
-          <Route path="/register-artist" element={<ArtistForm />} />
-        <Route path="/register-vendor" element={<VendorForm />} />
-     
+      <Route path="/register-artist" element={<ArtistForm />} />
+      <Route path="/register-vendor" element={<VendorForm />} />
+
 
       <Route path="/filmclub/cine-samvad" element={<CineSamvad />} />
       <Route path="/notification" element={<Notification />} />
       <Route path="/tender" element={<Tender />} />
-   
+
       <Route path="/filmclub/chatarpatar" element={<Chatarpatar />} />
       <Route path="/filmclub/coffee-with-film" element={<CoffeeWithFilm />} />
 
@@ -108,16 +121,19 @@ export default function App() {
 
       {/* Protected Route for District Admin for their dashboard */}
       <Route
-          path="/MainDash"
-          element={
-            <ProtectedRoute allowedRoles={['district_admin']}>
-              <MainDash />
-            </ProtectedRoute>
-          }
-        />
+        path="/MainDash"
+        element={
+          <ProtectedRoute allowedRoles={['district_admin']}>
+            <MainDash />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="vendor-registration" element={<VendorRegistrationForm />} />
-      
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/about-us" element={<AboutUs />} />
+      <Route path="/document/:docId" element={<PDFViewerPage />} />
+
 
       <Route path="*" element={<navigate to="/" replace />} />
 

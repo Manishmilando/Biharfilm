@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { FileText, FilePlus, FolderOpen, X, RefreshCw, Edit, Trash2 } from "lucide-react";
+import { FileText, PlusCircle, Trash2, Edit, AlertCircle } from "lucide-react";
+import { RiContractFill } from "react-icons/ri";
 import AddTender from "./AddTender";
 import axios from "axios";
 
-const TenderMain = () => {
+const TenderMain = ({ searchQuery }) => {
   const [tenders, setTenders] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [selectedTender, setSelectedTender] = useState(null); // Add this state for editing
+  const [editData, setEditData] = useState(null);
 
-  // Fetch Tenders
+  // Fetch Tenders from API
   const fetchTenders = async () => {
-    setLoading(true);
     try {
       const { data } = await axios.get(
         "https://biharfilmbackend-production.up.railway.app/api/tender/tenders"
@@ -19,8 +18,6 @@ const TenderMain = () => {
       setTenders(data.tenders || []);
     } catch (error) {
       console.error("Failed to fetch tenders:", error);
-    } finally {
-      setTimeout(() => setLoading(false), 500);
     }
   };
 
@@ -28,31 +25,33 @@ const TenderMain = () => {
     fetchTenders();
   }, []);
 
-  // Delete Tender API Call
+  // Filter tenders based on search query
+  const filteredTenders = tenders.filter((item) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      item.title?.toLowerCase().includes(query) ||
+      item.description?.toLowerCase().includes(query)
+    );
+  });
+
+  // Delete Tender
   const deleteTender = async (id) => {
     if (!window.confirm("Are you sure you want to delete this tender?")) return;
     try {
       await axios.delete(
         `https://biharfilmbackend-production.up.railway.app/api/tender/tenders/${id}`
       );
-      fetchTenders();
+      setTenders(tenders.filter((t) => t.id !== id));
     } catch (error) {
       console.error("Failed to delete tender:", error);
     }
   };
 
-  // Edit Tender (Open Form with Data)
-  const editTender = (tender) => {
-    console.log("Edit Tender:", tender);
-    setSelectedTender(tender); // Set the selected tender for editing
-    setShowForm(true);         // Open the form modal
-  };
-
-  // Handle form close and refresh
-  const handleFormClose = () => {
-    setShowForm(false);
-    setSelectedTender(null);   // Clear selected tender
-    fetchTenders();           // Refresh tenders list
+  // Edit Tender
+  const editTender = (item) => {
+    setEditData(item);
+    setShowForm(true);
   };
 
   // Dynamic Counts
@@ -61,83 +60,75 @@ const TenderMain = () => {
     const today = new Date().toISOString().split("T")[0];
     return t.date === today;
   }).length;
-  const manualTenders = tenders.filter((t) => t.addedBy === "admin").length;
 
   const cards = [
     {
       title: "Total Tenders",
       count: totalTenders,
       subtitle: "All-time tenders",
-      icon: <FolderOpen className="w-5 h-5" />,
-      color: "#802d44",
+      icon: <RiContractFill className="w-5 h-5" />,
+      color: "text-[#a92b4e]",
+      bgColor: "bg-[#a92b4e]/10",
+      borderColor: "border-[#a92b4e]/20"
     },
     {
       title: "New Tenders",
       count: newTenders,
-      subtitle: "Today's new tenders",
+      subtitle: "Today’s new tenders",
       icon: <FileText className="w-5 h-5" />,
-      color: "#802d44",
+      color: "text-[#a92b4e]",
+      bgColor: "bg-[#a92b4e]/10",
+      borderColor: "border-[#a92b4e]/20"
     },
     {
       title: "Add Tender",
-      count: manualTenders,
-      subtitle: "Added manually today",
-      icon: <FilePlus className="w-5 h-5" />,
-      color: "#802d44",
+      count: "New",
+      subtitle: "Click to add new",
+      icon: <PlusCircle className="w-5 h-5" />,
+      color: "text-white",
+      bgColor: "bg-[#a92b4e]",
+      borderColor: "border-[#a92b4e]",
+      isAction: true,
       onClick: () => {
-        setSelectedTender(null); // Ensure no tender is selected for new creation
+        setEditData(null);
         setShowForm(true);
       },
     },
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-6">
       {/* Top Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {cards.map((card, index) => (
           <div
             key={index}
             onClick={card.onClick}
-            className={`${
-              card.title === "Add Tender"
-                ? "bg-[#802d44] hover:bg-[#6b1f36] text-white shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95"
-                : "bg-white border border-gray-200/60 hover:shadow-xl text-gray-800"
-            } rounded-xl p-6 flex items-center justify-between transition-all duration-300 cursor-pointer`}
+            className={`rounded-xl p-6 flex items-center justify-between transition-all duration-300 ${card.isAction
+              ? "bg-[#a92b4e] text-white shadow-lg shadow-[#a92b4e]/30 hover:-translate-y-1 cursor-pointer"
+              : "bg-white border border-gray-200 hover:shadow-md"
+              }`}
           >
             <div>
               <div
-                className={`flex items-center gap-2 mb-1 ${
-                  card.title === "Add Tender" ? "text-white" : ""
-                }`}
-                style={card.title !== "Add Tender" ? { color: card.color } : {}}
+                className={`flex items-center gap-2 mb-2 ${!card.isAction ? "text-[#a92b4e]" : "text-white/90"}`}
               >
                 {card.icon}
                 <h3 className="text-sm font-semibold">{card.title}</h3>
               </div>
-              <p className={`text-3xl font-bold ${
-                card.title === "Add Tender" ? "text-white" : "text-gray-800"
-              }`}>
-                {card.count}
-              </p>
-              <p className={`text-xs mt-1 ${
-                card.title === "Add Tender" ? "text-white/80" : "text-gray-500"
-              }`}>
-                {card.subtitle}
-              </p>
+              <p className={`text-3xl font-bold ${!card.isAction ? "text-gray-800" : "text-white"}`}>{card.count}</p>
+              <p className={`text-xs mt-1 ${!card.isAction ? "text-gray-500" : "text-white/80"}`}>{card.subtitle}</p>
             </div>
-            
-            {card.title === "Add Tender" ? (
-              <div className="bg-white text-[#802d44] px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gray-50 transition-colors duration-200 flex items-center gap-2">
-                <span>+</span>
-                <span>Add New</span>
-              </div>
-            ) : (
+            {!card.isAction && (
               <div
-                className="text-xs font-semibold px-2 py-1 rounded-full"
-                style={{ backgroundColor: `${card.color}20`, color: card.color }}
+                className={`w-10 h-10 rounded-full flex items-center justify-center ${card.bgColor} ${card.color}`}
               >
-                +{card.count}
+                {card.icon}
+              </div>
+            )}
+            {card.isAction && (
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white">
+                <PlusCircle className="w-6 h-6" />
               </div>
             )}
           </div>
@@ -145,104 +136,100 @@ const TenderMain = () => {
       </div>
 
       {/* Tenders Table */}
-      <div className="bg-white border border-gray-200/60 rounded-xl p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Tenders List</h2>
-          <button
-            onClick={fetchTenders}
-            className="flex items-center gap-2 text-gray-400 px-2 py-2 rounded-full transition disabled:opacity-60"
-            disabled={loading}
-          >
-            {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
-          </button>
+      <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+          <h2 className="text-lg font-bold text-gray-800">Tenders List</h2>
+          <span className="text-xs font-medium px-2.5 py-1 bg-[#a92b4e]/10 text-[#a92b4e] rounded-full">
+            {filteredTenders.length} Total
+          </span>
         </div>
 
-        <table className="w-full border rounded-2xl text-left text-sm">
-          <thead className="bg-gray-100">
-            <tr className="border-b border-gray-200 text-gray-600">
-              <th className="p-3">Title</th>
-              <th className="p-3">Description</th>
-              <th className="p-3">Date</th>
-              <th className="p-3">PDF</th>
-              <th className="p-3 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tenders.map((item) => (
-              <tr key={item.id} className="border-b border-gray-200 hover:bg-gray-50 transition">
-                <td className="p-3 font-medium text-gray-800">Tender - {item.title}</td>
-                <td className="p-3 text-gray-600">{item.description}</td>
-                <td className="p-3 text-gray-600">{item.date}</td>
-                <td className="p-3">
-                  {item.pdf ? (
-                    <a href={item.pdf} target="_blank" rel="noopener noreferrer">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5">
-                        <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
-                        <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
-                      </svg>
-                    </a>
-                  ) : (
-                    "-"
-                  )}
-                </td>
-                <td className="p-3 text-center">
-                  <div className="flex justify-center items-center gap-4 text-gray-600">
-                    {/* Edit Button */}
-                    <button
-                      onClick={() => editTender(item)}
-                      className="hover:text-blue-500 transition-transform hover:scale-110"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
-                      </svg>
-                    </button>
-
-                    {/* Delete Button */}
-                    <button
-                      onClick={() => deleteTender(item.id)}
-                      className="hover:text-red-500 transition-transform hover:scale-110"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="bg-gray-50 text-gray-600 border-b border-gray-100">
+                <th className="px-6 py-4 font-semibold w-1/4">Title</th>
+                <th className="px-6 py-4 font-semibold w-1/3">Description</th>
+                <th className="px-6 py-4 font-semibold">Date</th>
+                <th className="px-6 py-4 font-semibold text-center">Attachment</th>
+                <th className="px-6 py-4 font-semibold text-center">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {filteredTenders.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="px-6 py-12 text-center">
+                    <div className="flex flex-col items-center justify-center">
+                      <AlertCircle className="w-8 h-8 text-gray-300 mb-3" />
+                      <p className="text-gray-500 font-medium">No tenders found</p>
+                      <p className="text-gray-400 text-xs mt-1">Try adjusting your search or add a new tender</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                filteredTenders.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="hover:bg-gray-50/80 transition-colors group"
+                  >
+                    <td className="px-6 py-4 font-medium text-gray-900">{item.title}</td>
+                    <td className="px-6 py-4 text-gray-600 line-clamp-2 max-w-xs">{item.description}</td>
+                    <td className="px-6 py-4 text-gray-500 whitespace-nowrap">{item.date}</td>
+                    <td className="px-6 py-4 text-center">
+                      {item.pdf ? (
+                        <a
+                          href={item.pdf}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                          title="View PDF"
+                        >
+                          <FileText className="w-4 h-4" />
+                        </a>
+                      ) : (
+                        <span className="text-gray-300">-</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => editTender(item)}
+                          className="p-2 text-gray-500 hover:text-[#a92b4e] hover:bg-[#a92b4e]/5 rounded-lg transition-colors"
+                          title="Edit"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
 
-        {tenders.length === 0 && <p className="text-center text-gray-500 mt-4">No tenders found.</p>}
+                        <button
+                          onClick={() => deleteTender(item.id)}
+                          className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Add/Edit Tender Modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 pt-16">
-          <button
-            onClick={handleFormClose}
-            className="absolute top-5 right-5 text-white bg-red-600 rounded-full p-2 hover:bg-red-700 transition"
-          >
-            <X className="w-5 h-5" />
-          </button>
-          <AddTender 
-            tenderData={selectedTender} 
-            onClose={handleFormClose}
-          />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
+          <div className="w-full max-w-lg animate-in fade-in zoom-in duration-200">
+            <AddTender
+              tenderData={editData}
+              onClose={() => {
+                setShowForm(false);
+                setEditData(null);
+                fetchTenders();
+              }}
+            />
+          </div>
         </div>
       )}
     </div>

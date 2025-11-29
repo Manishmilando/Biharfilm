@@ -51,12 +51,12 @@ const VendorRegistrationForm = () => {
         alert('File size should be less than 10MB');
         return;
       }
-      
+
       if (!file.type.startsWith('image/')) {
         alert('Please select an image file');
         return;
       }
-      
+
       setLogoFile(file);
       const previewUrl = URL.createObjectURL(file);
       setLogoPreview(previewUrl);
@@ -124,23 +124,23 @@ const VendorRegistrationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
 
     try {
       const submitData = new FormData();
-      
+
       // Append vendor data - exactly as your Postman test shows
       submitData.append('vendorName', formData.vendorName.trim());
       submitData.append('category', formData.category);
       submitData.append('phoneNumber', formData.phoneNumber.trim());
       submitData.append('email', formData.email.trim());
       submitData.append('address', formData.address.trim());
-      
+
       // Optional website field
       if (formData.website && formData.website.trim()) {
         submitData.append('website', formData.website.trim());
@@ -177,11 +177,11 @@ const VendorRegistrationForm = () => {
 
       if (!response.ok) {
         let errorMessage = `Server error: ${response.status} ${response.statusText}`;
-        
+
         try {
           const errorText = await response.text();
           console.log('Error response:', errorText);
-          
+
           try {
             const errorJson = JSON.parse(errorText);
             errorMessage = errorJson.message || errorMessage;
@@ -195,7 +195,7 @@ const VendorRegistrationForm = () => {
         } catch (textError) {
           console.error('Could not read error response:', textError);
         }
-        
+
         throw new Error(errorMessage);
       }
 

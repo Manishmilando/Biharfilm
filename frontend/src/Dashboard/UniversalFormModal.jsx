@@ -7,10 +7,10 @@ import autoTable from 'jspdf-autotable';
 import NOCTimeline from './NOCTimeline';
 
 
-const UniversalFormModal = ({ 
-  isOpen, 
-  onClose, 
-  selectedRow, 
+const UniversalFormModal = ({
+  isOpen,
+  onClose,
+  selectedRow,
   userRole,
   onForward,
   onApprove,
@@ -142,7 +142,7 @@ const UniversalFormModal = ({
     }
   ];
 
-const handleDownloadPDF = () => {
+  const handleDownloadPDF = () => {
     const doc = new jsPDF('p', 'mm', 'a4');
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
@@ -151,12 +151,12 @@ const handleDownloadPDF = () => {
     // Header with Logo and Title
     doc.setFillColor(137, 23, 55);
     doc.rect(0, 0, pageWidth, 35, 'F');
-    
+
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(20);
     doc.setFont('helvetica', 'bold');
     doc.text('BSFDFC NOC Application', pageWidth / 2, 15, { align: 'center' });
-    
+
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.text('Department of Art & Culture, Govt. of Bihar', pageWidth / 2, 23, { align: 'center' });
@@ -199,12 +199,12 @@ const handleDownloadPDF = () => {
       // Section Content - Table format
       const tableData = validFields.map(([label, key]) => {
         let value = selectedRow[key];
-        
+
         // Handle URLs
         if (typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))) {
           value = '[Document URL Available]';
         }
-        
+
         // Truncate long text
         if (typeof value === 'string' && value.length > 80) {
           value = value.substring(0, 80) + '...';
@@ -328,7 +328,7 @@ const handleDownloadPDF = () => {
   // Get role-specific actions
   const getRoleActions = () => {
     if (customActions) return customActions;
-    
+
     switch (userRole) {
       case 'admin':
         return (
@@ -342,7 +342,7 @@ const handleDownloadPDF = () => {
                 <span>Forward</span>
               </div>
             </button>
-            <button 
+            <button
               onClick={() => onReject && onReject(selectedRow)}
               className="bg-white hover:bg-gray-50 text-[#891737] border border-[#891737] hover:border-[#6e1129] px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
             >
@@ -353,7 +353,7 @@ const handleDownloadPDF = () => {
             </button>
           </>
         );
-      
+
       case 'district_admin':
         return (
           <>
@@ -366,7 +366,7 @@ const handleDownloadPDF = () => {
                 <span>Approve</span>
               </div>
             </button>
-            <button 
+            <button
               onClick={() => onReject && onReject(selectedRow)}
               className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
             >
@@ -376,10 +376,10 @@ const handleDownloadPDF = () => {
             </button>
           </>
         );
-      
+
       case 'filmmaker':
         return (
-          <button 
+          <button
             onClick={onClose}
             className="bg-[#891737] hover:bg-[#6e1129] text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
           >
@@ -389,10 +389,10 @@ const handleDownloadPDF = () => {
             </div>
           </button>
         );
-      
+
       default:
         return (
-          <button 
+          <button
             onClick={onClose}
             className="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
           >
@@ -405,7 +405,7 @@ const handleDownloadPDF = () => {
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden border border-gray-200 flex flex-col">
-        
+
         {/* HEADER */}
         <div className="bg-gray-50 border-b border-gray-200 p-5">
           <div className="flex items-center justify-between">
@@ -457,7 +457,7 @@ const handleDownloadPDF = () => {
                   <FaExternalLinkAlt className="text-blue-600 text-sm" />
                 </button>
               )}
-              
+
               <button
                 onClick={onClose}
                 className="w-10 h-10 bg-gray-100 hover:bg-[#891737]/10 rounded-full flex items-center justify-center transition-colors duration-200"
@@ -471,7 +471,7 @@ const handleDownloadPDF = () => {
 
         {/* CONTENT - Grid layout with 2 columns */}
         <div className="overflow-y-auto flex-1 grid grid-cols-1 lg:grid-cols-3 gap-0">
-          
+
           {/* LEFT SIDE - Form Data (2 columns) */}
           <div className="lg:col-span-2 border-r border-gray-200 p-6 space-y-5 overflow-y-auto max-h-[calc(90vh-160px)]">
             {sections.map((section, index) => {

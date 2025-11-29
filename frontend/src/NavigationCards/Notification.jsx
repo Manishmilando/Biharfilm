@@ -1,28 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavbarB from "../Components/NavbarB";
-
-const notifications = [
-  { title: "New Film Policy Launched", date: "2025-06-01", description: "The government has introduced a new policy for film makers." },
-  { title: "Film Festival Dates Announced", date: "2025-05-20", description: "Annual Bihar Film Festival will take place in August." },
-  { title: "Post-production Services", date: "2025-05-28", description: "Tender for post-production services now open." },
-  { title: "Camera Equipment Tender", date: "2025-06-10", description: "Vendors invited to supply camera equipment." },
-];
+import Navbar from "../Components/Navbar";
+import axios from "axios";
 
 const Notifications = () => {
   const navigate = useNavigate();
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const link = document.createElement("link");
     link.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap";
     link.rel = "stylesheet";
     document.head.appendChild(link);
+
+    fetchNotifications();
   }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const { data } = await axios.get(
+        "https://biharfilmbackend-production.up.railway.app/api/notification/notifications"
+      );
+      setNotifications(data.notifications || []);
+    } catch (error) {
+      console.error("Failed to fetch notifications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#190108] px-4 sm:px-10 lg:px-20 py-10 text-white font-[Poppins] animate-fade">
-      <NavbarB />
-      
+      <Navbar />
+
       {/* Back Button */}
       <div className="mb-10 mt-18">
         <button
@@ -43,34 +54,59 @@ const Notifications = () => {
 
       {/* Notifications Section */}
       <div className="bg-white rounded-xl shadow-md overflow-y-auto text-black animate-slide-up w-full max-w-5xl mx-auto max-h-[500px]">
-  <h2 className="text-xl font-semibold bg-[#891737] text-white p-4">Notifications</h2>
-  <table className="w-full divide-y divide-gray-300">
-    <thead className="bg-gray-100">
-      <tr>
-        <th className="px-4 py-3 text-left">Sr. No</th>
-        <th className="px-4 py-3 text-left">Title</th>
-        <th className="px-4 py-3 text-left">Date</th>
-        <th className="px-4 py-3 text-left">Description</th>
-        <th className="px-4 py-3 text-left">Download</th>
-      </tr>
-    </thead>
-    <tbody>
-      {notifications.map((item, index) => (
-        <tr key={index} className="hover:bg-gray-100 transition duration-300">
-          <td className="px-4 py-3">{index + 1}</td>
-          <td className="px-4 py-3 font-medium">{item.title}</td>
-          <td className="px-4 py-3 text-sm text-gray-600">{item.date}</td>
-          <td className="px-4 py-3 text-sm text-gray-700">{item.description}</td>
-          <td className="px-4 py-3">
-            <button className="text-[#891737] border border-[#891737] px-3 py-1 rounded hover:bg-[#891737] hover:text-white text-sm font-semibold transition duration-300">
-              ⬇ PDF
-            </button>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+        <h2 className="text-xl font-semibold bg-[#891737] text-white p-4">Notifications</h2>
+        <table className="w-full divide-y divide-gray-300">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="px-4 py-3 text-left">Sr. No</th>
+              <th className="px-4 py-3 text-left">Title</th>
+              <th className="px-4 py-3 text-left">Date</th>
+              <th className="px-4 py-3 text-left">Description</th>
+              <th className="px-4 py-3 text-left">Download</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="5" className="px-4 py-8 text-center text-gray-500">
+                  Loading notifications...
+                </td>
+              </tr>
+            ) : notifications.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="px-4 py-8 text-center text-gray-500">
+                  No notifications found.
+                </td>
+              </tr>
+            ) : (
+              notifications.map((item, index) => (
+                <tr key={item.id || index} className="hover:bg-gray-50 transition duration-300">
+                  <td className="px-4 py-3">{index + 1}</td>
+                  <td className="px-4 py-3 font-medium">{item.notificationTitle}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600">
+                    {item.notificationDate ? new Date(item.notificationDate).toLocaleDateString() : "-"}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-700">{item.notificationDescription}</td>
+                  <td className="px-4 py-3">
+                    {item.notificationPdf ? (
+                      <a
+                        href={item.notificationPdf}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block text-[#891737] border border-[#891737] px-3 py-1 rounded hover:bg-[#891737] hover:text-white text-sm font-semibold transition duration-300 no-underline"
+                      >
+                        ⬇ PDF
+                      </a>
+                    ) : (
+                      <span className="text-gray-400 text-sm">-</span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
     </div>
   );

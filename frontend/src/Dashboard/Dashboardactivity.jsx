@@ -5,7 +5,7 @@ import { RefreshCw, Clock, CheckCircle, XCircle, Send, AlertCircle } from "lucid
 import DownloadDashboard from "./DownloadDashboard";
 import UniversalFormModal from './UniversalFormModal';
 
-function Dashboardactivity() {
+function Dashboardactivity({ searchQuery }) {
   const [selectedRow, setSelectedRow] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showForwardModal, setShowForwardModal] = useState(false);
@@ -19,6 +19,18 @@ function Dashboardactivity() {
   const [adminEmail, setAdminEmail] = useState('');
   const [adminRemarks, setAdminRemarks] = useState('');
   const [isForwarding, setIsForwarding] = useState(false);
+
+  // Filter cases based on search query
+  const filteredCases = cases.filter((item) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      item.title?.toLowerCase().includes(query) ||
+      item.typeOfProject?.toLowerCase().includes(query) ||
+      item.representativeName?.toLowerCase().includes(query) ||
+      item.genre?.toLowerCase().includes(query)
+    );
+  });
 
   // Helper function to truncate text
   const truncateText = (text, maxLength = 20) => {
@@ -82,7 +94,7 @@ function Dashboardactivity() {
         dotColor: 'bg-red-500'
       };
     }
-    
+
     return {
       label: status || 'Unknown',
       color: 'bg-gray-50 text-gray-700 border-gray-200',
@@ -96,7 +108,7 @@ function Dashboardactivity() {
       try {
         setLoading(true);
         const token = localStorage.getItem('authToken');
-        
+
         if (!token) {
           setError("🔐 Please login to view data.");
           setLoading(false);
@@ -201,7 +213,7 @@ function Dashboardactivity() {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">NOC Applications</h2>
           <p className="text-xs text-gray-500 mt-1">
-            Showing {cases.length} total applications
+            Showing {filteredCases.length} applications
           </p>
         </div>
         <button
@@ -289,7 +301,7 @@ function Dashboardactivity() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {cases.length === 0 ? (
+                {filteredCases.length === 0 ? (
                   <tr>
                     <td colSpan="8" className="px-4 py-12 text-center">
                       <AlertCircle className="h-12 w-12 text-gray-300 mx-auto mb-4" />
@@ -297,12 +309,12 @@ function Dashboardactivity() {
                     </td>
                   </tr>
                 ) : (
-                  cases.map((caseDetail, index) => {
+                  filteredCases.map((caseDetail, index) => {
                     const statusInfo = getStatusInfo(
-                      caseDetail.status, 
+                      caseDetail.status,
                       caseDetail.forwardStatus || caseDetail.districtStatus
                     );
-                    
+
                     return (
                       <tr
                         key={caseDetail._id}
@@ -338,10 +350,10 @@ function Dashboardactivity() {
                         <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
                           {caseDetail.startDateTime
                             ? new Date(caseDetail.startDateTime).toLocaleDateString('en-GB', {
-                                day: '2-digit',
-                                month: 'short',
-                                year: 'numeric'
-                              })
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric'
+                            })
                             : "N/A"}
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap">
@@ -428,16 +440,15 @@ function Dashboardactivity() {
                 <h3 className="text-md font-medium text-gray-800 mb-3 border-l-3 border-[#891737] pl-2">
                   Departments
                 </h3>
-                
+
                 <div className="space-y-2">
                   {["DOP", "DTO", "SDPO", "DM", "SP"].map((dept) => (
                     <label
                       key={dept}
-                      className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-colors duration-200 ${
-                        selectedDepartments.includes(dept)
+                      className={`flex items-center gap-2 p-2 rounded-lg border cursor-pointer transition-colors duration-200 ${selectedDepartments.includes(dept)
                           ? 'bg-[#891737]/5 border-[#891737] text-gray-900'
                           : 'bg-gray-50 border-gray-200 hover:border-gray-300'
-                      }`}
+                        }`}
                     >
                       <input
                         type="checkbox"
@@ -451,11 +462,10 @@ function Dashboardactivity() {
                           }
                         }}
                       />
-                      <div className={`w-4 h-4 rounded border flex items-center justify-center ${
-                        selectedDepartments.includes(dept)
+                      <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedDepartments.includes(dept)
                           ? 'bg-[#891737] border-[#891737]'
                           : 'border-gray-300'
-                      }`}>
+                        }`}>
                         {selectedDepartments.includes(dept) && (
                           <div className="w-2 h-2 bg-white rounded-sm"></div>
                         )}
@@ -480,7 +490,7 @@ function Dashboardactivity() {
                 <h3 className="text-md font-medium text-gray-800 mb-3 border-l-3 border-[#891737] pl-2">
                   Districts
                 </h3>
-                
+
                 <div className="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto">
                   {[
                     "Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Darbhanga", "Begusarai",
@@ -491,11 +501,10 @@ function Dashboardactivity() {
                   ].map((district) => (
                     <label
                       key={district}
-                      className={`flex items-center gap-2 p-2 rounded border text-xs cursor-pointer transition-colors duration-200 ${
-                        selectedDistricts.includes(district)
+                      className={`flex items-center gap-2 p-2 rounded border text-xs cursor-pointer transition-colors duration-200 ${selectedDistricts.includes(district)
                           ? 'bg-[#891737]/5 border-[#891737] text-gray-900'
                           : 'bg-gray-50 border-gray-200 hover:border-gray-300'
-                      }`}
+                        }`}
                     >
                       <input
                         type="checkbox"
@@ -509,11 +518,10 @@ function Dashboardactivity() {
                           }
                         }}
                       />
-                      <div className={`w-3 h-3 rounded-sm border flex items-center justify-center ${
-                        selectedDistricts.includes(district)
+                      <div className={`w-3 h-3 rounded-sm border flex items-center justify-center ${selectedDistricts.includes(district)
                           ? 'bg-[#891737] border-[#891737]'
                           : 'border-gray-300'
-                      }`}>
+                        }`}>
                         {selectedDistricts.includes(district) && (
                           <div className="w-1.5 h-1.5 bg-white rounded-sm"></div>
                         )}
@@ -530,7 +538,7 @@ function Dashboardactivity() {
               <div className="border-t border-gray-200 bg-gray-50 px-4 py-3">
                 <div className="flex justify-between items-center text-xs text-gray-600">
                   <span>
-                    <strong>{selectedDepartments.length}</strong> departments, 
+                    <strong>{selectedDepartments.length}</strong> departments,
                     <strong> {selectedDistricts.length}</strong> districts
                   </span>
                   <span className="text-[#891737] font-medium">
@@ -587,7 +595,7 @@ function Dashboardactivity() {
                     const response = await axios.put(
                       `https://biharfilmbackend-production.up.railway.app/api/noc/forward/${selectedRow.id}`,
                       {
-                        districts: districtsPayload,  
+                        districts: districtsPayload,
                         departments: departmentsPayload,
                         adminEmail: adminEmail,
                         adminRemarks: adminRemarks || null
@@ -604,23 +612,23 @@ function Dashboardactivity() {
 
                     if (response.data.success) {
                       alert("Form forwarded successfully!");
-                      
+
                       setSelectedDepartments([]);
                       setSelectedDistricts([]);
                       setAdminEmail('');
                       setAdminRemarks('');
                       setShowForwardModal(false);
                       setShowModal(false);
-                      
+
                       onForwardSuccess();
                     } else {
                       alert(`Failed to forward form: ${response.data.message || 'Unknown error'}`);
                     }
                   } catch (error) {
                     console.error("Forwarding failed:", error);
-                    
+
                     let errorMessage = "Error forwarding the form.";
-                    
+
                     if (error.response) {
                       errorMessage = error.response.data?.message || `Server error: ${error.response.status}`;
                     } else if (error.request) {
@@ -628,7 +636,7 @@ function Dashboardactivity() {
                     } else if (error.code === 'ECONNABORTED') {
                       errorMessage = "Request timeout. Please try again.";
                     }
-                    
+
                     alert(errorMessage);
                   } finally {
                     setIsForwarding(false);

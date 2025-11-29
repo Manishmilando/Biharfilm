@@ -3,9 +3,9 @@ import { Navigate } from 'react-router-dom';
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem('authToken');
   const userJson = localStorage.getItem('user');
-  
+
   console.log('ProtectedRoute - Token:', token ? 'Present' : 'Missing');
-  console.log('ProtectedRoute - User JSON:', userJson);
+  console.table('ProtectedRoute - User JSON:', userJson);
 
   // Check if user is authenticated
   if (!token) {
@@ -17,7 +17,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   let user = {};
   try {
     user = JSON.parse(userJson || '{}');
-    console.log('ProtectedRoute - Parsed User:', user);
+    console.table('ProtectedRoute - Parsed User:', user);
   } catch (error) {
     console.error('Failed to parse user data:', error);
     localStorage.clear(); // Clear corrupted data

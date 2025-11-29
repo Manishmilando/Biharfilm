@@ -1,18 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import Logo1 from "/src/assets/Logo1.png";
-import Adminmam from "/src/assets/adminmam.svg";
 import { MdSpaceDashboard } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
-import { FileText, CheckCircle, Clock, XCircle, DollarSign } from "lucide-react";
+import { FileText, CheckCircle, Clock, XCircle } from "lucide-react";
 import Dashboardactivity from "./Dashboardactivity";
 import Artist from "./Artist";
 import { RiContractFill } from "react-icons/ri";
 import TenderMain from "../Dashboard/TenderMain";
 import NotificationMain from "./NotificationMain";
+import axios from "axios";
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("Overview");
+  const [nocStats, setNocStats] = useState({
+    total: 0,
+    approved: 0,
+    pending: 0,
+    rejected: 0
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchNocStats = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+
+        const { data } = await axios.get(
+          "https://biharfilmbackend-production.up.railway.app/api/noc/getAllNocForms",
+          {
+            headers: { 'Authorization': `Bearer ${token}` }
+          }
+        );
+
+        const forms = data.data || [];
+
+        const stats = {
+          total: forms.length,
+          approved: forms.filter(f => f.status === 'approved' || f.forwardStatus === 'approved').length,
+          pending: forms.filter(f => f.status === 'submitted' || f.status === 'forwarded').length,
+          rejected: forms.filter(f => f.status === 'rejected' || f.forwardStatus === 'rejected').length
+        };
+
+        setNocStats(stats);
+      } catch (error) {
+        console.error("Failed to fetch NOC stats:", error);
+      }
+    };
+
+    fetchNocStats();
+  }, []);
 
   const handleLogout = () => {
     console.log("Logout triggered");
@@ -28,65 +66,52 @@ const Dashboard = () => {
           <>
             {/* Metrics Overview Section */}
             <section className="mb-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                {/* NOC Metrics */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <MetricCard
                   title="Total NOC"
-                  value="256"
+                  value={nocStats.total}
+                  subtitle="All applications"
                   icon={<FileText className="h-5 w-5" />}
+                  color="text-blue-600"
+                  bgColor="bg-blue-50"
                 />
                 <MetricCard
-                  title="Completed NOC"
-                  value="228"
+                  title="Approved NOC"
+                  value={nocStats.approved}
+                  subtitle="Successfully processed"
                   icon={<CheckCircle className="h-5 w-5" />}
+                  color="text-green-600"
+                  bgColor="bg-green-50"
                 />
                 <MetricCard
                   title="Pending NOC"
-                  value="28"
+                  value={nocStats.pending}
+                  subtitle="Awaiting action"
                   icon={<Clock className="h-5 w-5" />}
+                  color="text-amber-600"
+                  bgColor="bg-amber-50"
                 />
                 <MetricCard
                   title="Rejected NOC"
-                  value="4"
+                  value={nocStats.rejected}
+                  subtitle="Applications declined"
                   icon={<XCircle className="h-5 w-5" />}
-                />
-              </div>
-
-              {/* Subsidy Metrics */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <MetricCard
-                  title="Total Subsidy"
-                  value="120"
-                  icon={<DollarSign className="h-5 w-5" />}
-                />
-                <MetricCard
-                  title="Approved Subsidy"
-                  value="85"
-                  icon={<CheckCircle className="h-5 w-5" />}
-                />
-                <MetricCard
-                  title="Pending Subsidy"
-                  value="23"
-                  icon={<Clock className="h-5 w-5" />}
-                />
-                <MetricCard
-                  title="Rejected Subsidy"
-                  value="12"
-                  icon={<XCircle className="h-5 w-5" />}
+                  color="text-red-600"
+                  bgColor="bg-red-50"
                 />
               </div>
             </section>
 
             {/* Activity section */}
-            <Dashboardactivity />
+            <Dashboardactivity searchQuery={searchQuery} />
           </>
         );
       case "Artist":
-        return <Artist />;
+        return <Artist searchQuery={searchQuery} />;
       case "Notifications":
-        return <NotificationMain />;
+        return <NotificationMain searchQuery={searchQuery} />;
       case "Tender":
-        return <TenderMain />;
+        return <TenderMain searchQuery={searchQuery} />;
       case "Deleted":
         return (
           <div className="text-gray-600 text-lg">
@@ -163,7 +188,9 @@ const Dashboard = () => {
           <div className="flex items-center gap-4">
             <input
               type="text"
-              placeholder="Search applications..."
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="px-4 py-2 rounded-lg border border-gray-300 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-[#891737] focus:border-transparent"
             />
             <div className="w-10 h-10 rounded-full bg-[#891737] flex items-center justify-center">
@@ -194,11 +221,10 @@ const Dashboard = () => {
 
 const SidebarItem = ({ icon, label, active, onClick }) => (
   <div
-    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 ${
-      active 
-        ? "bg-[#891737] text-white shadow-sm" 
-        : "text-gray-700 hover:bg-gray-100"
-    }`}
+    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all duration-200 ${active
+      ? "bg-[#891737] text-white shadow-sm"
+      : "text-gray-700 hover:bg-gray-100"
+      }`}
     onClick={onClick}
   >
     <span className="text-lg">{icon}</span>
@@ -206,15 +232,19 @@ const SidebarItem = ({ icon, label, active, onClick }) => (
   </div>
 );
 
-const MetricCard = ({ title, value, icon }) => {
+const MetricCard = ({ title, value, subtitle, icon, color, bgColor }) => {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md hover:border-gray-300 transition-all duration-200">
+    <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all duration-200">
       <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-sm text-gray-500 font-medium mb-2">{title}</p>
+        <div>
+          <div className={`flex items-center gap-2 mb-2 ${color}`}>
+            {icon}
+            <h3 className="text-sm font-semibold">{title}</h3>
+          </div>
           <p className="text-3xl font-bold text-gray-900">{value}</p>
+          <p className="text-xs text-gray-500 mt-1">{subtitle}</p>
         </div>
-        <div className="bg-gray-100 text-gray-600 p-3 rounded-lg">
+        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${bgColor} ${color}`}>
           {icon}
         </div>
       </div>

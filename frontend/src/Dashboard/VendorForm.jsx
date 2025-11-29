@@ -26,7 +26,7 @@ const VendorProductForm = () => {
   // Categories from the attached file
   const categories = [
     'Photography & Videography',
-    'Catering Services', 
+    'Catering Services',
     'Decorations & Lighting',
     'Music & Entertainment',
     'Transportation',
@@ -34,6 +34,7 @@ const VendorProductForm = () => {
     'Costumes & Makeup',
     'Equipment Rental',
     'Post-Production',
+    "Security",
     'Other'
   ];
 
@@ -128,7 +129,7 @@ const VendorProductForm = () => {
 
     productKeys.forEach((key, index) => {
       const product = productData[key] || {};
-      
+
       if (!product.name?.trim()) {
         errors[`${key}_name`] = "Product name is required";
       }
@@ -154,7 +155,7 @@ const VendorProductForm = () => {
       if (name === 'category') {
         setVendorData(prev => ({
           ...prev,
-          category: checked 
+          category: checked
             ? [...prev.category, value]
             : prev.category.filter(cat => cat !== value)
         }));
@@ -198,7 +199,7 @@ const VendorProductForm = () => {
   // Handle vendor form submission
   const handleVendorSubmit = (e) => {
     e.preventDefault();
-    
+
     if (validateVendorForm()) {
       console.log("Vendor data:", vendorData);
       setStep(2);
@@ -226,21 +227,21 @@ const VendorProductForm = () => {
   // Handle product form submission - Updated to match the attached file's API structure
   const handleProductSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateProductForm()) {
       return;
     }
 
     console.log("Form data being submitted");
     setLoading(true);
-    
+
     try {
       // Build products array
       const validProducts = [];
       productKeys.forEach((key) => {
         const [category, type] = key.split('-');
         const product = productData[key];
-        
+
         if (product && product.name && product.description && product.price) {
           validProducts.push({
             name: product.name,
@@ -260,7 +261,7 @@ const VendorProductForm = () => {
 
       // Create FormData exactly like the attached file
       const submitData = new FormData();
-      
+
       // Append vendor data - matching the attached file structure
       submitData.append('vendorName', vendorData.vendorName.trim());
       submitData.append('category', vendorData.category.join(', ')); // Join multiple categories
@@ -336,7 +337,7 @@ const VendorProductForm = () => {
 
       if (result.success) {
         alert('Vendor registered successfully!');
-        
+
         // Reset everything
         setVendorData({
           vendorName: '',
@@ -354,12 +355,12 @@ const VendorProductForm = () => {
         setLogoFile(null);
         setLogoPreview(null);
         setStep(1);
-        
-        
+
+
       } else {
         throw new Error(result.message || 'Registration failed');
       }
-      
+
     } catch (error) {
       console.error('Submit error:', error);
       alert(`Registration failed: ${error.message}`);
@@ -373,7 +374,7 @@ const VendorProductForm = () => {
       {step === 1 && (
         <form onSubmit={handleVendorSubmit} className="space-y-6">
           <h2 className="text-2xl font-bold text-[#a92b4e]">Vendor Information</h2>
-          
+
           <div>
             <label className="block mb-1 font-medium">Vendor Name *</label>
             <input
@@ -506,10 +507,10 @@ const VendorProductForm = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {categories.map((cat) => (
                 <label key={cat} className="flex items-center gap-2 cursor-pointer">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     name="category"
-                    value={cat} 
+                    value={cat}
                     checked={vendorData.category.includes(cat)}
                     onChange={handleVendorChange}
                     className="w-4 h-4 text-[#a92b4e] focus:ring-[#a92b4e]"
@@ -544,7 +545,7 @@ const VendorProductForm = () => {
           {vendorData.category.map((cat) => (
             <div key={cat} className="border rounded-xl p-6 space-y-4 bg-gray-50">
               <h3 className="text-lg font-semibold text-gray-800">{cat}</h3>
-              
+
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 {(productTypes[cat] || []).map((type) => (
                   <label key={type} className="flex items-center gap-2 cursor-pointer">
@@ -562,7 +563,7 @@ const VendorProductForm = () => {
               {(productTypes[cat] || []).map((type) => {
                 const key = `${cat}-${type}`;
                 const isSelected = selectedTypes[key];
-                
+
                 return isSelected && (
                   <div key={type} className="border-t pt-4 mt-4 bg-white p-4 rounded-lg">
                     <h4 className="font-medium mb-3 text-[#a92b4e]">{type} Details</h4>
@@ -638,7 +639,7 @@ const VendorProductForm = () => {
             >
               ← Back
             </button>
-            
+
             <button
               type="submit"
               disabled={loading || productKeys.length === 0}

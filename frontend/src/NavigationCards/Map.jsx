@@ -1,259 +1,250 @@
 import React, { useState, useEffect } from "react";
-import {
-    MapContainer,
-    TileLayer,
-    Marker,
-    Popup,
-    Tooltip,
-    LayersControl,
-    useMap,
-} from "react-leaflet";
-import L from "leaflet";
-import { FiSearch, FiMapPin, FiArrowLeft } from "react-icons/fi";
-import "leaflet/dist/leaflet.css";
-
-const customIcon = new L.Icon({
-    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-    shadowSize: [41, 41],
-});
-
-const redIcon = new L.Icon({
-    iconUrl: "https://chart.googleapis.com/chart?chst=d_map_pin_icon&chld=home|ff0000",
-    iconSize: [30, 40],
-    iconAnchor: [15, 40],
-    popupAnchor: [1, -34],
-});
-
-const places = [
-    { name: "CineWorks Studios", type: "Film Production", lat: 25.45711, lng: 86.06521 },
-    { name: "Silver Frame Productions", type: "Film Production", lat: 25.45217, lng: 86.07819 },
-    { name: "Visionary Films Pvt. Ltd.", type: "Film Production", lat: 25.44437, lng: 86.03709 },
-    { name: "DreamScape Entertainment", type: "Film Production", lat: 25.46654, lng: 86.0997 },
-    { name: "Lights Camera Action Studios", type: "Film Production", lat: 25.4771, lng: 85.9926 },
-    { name: "Urban Prop Masters", type: "Props Vendor", lat: 25.42066, lng: 86.11903 },
-    { name: "Creative Set Rentals", type: "Props Vendor", lat: 25.44557, lng: 86.02732 },
-    { name: "Scenic Design Depot", type: "Props Vendor", lat: 25.41804, lng: 86.10659 },
-    { name: "Epic Props & Effects", type: "Props Vendor", lat: 25.47121, lng: 85.96212 },
-    { name: "Cinema Artisans", type: "Props Vendor", lat: 25.62416, lng: 86.14468 },
-    { name: "Set Decor Hub", type: "Props Vendor", lat: 25.59235, lng: 86.1613 },
-    { name: "FilmCraft Equipment", type: "Props Vendor", lat: 25.37884, lng: 86.00514 },
-    { name: "Golden Reel Props", type: "Props Vendor", lat: 25.40944, lng: 86.14995 },
-    { name: "Starlight Production House", type: "Film Production", lat: 25.42561, lng: 86.13863 },
-    { name: "Maverick Props Studio", type: "Props Vendor", lat: 25.42692, lng: 86.1366 },
-    { name: "OnSet Essentials", type: "Props Vendor", lat: 25.37628, lng: 86.18749 },
-    { name: "Backdrop Rentals Co.", type: "Props Vendor", lat: 25.41896, lng: 86.1152 },
-    { name: "Classic Props Gallery", type: "Props Vendor", lat: 25.66817, lng: 86.1777 },
-];
-
-const categories = ["All", "Film Production", "Props Vendor"];
-
-const FlyToLocation = ({ lat, lng }) => {
-    const map = useMap();
-    useEffect(() => {
-        if (lat && lng) {
-            map.flyTo([lat, lng], 14, { duration: 1.5 });
-        }
-    }, [lat, lng]);
-    return null;
-};
+import { FiSearch, FiMapPin, FiArrowLeft, FiGlobe, FiPhone, FiMail } from "react-icons/fi";
 
 const Map = () => {
-    const [selectedType, setSelectedType] = useState("All");
+    const [vendors, setVendors] = useState([]);
     const [search, setSearch] = useState("");
-    const [userLocation, setUserLocation] = useState(null);
-    const [showMap, setShowMap] = useState(false);
-    const [focusedPlace, setFocusedPlace] = useState(null);
-
-    const filtered = places.filter(
-        (p) =>
-            (selectedType === "All" || p.type === selectedType) &&
-            p.name.toLowerCase().includes(search.toLowerCase())
-    );
+    const [focusedVendor, setFocusedVendor] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                setUserLocation({
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                });
-            },
-            (error) => console.log("Geolocation error:", error)
-        );
+        const fetchVendors = async () => {
+            try {
+                const response = await fetch("https://biharfilmbackend-production.up.railway.app/api/vendor/getvendors");
+                const data = await response.json();
+                if (data.success) {
+                    setVendors(data.data);
+                }
+            } catch (error) {
+                console.error("Error fetching vendors:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchVendors();
     }, []);
 
-    const handlePlaceClick = (place) => {
-        setFocusedPlace(place);
-        setShowMap(true);
-    };
-
-    const handleBack = () => {
-        setShowMap(false);
-        setFocusedPlace(null);
-    };
+    const filtered = vendors.filter(
+        (v) =>
+            v.vendorName && v.vendorName.toLowerCase().includes(search.toLowerCase())
+    );
 
     return (
-        <div className="w-full max-w-7xl mx-auto min-h-[38rem] max-h-[38rem] bg-gray-900 text-white flex rounded-xl overflow-hidden">
-            
+        <div className="w-full max-w-7xl mx-auto min-h-[38rem] max-h-[38rem] bg-gradient-to-br from-[#a92b4e] via-[#a92b4e] to-[#801f3a] text-white flex rounded-xl overflow-hidden shadow-2xl">
+
             {/* Sidebar */}
-            <div className={`${showMap ? 'hidden md:block md:w-80' : 'w-full md:w-80'} bg-gray-800 flex flex-col`}>
-                <div className="p-4 border-b border-gray-700">
-                    <h2 className="text-lg font-semibold text-purple-300 mb-3">Props & Studios</h2>
-                    
+            <div className={`${focusedVendor ? 'hidden md:block md:w-80' : 'w-full md:w-80'} bg-black/20 backdrop-blur-sm flex flex-col border-r border-white/10`}>
+                <div className="p-4 border-b border-white/10">
+                    <h2 className="text-lg font-semibold text-white mb-3">Vendors & Services</h2>
+
                     {/* Search */}
-                    <div className="relative mb-3">
-                        <FiSearch className="absolute left-3 top-3 text-gray-400 text-sm" />
+                    <div className="relative mb-1">
+                        <FiSearch className="absolute left-3 top-3 text-white/60 text-sm" />
                         <input
                             type="text"
-                            placeholder="Search..."
+                            placeholder="Search vendors..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-9 pr-3 py-2 text-sm rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500"
+                            className="w-full pl-9 pr-3 py-2 text-sm rounded-lg bg-white/10 border border-white/10 text-white placeholder-white/50 focus:outline-none focus:border-white/30 focus:bg-white/20 transition-all"
                         />
-                    </div>
-                    
-                    {/* Categories */}
-                    <div className="flex flex-wrap gap-2">
-                        {categories.map((type) => (
-                            <button
-                                key={type}
-                                onClick={() => {
-                                    setSelectedType(type);
-                                    setShowMap(false);
-                                    setFocusedPlace(null);
-                                }}
-                                className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-                                    selectedType === type
-                                        ? "bg-purple-600 text-white"
-                                        : "bg-gray-700 hover:bg-gray-600 text-gray-300"
-                                }`}
-                            >
-                                {type}
-                            </button>
-                        ))}
                     </div>
                 </div>
 
-                {/* Places List */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                    <p className="text-xs text-gray-400 mb-3">
-                        {filtered.length} locations
+                {/* Vendors List */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+                    <p className="text-xs text-white/60 mb-3">
+                        {filtered.length} vendors
                     </p>
-                    
-                    {filtered.length === 0 ? (
-                        <div className="text-center text-gray-400 py-8">
+
+                    {loading ? (
+                        <div className="text-center text-white/60 py-8">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+                            <p className="text-sm">Loading...</p>
+                        </div>
+                    ) : filtered.length === 0 ? (
+                        <div className="text-center text-white/60 py-8">
                             <FiMapPin className="text-2xl mx-auto mb-2 opacity-50" />
-                            <p className="text-sm">No locations found</p>
+                            <p className="text-sm">No vendors found</p>
                         </div>
                     ) : (
-                        filtered.map((place, i) => (
+                        filtered.map((vendor, i) => (
                             <div
-                                key={i}
-                                onClick={() => handlePlaceClick(place)}
-                                className="cursor-pointer bg-gray-700/50 hover:bg-gray-700 rounded-lg p-3 border border-gray-600/50 hover:border-purple-500/50 transition-all duration-200 group"
+                                key={vendor.id || i}
+                                onClick={() => setFocusedVendor(vendor)}
+                                className={`cursor-pointer rounded-lg p-3 border transition-all duration-200 group ${focusedVendor?.id === vendor.id
+                                    ? "bg-white/20 border-white/30"
+                                    : "bg-white/5 hover:bg-white/10 border-white/5 hover:border-white/20"
+                                    }`}
                             >
-                                <h4 className="font-medium text-sm text-white group-hover:text-purple-200 truncate">
-                                    {place.name}
-                                </h4>
-                                <p className="text-xs text-gray-400 mt-1 flex items-center">
-                                    <FiMapPin className="mr-1 text-xs" />
-                                    {place.type}
-                                </p>
+                                <div className="flex items-center space-x-3">
+                                    <img
+                                        src={vendor.logoUrl || "https://via.placeholder.com/150"}
+                                        alt={vendor.vendorName}
+                                        className="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-white/20"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="font-medium text-sm text-white group-hover:text-white truncate">
+                                            {vendor.vendorName}
+                                        </h4>
+                                        <p className="text-xs text-white/60 mt-1 capitalize truncate">
+                                            {vendor.category}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         ))
                     )}
                 </div>
             </div>
 
-            {/* Map Section */}
-            {showMap && (
-                <div className="flex-1 flex flex-col">
-                    {/* Map Header */}
-                    <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-gray-800/50">
-                        <button
-                            onClick={handleBack}
-                            className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                        >
-                            <FiArrowLeft className="text-sm" />
-                            <span className="hidden sm:inline">Back</span>
-                        </button>
-                        
-                        {focusedPlace && (
-                            <div className="bg-gray-700/50 px-3 py-2 rounded-lg">
-                                <p className="text-sm font-medium text-purple-300 truncate max-w-48">
-                                    {focusedPlace.name}
-                                </p>
-                                <p className="text-xs text-gray-400">{focusedPlace.type}</p>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Map Container */}
-                    <div className="flex-1 relative">
-                        <MapContainer
-                            center={focusedPlace ? [focusedPlace.lat, focusedPlace.lng] : [25.43, 86.1]}
-                            zoom={focusedPlace ? 14 : 11}
-                            scrollWheelZoom={true}
-                            className="w-full h-full"
-                        >
-                            <LayersControl position="topright">
-                                <LayersControl.BaseLayer checked name="Street">
-                                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                                </LayersControl.BaseLayer>
-                                <LayersControl.BaseLayer name="Satellite">
-                                    <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
-                                </LayersControl.BaseLayer>
-                            </LayersControl>
-
-                            {filtered.map((place, i) => (
-                                <Marker key={i} position={[place.lat, place.lng]} icon={customIcon}>
-                                    <Popup>
+            {/* Main Content */}
+            <div className="flex-1 flex flex-col bg-black/10 backdrop-blur-sm">
+                {!focusedVendor ? (
+                    // Grid view for larger screens
+                    <div className="hidden md:block flex-1 p-6">
+                        <div className="mb-6">
+                            <h3 className="text-2xl font-bold text-white mb-2">Available Vendors</h3>
+                            <p className="text-white/60">Click on any vendor to view their details</p>
+                        </div>
+                        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 h-full overflow-y-auto pr-2 custom-scrollbar pb-20">
+                            {loading ? (
+                                <div className="col-span-full flex justify-center py-20">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                                </div>
+                            ) : filtered.length === 0 ? (
+                                <div className="col-span-full flex flex-col items-center justify-center py-12 text-white/40">
+                                    <FiMapPin className="text-5xl mb-4 opacity-30" />
+                                    <p className="text-xl">No vendors found</p>
+                                </div>
+                            ) : (
+                                filtered.map((vendor, i) => (
+                                    <div
+                                        key={vendor.id || i}
+                                        onClick={() => setFocusedVendor(vendor)}
+                                        className="cursor-pointer bg-white/5 hover:bg-white/10 rounded-2xl p-4 border border-white/10 hover:border-white/30 transition-all duration-300 group h-fit hover:-translate-y-1 shadow-lg"
+                                    >
                                         <div className="text-center">
-                                            <h4 className="font-semibold text-gray-800">{place.name}</h4>
-                                            <p className="text-sm text-gray-600">{place.type}</p>
+                                            <img
+                                                src={vendor.logoUrl || "https://via.placeholder.com/150"}
+                                                alt={vendor.vendorName}
+                                                className="w-20 h-20 rounded-full object-cover mx-auto mb-3 border-2 border-white/20 group-hover:border-white/50 transition-colors"
+                                            />
+                                            <h4 className="font-semibold text-white mb-1 truncate">
+                                                {vendor.vendorName}
+                                            </h4>
+                                            <p className="text-xs text-white/70 mb-2 capitalize bg-white/10 inline-block px-2 py-0.5 rounded-full truncate max-w-full">{vendor.category}</p>
+                                            <p className="text-xs text-white/50 line-clamp-2">{vendor.address}</p>
+                                            <div className="mt-3 text-xs text-white/40 group-hover:text-white/80 transition-colors">
+                                                Click to view details
+                                            </div>
                                         </div>
-                                    </Popup>
-                                    <Tooltip direction="top" offset={[0, -30]} permanent>
-                                        <div className={`px-2 py-1 rounded text-xs font-medium ${
-                                            focusedPlace?.name === place.name
-                                                ? "bg-purple-600 text-white"
-                                                : "bg-white text-gray-800"
-                                        }`}>
-                                            {place.name}
-                                        </div>
-                                    </Tooltip>
-                                </Marker>
-                            ))}
-                            
-                            {focusedPlace && <FlyToLocation lat={focusedPlace.lat} lng={focusedPlace.lng} />}
-                            
-                            {userLocation && (
-                                <Marker position={[userLocation.lat, userLocation.lng]} icon={redIcon}>
-                                    <Popup>
-                                        <div className="text-center">
-                                            <h4 className="font-semibold text-gray-800">Your Location</h4>
-                                        </div>
-                                    </Popup>
-                                </Marker>
+                                    </div>
+                                ))
                             )}
-                        </MapContainer>
+                        </div>
                     </div>
-                </div>
-            )}
+                ) : (
+                    // Vendor detail view
+                    <div className="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto custom-scrollbar">
+                        <div className="flex items-center justify-between mb-6">
+                            <button
+                                onClick={() => setFocusedVendor(null)}
+                                className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl shadow-lg transition-all duration-300 font-medium border border-white/10"
+                            >
+                                <FiArrowLeft />
+                                <span>Back to Vendors</span>
+                            </button>
+                        </div>
+
+                        <div className="flex-1 flex flex-col items-center">
+                            <div className="text-center max-w-2xl w-full bg-white/5 p-8 rounded-3xl border border-white/10 shadow-xl">
+                                <img
+                                    src={focusedVendor.logoUrl || "https://via.placeholder.com/150"}
+                                    alt={focusedVendor.vendorName}
+                                    className="w-40 h-40 rounded-full object-cover mx-auto mb-6 border-4 border-white/20 shadow-2xl"
+                                />
+                                <h3 className="text-4xl font-bold text-white mb-2">{focusedVendor.vendorName}</h3>
+                                <div className="inline-block px-6 py-2 bg-white/10 text-white rounded-full text-sm font-medium mb-6 border border-white/10 capitalize">
+                                    {focusedVendor.category}
+                                </div>
+
+                                <div className="text-left space-y-6 bg-black/20 p-6 rounded-xl mb-8">
+                                    <div className="flex items-start space-x-3">
+                                        <FiMapPin className="mt-1 text-white/60 flex-shrink-0" />
+                                        <div>
+                                            <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-1">Address</h4>
+                                            <p className="text-gray-200 text-lg leading-relaxed">
+                                                {focusedVendor.address || "No address provided."}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {focusedVendor.phoneNumber && (
+                                            <div className="flex items-center space-x-3">
+                                                <FiPhone className="text-white/60" />
+                                                <div>
+                                                    <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-1">Phone</h4>
+                                                    <p className="text-white">{focusedVendor.phoneNumber}</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {focusedVendor.email && (
+                                            <div className="flex items-center space-x-3">
+                                                <FiMail className="text-white/60" />
+                                                <div>
+                                                    <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-1">Email</h4>
+                                                    <p className="text-white truncate max-w-[200px]">{focusedVendor.email}</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {focusedVendor.website && (
+                                        <div className="flex items-center space-x-3">
+                                            <FiGlobe className="text-white/60" />
+                                            <div>
+                                                <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-1">Website</h4>
+                                                <a href={focusedVendor.website} target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:text-blue-100 underline truncate max-w-full block">
+                                                    {focusedVendor.website}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="flex justify-center space-x-4">
+                                    <button className="px-8 py-3 bg-white text-[#a92b4e] hover:bg-gray-100 rounded-xl font-bold transition-colors shadow-lg">
+                                        Contact Vendor
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
 
             {/* Custom Styles */}
             <style jsx global>{`
-                .leaflet-tooltip {
-                    background: transparent !important;
-                    border: none !important;
-                    box-shadow: none !important;
+                .line-clamp-2 {
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
                 }
-                .leaflet-popup-content-wrapper {
-                    border-radius: 8px;
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: rgba(255, 255, 255, 0.05);
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: rgba(255, 255, 255, 0.2);
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(255, 255, 255, 0.3);
                 }
             `}</style>
         </div>

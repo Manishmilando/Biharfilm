@@ -1,23 +1,34 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavbarB from "../Components/NavbarB";
+import axios from "axios";
 
-const tenders = [
-  { title: "Camera Equipment Tender", date: "2025-06-10", description: "Vendors invited to supply camera equipment." },
-  { title: "Post-production Services", date: "2025-05-28", description: "Tender for post-production services now open." }, 
-  { title: "Film Festival Dates Announced", date: "2025-05-20", description: "Annual Bihar Film Festival will take place in August." },
-  { title: "New Film Policy Launched", date: "2025-06-01", description: "The government has introduced a new policy for film makers." },
-];
-
-const Notifications = () => {
+const Tenders = () => {
   const navigate = useNavigate();
+  const [tenders, setTenders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const link = document.createElement("link");
     link.href = "https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap";
     link.rel = "stylesheet";
     document.head.appendChild(link);
+
+    fetchTenders();
   }, []);
+
+  const fetchTenders = async () => {
+    try {
+      const { data } = await axios.get(
+        "https://biharfilmbackend-production.up.railway.app/api/tender/tenders"
+      );
+      setTenders(data.tenders || []);
+    } catch (error) {
+      console.error("Failed to fetch tenders:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#190108] px-4 sm:px-10 lg:px-20 py-10 text-white font-[Poppins] animate-fade">
@@ -54,20 +65,45 @@ const Notifications = () => {
               <th className="px-4 py-3 text-left">Download</th>
             </tr>
           </thead>
-          <tbody>
-            {tenders.map((item, index) => (
-              <tr key={index} className="hover:bg-gray-100 transition duration-300">
-                <td className="px-4 py-3">{index + 1}</td>
-                <td className="px-4 py-3 font-medium">{item.title}</td>
-                <td className="px-4 py-3 text-sm text-gray-600">{item.date}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{item.description}</td>
-                <td className="px-4 py-3">
-                  <button className="text-[#891737] border border-[#891737] px-3 py-1 rounded hover:bg-[#891737] hover:text-white text-sm font-semibold transition duration-300">
-                    ⬇ PDF
-                  </button>
+          <tbody className="divide-y divide-gray-200">
+            {loading ? (
+              <tr>
+                <td colSpan="5" className="px-4 py-8 text-center text-gray-500">
+                  Loading tenders...
                 </td>
               </tr>
-            ))}
+            ) : tenders.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="px-4 py-8 text-center text-gray-500">
+                  No tenders found.
+                </td>
+              </tr>
+            ) : (
+              tenders.map((item, index) => (
+                <tr key={item.id || index} className="hover:bg-gray-50 transition duration-300">
+                  <td className="px-4 py-3">{index + 1}</td>
+                  <td className="px-4 py-3 font-medium">{item.title}</td>
+                  <td className="px-4 py-3 text-sm text-gray-600">
+                    {item.date ? new Date(item.date).toLocaleDateString() : "-"}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-700">{item.description}</td>
+                  <td className="px-4 py-3">
+                    {item.pdf ? (
+                      <a
+                        href={item.pdf}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block text-[#891737] border border-[#891737] px-3 py-1 rounded hover:bg-[#891737] hover:text-white text-sm font-semibold transition duration-300 no-underline"
+                      >
+                        ⬇ PDF
+                      </a>
+                    ) : (
+                      <span className="text-gray-400 text-sm">-</span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
@@ -75,4 +111,4 @@ const Notifications = () => {
   );
 };
 
-export default Notifications;
+export default Tenders;

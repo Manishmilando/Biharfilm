@@ -10,6 +10,8 @@ const Navbar = () => {
   const [navbarVisible, setNavbarVisible] = useState(true);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isNoticeDropdownOpen, setIsNoticeDropdownOpen] = useState(false);
+  const [isDocumentsDropdownOpen, setIsDocumentsDropdownOpen] = useState(false);
+  const [isHomeDropdownOpen, setIsHomeDropdownOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,15 +42,28 @@ const Navbar = () => {
   };
 
   const handleLocationClick = (id) => {
-    if (id === "notice") {
+    if (id === "notice" || id === "documents" || id === "home") {
       return; // Do nothing since dropdown is used
     } else {
-      const section = document.getElementById(id);
-      if (section) {
-        scrollToElementSmoothly(section, 2200);
+      if (location.pathname !== "/") {
+        navigate("/", { state: { scrollTo: id } });
+      } else {
+        const section = document.getElementById(id);
+        if (section) {
+          scrollToElementSmoothly(section, 2200);
+        }
       }
       if (isMobileMenuOpen) setIsMobileMenuOpen(false);
     }
+  };
+
+  const handleHomeClick = () => {
+    if (location.pathname !== "/") {
+      navigate("/");
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    setIsMobileMenuOpen(false);
   };
 
   const handleApplyClick = () => {
@@ -85,12 +100,10 @@ const Navbar = () => {
   }, [prevScrollPos]);
 
   const menuItems = [
-    { id: "home", label: "Home" },
+    // { id: "home", label: "Home" }, // Moved to dropdown
     { id: "Vr", label: "VR" },
-    { id: "FilmClub", label: "Film Club" },
-    // { id: "Shooting-location", label: "Shooting Location" },
-    { id: "GoverningBody", label: "Governing Body" },
-    { id: "FilmPolicy", label: "Film Policy" },
+    // Removed Film Club and Governing Body
+    { id: "FilmPolicy", label: "Policy" },
   ];
 
   return (
@@ -106,7 +119,7 @@ const Navbar = () => {
         <div className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-100 z-0 pointer-events-none transition-opacity duration-300"></div>
 
         <div className="flex justify-between items-center relative z-10">
-          <div className="flex items-center">
+          <div className="flex items-center cursor-pointer" onClick={handleHomeClick}>
             <img src={Logo1} alt="logo" className="h-14 w-20 md:h-16 md:w-24" />
           </div>
 
@@ -115,6 +128,52 @@ const Navbar = () => {
             className={`hidden md:flex items-center gap-10 text-lg relative z-10 transition-colors duration-300 ${navbarVisible && hasScrolled ? "text-black" : "text-white"
               } group-hover:text-black`}
           >
+            <li
+              className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
+              onClick={handleHomeClick}
+            >
+              Home
+            </li>
+            {/* Home Dropdown */}
+            <li
+              className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
+              onMouseEnter={() => setIsHomeDropdownOpen(true)}
+              onMouseLeave={() => setIsHomeDropdownOpen(false)}
+            >
+              About Us <ChevronDown size={16} className="ml-1" />
+              {isHomeDropdownOpen && (
+                <ul className="absolute top-full left-0 w-40 bg-white text-black shadow-lg rounded-md overflow-hidden z-50">
+
+                  <li
+                    onClick={() => {
+                      navigate("/about-us");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    BSFDFC Profile
+                  </li>
+                  <li
+                    onClick={() => {
+                      handleLocationClick("GoverningBody");
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Board of Director's
+                  </li>
+
+                  <li
+                    onClick={() => {
+                      handleLocationClick("GoverningBody");
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Organization structure
+                  </li>
+                </ul>
+              )}
+            </li>
+
             {menuItems.map((item) => (
               <li
                 key={item.id}
@@ -136,15 +195,15 @@ const Navbar = () => {
               </li>
             </div>
 
-            {/* Notice Dropdown */}
+            {/* Documents Dropdown */}
             <li
               className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
-              onMouseEnter={() => setIsNoticeDropdownOpen(true)}
-              onMouseLeave={() => setIsNoticeDropdownOpen(false)}
+              onMouseEnter={() => setIsDocumentsDropdownOpen(true)}
+              onMouseLeave={() => setIsDocumentsDropdownOpen(false)}
             >
-              Notification <ChevronDown size={16} className="ml-1" />
-              {isNoticeDropdownOpen && (
-                <ul className="absolute top-full left-0 w-40 bg-white text-black shadow-lg rounded-md overflow-hidden z-50">
+              Documents <ChevronDown size={16} className="ml-1" />
+              {isDocumentsDropdownOpen && (
+                <ul className="absolute top-full left-0 w-56 bg-white text-black shadow-lg rounded-md overflow-hidden z-50">
                   <li
                     onClick={() => {
                       navigate("/notification");
@@ -152,7 +211,7 @@ const Navbar = () => {
                     }}
                     className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
                   >
-                    Notifications
+                    Notification
                   </li>
                   <li
                     onClick={() => {
@@ -161,17 +220,55 @@ const Navbar = () => {
                     }}
                     className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
                   >
-                    Tenders
+                    Tender
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate("/document/film-policy");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Film Policy
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate("/document/bihar-baiskop");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Bihar Baiskop
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate("/document/goa-film-brochure");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Goa Film Brochure
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate("/document/promotion-policy");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Promotion Policy
                   </li>
                 </ul>
               )}
             </li>
+
+
             <div className="flex items-center gap-1">
               <li
                 onClick={handleApplyClick}
                 className="flex items-center gap-1 cursor-pointer hover:text-red-600 font-semibold transition"
               >
-                Login
+                Register
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -220,6 +317,47 @@ const Navbar = () => {
           </button>
 
           <ul className="flex flex-col gap-6 mt-16 text-lg font-semibold">
+
+            {/* Home Dropdown in Mobile */}
+            <li className="text-gray-300 border-b border-gray-700 pb-1">Home</li>
+            <ul className="ml-4 flex flex-col gap-3">
+              <li
+                onClick={handleHomeClick}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Main
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/about-us");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                About Us
+              </li>
+              <li
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Vision
+              </li>
+              <li
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Mission
+              </li>
+              <li
+                onClick={() => {
+                  handleLocationClick("GoverningBody");
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Team
+              </li>
+            </ul>
+
             {menuItems.map((item) => (
               <li
                 key={item.id}
@@ -241,8 +379,67 @@ const Navbar = () => {
               Shooting Location
             </li>
 
+            {/* Documents Dropdown in Mobile */}
+            <li className="mt-2 text-gray-300 border-b border-gray-700 pb-1">Documents</li>
+            <ul className="ml-4 flex flex-col gap-3">
+              <li
+                onClick={() => {
+                  navigate("/notification");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Notification
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/tender");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Tender
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/document/film-policy");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Film Policy
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/document/bihar-baiskop");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Bihar Baiskop
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/document/goa-film-brochure");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Goa Film Brochure
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/document/promotion-policy");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Promotion Policy
+              </li>
+            </ul>
+
             {/* Notice Dropdown in Mobile */}
-            <li className="mt-2">Notifications</li>
+            <li className="mt-2 text-gray-300 border-b border-gray-700 pb-1">Notifications</li>
             <ul className="ml-4 flex flex-col gap-3">
               <li
                 onClick={() => {
@@ -268,7 +465,7 @@ const Navbar = () => {
               onClick={handleApplyClick}
               className="cursor-pointer hover:text-red-500 transition-colors mt-4"
             >
-             Login
+              Login
             </li>
           </ul>
         </div>
