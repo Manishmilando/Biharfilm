@@ -9,7 +9,6 @@ const Navbar = () => {
   const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
   const [navbarVisible, setNavbarVisible] = useState(true);
   const [hasScrolled, setHasScrolled] = useState(false);
-  const [isNoticeDropdownOpen, setIsNoticeDropdownOpen] = useState(false);
   const [isDocumentsDropdownOpen, setIsDocumentsDropdownOpen] = useState(false);
   const [isHomeDropdownOpen, setIsHomeDropdownOpen] = useState(false);
 
@@ -42,19 +41,17 @@ const Navbar = () => {
   };
 
   const handleLocationClick = (id) => {
-    if (id === "notice" || id === "documents" || id === "home") {
-      return; // Do nothing since dropdown is used
+    if (id === "notice" || id === "documents" || id === "home") return;
+
+    if (location.pathname !== "/") {
+      navigate("/", { state: { scrollTo: id } });
     } else {
-      if (location.pathname !== "/") {
-        navigate("/", { state: { scrollTo: id } });
-      } else {
-        const section = document.getElementById(id);
-        if (section) {
-          scrollToElementSmoothly(section, 2200);
-        }
+      const section = document.getElementById(id);
+      if (section) {
+        scrollToElementSmoothly(section, 2200);
       }
-      if (isMobileMenuOpen) setIsMobileMenuOpen(false);
     }
+    if (isMobileMenuOpen) setIsMobileMenuOpen(false);
   };
 
   const handleHomeClick = () => {
@@ -99,22 +96,33 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos]);
 
+  // 🔒 Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isMobileMenuOpen]);
+
   const menuItems = [
-    // { id: "home", label: "Home" }, // Moved to dropdown
     { id: "Vr", label: "VR" },
-    // Removed Film Club and Governing Body
     { id: "FilmPolicy", label: "Policy" },
   ];
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 ${showNavbar ? "opacity-100" : "opacity-0"
-        } ${navbarVisible ? "transform-none" : "-translate-y-full"} group`}
+      className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 ${
+        showNavbar ? "opacity-100" : "opacity-0"
+      } ${navbarVisible ? "transform-none" : "-translate-y-full"} group`}
     >
       <div
-        className={`px-4 sm:px-6 lg:px-16 py-2 md:py-3 relative transition-colors duration-300 ${navbarVisible && hasScrolled ? "bg-white" : "bg-transparent"
-
-          }`}
+        className={`px-4 sm:px-6 lg:px-16 py-2 md:py-3 relative transition-colors duration-300 ${
+          navbarVisible && hasScrolled ? "bg-white" : "bg-transparent"
+        }`}
       >
         <div className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-100 z-0 pointer-events-none transition-opacity duration-300"></div>
 
@@ -125,8 +133,9 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <ul
-            className={`hidden md:flex items-center gap-10 text-lg relative z-10 transition-colors duration-300 ${navbarVisible && hasScrolled ? "text-black" : "text-white"
-              } group-hover:text-black`}
+            className={`hidden md:flex items-center gap-10 text-lg relative z-10 transition-colors duration-300 ${
+              navbarVisible && hasScrolled ? "text-black" : "text-white"
+            } group-hover:text-black`}
           >
             <li
               className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
@@ -134,6 +143,7 @@ const Navbar = () => {
             >
               Home
             </li>
+
             {/* Home Dropdown */}
             <li
               className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
@@ -143,7 +153,6 @@ const Navbar = () => {
               About Us <ChevronDown size={16} className="ml-1" />
               {isHomeDropdownOpen && (
                 <ul className="absolute top-full left-0 w-40 bg-white text-black shadow-lg rounded-md overflow-hidden z-50">
-
                   <li
                     onClick={() => {
                       navigate("/about-us");
@@ -154,18 +163,13 @@ const Navbar = () => {
                     BSFDFC Profile
                   </li>
                   <li
-                    onClick={() => {
-                      handleLocationClick("GoverningBody");
-                    }}
+                    onClick={() => handleLocationClick("GoverningBody")}
                     className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
                   >
                     Board of Director's
                   </li>
-
                   <li
-                    onClick={() => {
-                      handleLocationClick("GoverningBody");
-                    }}
+                    onClick={() => handleLocationClick("GoverningBody")}
                     className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
                   >
                     Organization structure
@@ -183,17 +187,16 @@ const Navbar = () => {
                 {item.label}
               </li>
             ))}
-            <div>
-              <li
-                className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
-                onClick={() => {
-                  navigate("/ShootingLocation");
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                Shooting Location
-              </li>
-            </div>
+
+            <li
+              className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
+              onClick={() => {
+                navigate("/ShootingLocation");
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              Shooting Location
+            </li>
 
             {/* Documents Dropdown */}
             <li
@@ -262,40 +265,36 @@ const Navbar = () => {
               )}
             </li>
 
-
-            <div className="flex items-center gap-1">
-              <li
-                onClick={handleApplyClick}
-                className="flex items-center gap-1 cursor-pointer hover:text-red-600 font-semibold transition"
+            <li
+              onClick={handleApplyClick}
+              className="flex items-center gap-1 cursor-pointer hover:text-red-600 font-semibold transition"
+            >
+              Register
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-5 h-5"
               >
-                Register
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
-                  />
-                </svg>
-              </li>
-            </div>
-
-
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
+                />
+              </svg>
+            </li>
           </ul>
 
-          {/* Mobile Toggle (Hamburger only) */}
+          {/* Mobile Toggle */}
           <div className="md:hidden relative z-[60]">
             {!isMobileMenuOpen && (
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className={`p-2 rounded-md focus:outline-none transition-colors duration-300 ${navbarVisible && hasScrolled ? "text-black" : "text-white"
-                  }`}
+                className={`p-2 rounded-md focus:outline-none transition-colors duration-300 ${
+                  navbarVisible && hasScrolled ? "text-black" : "text-white"
+                }`}
               >
                 <Menu size={28} />
               </button>
@@ -304,11 +303,13 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu */}
-        <div
-          className={`md:hidden fixed top-0 left-0 w-full h-screen bg-black text-white p-6 z-[40] shadow-xl transform transition-transform duration-500 ease-in-out ${isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
-            }`}
-        >
-          {/* Close Button inside menu */}
+       <div
+  className={`md:hidden fixed top-0 left-0 w-full h-screen bg-black text-white p-6 z-[40] shadow-xl overflow-y-auto overscroll-contain transform transition-transform duration-500 ease-in-out ${
+    isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+  }`}
+>
+
+          {/* Close Button */}
           <button
             onClick={() => setIsMobileMenuOpen(false)}
             className="absolute top-5 right-5 text-white hover:text-red-500"
@@ -317,8 +318,7 @@ const Navbar = () => {
           </button>
 
           <ul className="flex flex-col gap-6 mt-16 text-lg font-semibold">
-
-            {/* Home Dropdown in Mobile */}
+            {/* Home Section */}
             <li className="text-gray-300 border-b border-gray-700 pb-1">Home</li>
             <ul className="ml-4 flex flex-col gap-3">
               <li
@@ -368,7 +368,6 @@ const Navbar = () => {
               </li>
             ))}
 
-            {/* Added Shooting Location for Mobile */}
             <li
               onClick={() => {
                 navigate("/ShootingLocation");
@@ -379,8 +378,10 @@ const Navbar = () => {
               Shooting Location
             </li>
 
-            {/* Documents Dropdown in Mobile */}
-            <li className="mt-2 text-gray-300 border-b border-gray-700 pb-1">Documents</li>
+            {/* Documents Section */}
+            <li className="mt-2 text-gray-300 border-b border-gray-700 pb-1">
+              Documents
+            </li>
             <ul className="ml-4 flex flex-col gap-3">
               <li
                 onClick={() => {
@@ -435,29 +436,6 @@ const Navbar = () => {
                 className="cursor-pointer hover:text-red-500 transition-colors"
               >
                 Promotion Policy
-              </li>
-            </ul>
-
-            {/* Notice Dropdown in Mobile */}
-            <li className="mt-2 text-gray-300 border-b border-gray-700 pb-1">Notifications</li>
-            <ul className="ml-4 flex flex-col gap-3">
-              <li
-                onClick={() => {
-                  navigate("/notification");
-                  setIsMobileMenuOpen(false);
-                }}
-                className="cursor-pointer hover:text-red-500 transition-colors"
-              >
-                Notifications
-              </li>
-              <li
-                onClick={() => {
-                  navigate("/tender");
-                  setIsMobileMenuOpen(false);
-                }}
-                className="cursor-pointer hover:text-red-500 transition-colors"
-              >
-                Tenders
               </li>
             </ul>
 

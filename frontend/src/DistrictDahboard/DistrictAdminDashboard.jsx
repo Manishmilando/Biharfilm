@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { 
-  User, 
-  MapPin, 
-  Badge, 
-  Calendar, 
-  LogOut, 
+import {
+  User,
+  MapPin,
+  Badge,
+  Calendar,
+  LogOut,
   Search,
   Filter,
   Download,
@@ -40,14 +40,14 @@ function DistrictAdminDashboard() {
   // Helper function to get auth headers
   const getAuthHeaders = () => {
     const token = localStorage.getItem('authToken');
-    
+
     if (!token) {
       throw new Error('Authentication token not found');
     }
 
     // Ensure token has proper Bearer prefix
     const bearerToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
-    
+
     return {
       'Authorization': bearerToken,
       'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ function DistrictAdminDashboard() {
   // Helper function to validate token before making requests
   const validateToken = () => {
     const token = localStorage.getItem('authToken');
-    
+
     if (!token) {
       showNotification('error', 'Authentication token not found. Please login again.');
       setTimeout(() => {
@@ -108,7 +108,7 @@ function DistrictAdminDashboard() {
       try {
         setProfileLoading(true);
         const token = localStorage.getItem('authToken');
-        
+
         if (!token) {
           setProfileError("Please login to view data.");
           window.location.href = '/district-login';
@@ -163,14 +163,14 @@ function DistrictAdminDashboard() {
       try {
         setFormsLoading(true);
         const token = localStorage.getItem('authToken');
-        
+
         if (!token) {
           setFormsError("Authentication required.");
           return;
         }
 
         const districtId = currentUser.districtId;
-        
+
         if (!districtId) {
           setFormsError("No district assigned to your account.");
           return;
@@ -208,164 +208,164 @@ function DistrictAdminDashboard() {
     fetchForwardedForms();
   }, [currentUser, profileError]);
 
-// Update the handleApprove function
-const handleApprove = async (formId) => {
-  if (!validateToken()) {
-    return;
-  }
+  // Update the handleApprove function
+  const handleApprove = async (formId) => {
+    if (!validateToken()) {
+      return;
+    }
 
-  try {
-    setIsSubmitting(true);
-    const token = localStorage.getItem('authToken');
-    
-    console.log('Attempting to approve with:', {
-      formId,
-      userId: currentUser.id,
-      userName: currentUser.name,
-      role: currentUser.role,
-      districtName: currentUser.districtName,
-      hasDistrictId: !!currentUser.districtId
-    });
-    
-    const response = await axios.put(
-      `https://biharfilmbackend-production.up.railway.app/api/noc/districtAction/${formId}`,
-      {
-        action: 'approve',
-        remarks: 'Approved by district admin'
-        // Remove districtId and districtAdminId if backend doesn't need them
-        // The backend should get this info from the JWT token
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+    try {
+      setIsSubmitting(true);
+      const token = localStorage.getItem('authToken');
+
+      console.log('Attempting to approve with:', {
+        formId,
+        userId: currentUser.id,
+        userName: currentUser.name,
+        role: currentUser.role,
+        districtName: currentUser.districtName,
+        hasDistrictId: !!currentUser.districtId
+      });
+
+      const response = await axios.put(
+        `https://biharfilmbackend-production.up.railway.app/api/noc/districtAction/${formId}`,
+        {
+          action: 'approve',
+          remarks: 'Approved by district admin'
+          // Remove districtId and districtAdminId if backend doesn't need them
+          // The backend should get this info from the JWT token
         },
-        withCredentials: true,
-      }
-    );
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true,
+        }
+      );
 
-    if (response.data.success) {
-      showNotification('success', 'Application approved successfully!');
-      setShowConfirmModal(false);
-      setSelectedForm(null);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
-    } else {
-      showNotification('error', response.data.message || 'Failed to approve form.');
-    }
-  } catch (error) {
-    console.error('Error approving form:', error);
-    console.error('Full error response:', error.response?.data);
-    
-    let errorMessage = 'Failed to approve form. ';
-    
-    if (error.response) {
-      if (error.response.status === 401) {
-        errorMessage = 'Authentication failed: ' + (error.response.data?.message || 'Please login again');
-      } else if (error.response.status === 403) {
-        errorMessage = 'Access denied: ' + (error.response.data?.message || 'Insufficient permissions');
+      if (response.data.success) {
+        showNotification('success', 'Application approved successfully!');
+        setShowConfirmModal(false);
+        setSelectedForm(null);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
-        errorMessage += error.response.data?.message || `Server error: ${error.response.status}`;
+        showNotification('error', response.data.message || 'Failed to approve form.');
       }
-    } else {
-      errorMessage += error.message;
+    } catch (error) {
+      console.error('Error approving form:', error);
+      console.error('Full error response:', error.response?.data);
+
+      let errorMessage = 'Failed to approve form. ';
+
+      if (error.response) {
+        if (error.response.status === 401) {
+          errorMessage = 'Authentication failed: ' + (error.response.data?.message || 'Please login again');
+        } else if (error.response.status === 403) {
+          errorMessage = 'Access denied: ' + (error.response.data?.message || 'Insufficient permissions');
+        } else {
+          errorMessage += error.response.data?.message || `Server error: ${error.response.status}`;
+        }
+      } else {
+        errorMessage += error.message;
+      }
+
+      showNotification('error', errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    showNotification('error', errorMessage);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
-// Update the handleReject function
-const handleReject = async (formId) => {
-  if (!actionRemarks.trim()) {
-    showNotification('error', 'Please provide remarks for rejection.');
-    return;
-  }
+  // Update the handleReject function
+  const handleReject = async (formId) => {
+    if (!actionRemarks.trim()) {
+      showNotification('error', 'Please provide remarks for rejection.');
+      return;
+    }
 
-  if (actionRemarks.trim().length < 10) {
-    showNotification('error', 'Remarks must be at least 10 characters long.');
-    return;
-  }
+    if (actionRemarks.trim().length < 10) {
+      showNotification('error', 'Remarks must be at least 10 characters long.');
+      return;
+    }
 
-  if (!validateToken()) {
-    return;
-  }
+    if (!validateToken()) {
+      return;
+    }
 
-  try {
-    setIsSubmitting(true);
-    const token = localStorage.getItem('authToken');
-    
-    console.log('Attempting to reject with:', {
-      formId,
-      userId: currentUser.id,
-      userName: currentUser.name,
-      role: currentUser.role,
-      districtName: currentUser.districtName,
-      remarksLength: actionRemarks.length
-    });
+    try {
+      setIsSubmitting(true);
+      const token = localStorage.getItem('authToken');
+
+      console.log('Attempting to reject with:', {
+        formId,
+        userId: currentUser.id,
+        userName: currentUser.name,
+        role: currentUser.role,
+        districtName: currentUser.districtName,
+        remarksLength: actionRemarks.length
+      });
 
 
-    
-    const response = await axios.put(
-      `https://biharfilmbackend-production.up.railway.app/api/noc/districtAction/${formId}`,
-      {
-        action: 'reject',
-        remarks: actionRemarks
-        // Remove districtId and districtAdminId if backend doesn't need them
-        // The backend should get this info from the JWT token
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+
+      const response = await axios.put(
+        `https://biharfilmbackend-production.up.railway.app/api/noc/districtAction/${formId}`,
+        {
+          action: 'reject',
+          remarks: actionRemarks
+          // Remove districtId and districtAdminId if backend doesn't need them
+          // The backend should get this info from the JWT token
         },
-        withCredentials: true,
-      }
-    );
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true,
+        }
+      );
 
-    if (response.data.success) {
-      showNotification('success', 'Application rejected successfully!');
-      setShowRejectModal(false);
-      setActionRemarks('');
-      setSelectedForm(null);
-      setTimeout(() => {
-        window.location.reload();
-      }, 1500);
-    } else {
-      showNotification('error', response.data.message || 'Failed to reject form.');
-    }
-  } catch (error) {
-    console.error('Error rejecting form:', error);
-    console.error('Full error response:', error.response?.data);
-    
-    let errorMessage = 'Failed to reject form. ';
-    
-    if (error.response) {
-      if (error.response.status === 401) {
-        errorMessage = 'Authentication failed: ' + (error.response.data?.message || 'Please login again');
-      } else if (error.response.status === 403) {
-        errorMessage = 'Access denied: ' + (error.response.data?.message || 'Insufficient permissions');
+      if (response.data.success) {
+        showNotification('success', 'Application rejected successfully!');
+        setShowRejectModal(false);
+        setActionRemarks('');
+        setSelectedForm(null);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
-        errorMessage += error.response.data?.message || `Server error: ${error.response.status}`;
+        showNotification('error', response.data.message || 'Failed to reject form.');
       }
-    } else {
-      errorMessage += error.message;
+    } catch (error) {
+      console.error('Error rejecting form:', error);
+      console.error('Full error response:', error.response?.data);
+
+      let errorMessage = 'Failed to reject form. ';
+
+      if (error.response) {
+        if (error.response.status === 401) {
+          errorMessage = 'Authentication failed: ' + (error.response.data?.message || 'Please login again');
+        } else if (error.response.status === 403) {
+          errorMessage = 'Access denied: ' + (error.response.data?.message || 'Insufficient permissions');
+        } else {
+          errorMessage += error.response.data?.message || `Server error: ${error.response.status}`;
+        }
+      } else {
+        errorMessage += error.message;
+      }
+
+      showNotification('error', errorMessage);
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    showNotification('error', errorMessage);
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   const retryFetchForms = () => {
     if (currentUser) {
       setFormsError(null);
       setForwardedForms([]);
-      setCurrentUser({...currentUser});
+      setCurrentUser({ ...currentUser });
     }
   };
 
@@ -429,28 +429,25 @@ const handleReject = async (formId) => {
     <div className="min-h-screen bg-gray-50">
       {/* Notification Toast */}
       {notification.show && (
-        <div className={`fixed top-4 right-4 z-50 max-w-md rounded-lg shadow-lg p-4 flex items-center gap-3 animate-slide-in ${
-          notification.type === 'success' 
-            ? 'bg-green-50 border border-green-200' 
+        <div className={`fixed top-4 right-4 z-50 max-w-md rounded-lg shadow-lg p-4 flex items-center gap-3 animate-slide-in ${notification.type === 'success'
+            ? 'bg-green-50 border border-green-200'
             : 'bg-red-50 border border-red-200'
-        }`}>
+          }`}>
           {notification.type === 'success' ? (
             <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
           ) : (
             <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
           )}
-          <p className={`text-sm font-medium ${
-            notification.type === 'success' ? 'text-green-800' : 'text-red-800'
-          }`}>
+          <p className={`text-sm font-medium ${notification.type === 'success' ? 'text-green-800' : 'text-red-800'
+            }`}>
             {notification.message}
           </p>
           <button
             onClick={() => setNotification({ show: false, type: '', message: '' })}
             className="ml-auto"
           >
-            <XCircle className={`h-4 w-4 ${
-              notification.type === 'success' ? 'text-green-600' : 'text-red-600'
-            }`} />
+            <XCircle className={`h-4 w-4 ${notification.type === 'success' ? 'text-green-600' : 'text-red-600'
+              }`} />
           </button>
         </div>
       )}
@@ -617,7 +614,7 @@ const handleReject = async (formId) => {
                 <div className="text-red-600 mb-4">{formsError}</div>
                 <button
                   onClick={retryFetchForms}
-                  className="flex items-center mx-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  className="flex items-center mx-auto px-4 py-2 bg-[#4f0419] text-white rounded-lg hover:bg-red-700 transition-colors"
                 >
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Retry Loading
@@ -665,10 +662,10 @@ const handleReject = async (formId) => {
                   {forwardedForms.map((form, index) => {
                     const forwardedDate = form.forwardedAt ? new Date(form.forwardedAt) : new Date();
                     const pendingDays = Math.floor((new Date() - forwardedDate) / (1000 * 60 * 60 * 24));
-                    
+
                     return (
-                      <tr 
-                        key={form.id} 
+                      <tr
+                        key={form.id}
                         onClick={() => handleRowClick(form)}
                         className="hover:bg-gray-50 transition-colors cursor-pointer"
                       >
@@ -692,13 +689,12 @@ const handleReject = async (formId) => {
                           {forwardedDate.toLocaleDateString('en-GB')}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                            pendingDays > 30 
-                              ? 'bg-red-100 text-red-800' 
-                              : pendingDays > 15 
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-green-100 text-green-800'
-                          }`}>
+                          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${pendingDays > 30
+                              ? 'bg-red-100 text-red-800'
+                              : pendingDays > 15
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-green-100 text-green-800'
+                            }`}>
                             <Clock className="h-3 w-3 mr-1" />
                             {pendingDays} days
                           </span>
@@ -722,11 +718,10 @@ const handleReject = async (formId) => {
                               </button>
                             </div>
                           ) : (
-                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                              form.status === 'approved'
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${form.status === 'approved'
                                 ? 'bg-green-100 text-green-800'
                                 : 'bg-red-100 text-red-800'
-                            }`}>
+                              }`}>
                               {form.status === 'approved' && <CheckCircle className="h-3 w-3 mr-1" />}
                               {form.status === 'rejected' && <XCircle className="h-3 w-3 mr-1" />}
                               {form.status.charAt(0).toUpperCase() + form.status.slice(1)}
@@ -744,7 +739,7 @@ const handleReject = async (formId) => {
       </div>
 
       {/* Universal Form Modal */}
-      <UniversalFormModal 
+      <UniversalFormModal
         isOpen={showModal}
         onClose={closeModal}
         selectedRow={selectedForm}
@@ -772,11 +767,11 @@ const handleReject = async (formId) => {
                   <CheckCircle className="h-10 w-10 text-green-600" />
                 </div>
               </div>
-              
+
               <h3 className="text-xl font-bold text-gray-900 text-center mb-2">
                 Approve Application?
               </h3>
-              
+
               <p className="text-sm text-gray-600 text-center mb-4">
                 Are you sure you want to approve this NOC application?
               </p>
@@ -792,7 +787,7 @@ const handleReject = async (formId) => {
                   <span className="font-medium">Applicant:</span> {selectedForm.producerHouse}
                 </p>
               </div>
-              
+
               <div className="flex gap-3">
                 <button
                   onClick={closeConfirmModal}
@@ -842,7 +837,7 @@ const handleReject = async (formId) => {
                   <XCircle className="h-5 w-5" />
                 </button>
               </div>
-              
+
               <div className="mb-4 p-3 bg-gray-50 rounded-lg">
                 <p className="text-sm text-gray-600">
                   <span className="font-medium">Application ID:</span> NOC-{selectedForm.id}
@@ -872,7 +867,7 @@ const handleReject = async (formId) => {
                   {actionRemarks.length} characters
                 </p>
               </div>
-              
+
               <div className="flex justify-end space-x-3">
                 <button
                   onClick={closeRejectModal}
@@ -884,7 +879,7 @@ const handleReject = async (formId) => {
                 <button
                   onClick={() => handleReject(selectedForm.id)}
                   disabled={isSubmitting || actionRemarks.trim().length < 10}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 py-2 bg-[#4f0419] text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
                     <>

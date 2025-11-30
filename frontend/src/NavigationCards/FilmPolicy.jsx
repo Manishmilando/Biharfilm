@@ -3,6 +3,7 @@ import FilmSubsidyTable from "../Budget/FilmSubsidyTable.jsx";
 import InvestmentSubsidyTable from "../Budget/InvestmentSubsidyTable.jsx";
 import FilmSubsidy from "../Budget/FilmSubsidy.jsx";
 import "../App.css";
+import { File } from 'lucide-react';
 
 export default function FilmPolicyNOC() {
   return (
@@ -49,6 +50,22 @@ export default function FilmPolicyNOC() {
           <FilmSubsidy />
         </div>
       </div>
+      {/* Download Film Policy Button */}
+      <div className="w-full flex justify-center mt-12">
+        <button
+          onClick={() => {
+            const link = document.createElement("a");
+            link.href = "/FilmPolicy.pdf"; // keep file in public folder
+            link.download = "Bihar_Film_Policy.pdf";
+            link.click();
+          }}
+          className="bg-[#4f0419] hover:bg-[#891737] text-white text-base sm:text-lg font-medium px-8 py-3 rounded-full shadow-xl transition-all duration-300 hover:shadow-[#a92b4e]/50 hover:scale-105 flex items-center gap-2"
+        >
+          <File />
+          Download Complete Bihar New Film Policy (PDF)
+        </button>
+      </div>
+
     </div>
   );
 }

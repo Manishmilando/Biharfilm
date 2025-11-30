@@ -368,7 +368,7 @@ const UniversalFormModal = ({
             </button>
             <button
               onClick={() => onReject && onReject(selectedRow)}
-              className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              className="bg-[#4f0419] hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
             >
               <div className="flex items-center gap-2">
                 <span>Reject</span>

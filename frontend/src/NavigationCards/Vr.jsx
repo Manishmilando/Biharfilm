@@ -4,8 +4,6 @@ import { IoIosArrowRoundForward } from "react-icons/io";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-
-
 // Video list
 const videoList = [
   {
@@ -23,7 +21,7 @@ const videoList = [
       "Immerse yourself in the peaceful aura of Ghora Katora, a natural horse-shaped lake nestled among the hills of Rajgir. Surrounded by lush forests and often graced by migratory birds, this sacred and scenic waterbody is a hidden gem of Bihar. The VR experience lets you witness the stillness of the lake, the chirping of birds, and the gentle whispers of the wind through surrounding trees—ideal for those seeking serenity in nature’s lap.",
   },
   {
-  high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761046/VrvideoHQ3_ratnxr.mp4",
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761046/VrvideoHQ3_ratnxr.mp4",
     low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761064/VrvideoLQ3_kn3jiq.mp4",
     title: "Jungle Safari Entry, Rajgir",
     description:
@@ -57,7 +55,7 @@ const videoList = [
       "Embark on a breathtaking virtual journey across the Glass Bridge of Rajgir, a marvel suspended between the hills. This architectural feat offers panoramic views of the lush valley and serene landscape below, giving the sensation of walking amidst the clouds. Perfect for thrill-seekers and nature lovers, the experience captures the tranquil grandeur of Rajgir’s natural beauty combined with the thrill of height and modern engineering.",
   },
   {
-high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761047/VrvideoHQ2_wg40nf.mp4",
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761047/VrvideoHQ2_wg40nf.mp4",
     low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761061/VrvideoLQ2_rpiik4.mp4",
     title: "Ghora Katora, Rajgir",
     description:
@@ -85,7 +83,7 @@ high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761047/VrvideoHQ2_
       "Relive Bihar’s revolutionary spirit through the towering structure of Bapu Tower in Patna, a tribute to Mahatma Gandhi’s influence on the freedom movement in Bihar. The VR experience walks you through the symbolic architecture, plaques, and scenic surroundings, letting you sense the historic weight and inspiring atmosphere. It’s more than a monument—it’s a reminder of struggle, unity, and vision.",
   },
   {
-  high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761055/VrvideoHQ6_lk1cdp.mp4",
+    high: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761055/VrvideoHQ6_lk1cdp.mp4",
     low: "https://res.cloudinary.com/dgra109xv/video/upload/v1755761074/VrvideoLQ6_njgnih.mp4",
     title: "Hiuen Tsang Memorial Hall, Nalanda",
     description:
@@ -104,45 +102,53 @@ function Vr() {
   };
 
   return (
-    <div id="Vr" className="bg-[#190108] pt-16 px-4 md:px-10 pb-24">
-      <h2 className="text-white text-2xl sm:text-3xl md:text-5xl archivo-black-regular pl-4 md:pl-24">
-  Virtual Reality (VR)
-</h2>
+    <div id="Vr" className="bg-[#190108] pt-16 px-4 md:px-10 pb-24 relative overflow-hidden">
+      {/* Background Gradient Orb for depth */}
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#4f0419] rounded-full blur-[150px] opacity-20 pointer-events-none" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center mt-10 mb-12">
+      <h2 className="text-white text-2xl sm:text-3xl md:text-5xl archivo-black-regular pl-4 md:pl-24 relative z-10 mb-8 drop-shadow-xl">
+        Virtual Reality (VR)
+      </h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center mt-10 mb-12 relative z-10">
         {/* Text Section */}
-        <div>
-          <p className="text-white text-base leading-relaxed px-4 md:px-24 text-justify">
-            <strong>Experience {videoList[mainIndex].title} in Virtual Reality (VR):</strong>
-            <br />
-            {videoList[mainIndex].description}
-          </p>
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="pl-4 md:pl-24"
+        >
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 p-6 md:p-8 rounded-2xl shadow-2xl relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-          <button
-            type="button"
-            onClick={() => navigate("/vrpage")}
-            className="group ml-24 mt-6 text-white text-sm md:text-base font-medium relative transition-transform duration-300 hover:scale-105"
-          >
-            <span className="inline-block pb-0.5 border-b-2 border-transparent group-hover:border-white transition-all duration-300">
-              Learn more
-            </span>
-            <IoIosArrowRoundForward className="inline-block text-[#a92b4e] text-2xl ml-1 align-middle transition-transform duration-300 group-hover:translate-x-1" />
-          </button>
-        </div>
+            <p className="text-gray-300 text-base leading-relaxed text-justify relative z-10">
+              <strong className="text-white block mb-3 text-xl tracking-wide">Experience {videoList[mainIndex].title} in Virtual Reality (VR):</strong>
+              {videoList[mainIndex].description}
+            </p>
+
+            <button
+              type="button"
+              onClick={() => navigate("/vrpage")}
+              className="group mt-8 px-8 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-[#4f0419] hover:border-[#4f0419] transition-all duration-300 flex items-center gap-3 backdrop-blur-md shadow-lg hover:shadow-[#4f0419]/30"
+            >
+              <span className="text-white font-medium tracking-wide">Learn more</span>
+              <IoIosArrowRoundForward className="text-white text-2xl transition-transform duration-300 group-hover:translate-x-1" />
+            </button>
+          </div>
+        </motion.div>
 
         {/* Main Video Section */}
         <motion.div
-          initial={{ opacity: 0.8, scale: 0.95 }}
-          whileInView={{
-            opacity: 1,
-            scale: 1,
-            transition: { duration: 1.5, ease: "easeInOut", type: "tween" },
-          }}
-          viewport={{ amount: 0.3 }}
-          className="w-full h-[25rem] rounded-xl shadow-lg overflow-hidden bg-black"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="w-full h-[25rem] rounded-2xl shadow-2xl overflow-hidden bg-black border border-white/10 relative group mx-auto md:mx-0 max-w-[95%]"
         >
+          {/* Glow effect */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-[#4f0419] to-purple-900 opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-500" />
+
           <video
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover relative z-10"
             src={mainVideo}
             autoPlay
             muted
@@ -153,23 +159,27 @@ function Vr() {
       </div>
 
       {/* Scrolling Thumbnails */}
-      <div className="overflow-hidden group mt-8 px-4">
-        <div className="flex w-max space-x-4 animate-scrollVideos group-hover:pause-scroll">
+      <div className="overflow-hidden group mt-12 px-4 relative z-10">
+        <div className="flex w-max space-x-6 animate-scrollVideos group-hover:pause-scroll py-4 pl-4">
           {videoList.map((vid, index) =>
             index !== mainIndex && (
               <motion.div
                 key={index}
-                whileHover={{ scale: 1.03 }}
-                className="cursor-pointer rounded-xl overflow-hidden shadow-md border border-gray-700 w-60 h-36"
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="cursor-pointer rounded-xl overflow-hidden shadow-lg border border-white/10 w-64 h-40 relative flex-shrink-0"
                 onClick={() => handleVideoClick(vid, index)}
               >
                 <video
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-300"
                   src={vid.low}
                   muted
                   loop
                   autoPlay
                 />
+                <div className="absolute inset-0 bg-black/20 hover:bg-transparent transition-colors duration-300" />
+                <div className="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black/80 to-transparent">
+                  <p className="text-white text-xs font-medium truncate">{vid.title}</p>
+                </div>
               </motion.div>
             )
           )}

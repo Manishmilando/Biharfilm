@@ -1,10 +1,10 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import Filmclub from "/Filmclub.mp4";
 import { CiCoffeeCup } from "react-icons/ci";
 import { RiFilmAiFill, RiMovie2Line } from "react-icons/ri";
-import "../App.css"; // Ensure you have the correct path to your CSS file
+import { IoIosArrowRoundForward } from "react-icons/io";
+import "../App.css";
 
 const FilmClubUI = () => {
   const navigate = useNavigate();
@@ -12,19 +12,19 @@ const FilmClubUI = () => {
   const cards = [
     {
       title: "Coffee With Film",
-      description: "Let's think critically to improve the young peoples' imagination and creativity skills",
+      description: "Think critically to improve young peoples' imagination and creativity skills through cinematic discussions.",
       icon: <CiCoffeeCup className="text-white text-3xl" />,
       slug: "coffee-with-film",
     },
     {
       title: "Cine Samvad",
-      description: "Let's explore engaging content and film industry of Bihar.",
+      description: "Explore engaging content and the vibrant film industry of Bihar through interactive sessions.",
       icon: <RiFilmAiFill className="text-white text-3xl" />,
       slug: "cine-samvad",
     },
     {
       title: "Film Festival",
-      description: "Let's have a brief discussion over movies with resource like powerpoint presentation with embedded clip and worksheets.",
+      description: "Engage in detailed movie discussions with presentations, embedded clips, and interactive worksheets.",
       icon: <RiMovie2Line className="text-white text-3xl" />,
       slug: "chatarpatar",
     },
@@ -33,58 +33,104 @@ const FilmClubUI = () => {
   return (
     <div
       id="FilmClubUI"
-      className="relative w-full min-h-screen bg-[#190108] flex items-center justify-center px-4 py-16 overflow-hidden"
+      className="relative w-full h-screen bg-[#190108] flex flex-col items-center justify-center px-4 py-8 overflow-hidden"
     >
-      {/* Background Video */}
-      <video
-        className="absolute top-0 left-0 w-full h-full object-cover opacity-20 z-0"
-        src="https://res.cloudinary.com/dgra109xv/video/upload/v1755760928/Filmclub_xrdco0.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
+      {/* Background Video with Overlay */}
+      <div className="absolute inset-0 z-0">
+        <video
+          className="absolute top-0 left-0 w-full h-full object-cover"
+          src="https://res.cloudinary.com/dgra109xv/video/upload/v1755760928/Filmclub_xrdco0.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+        <div className="absolute inset-0 bg-[#190108]/70 backdrop-blur-[1px]" />
+      </div>
 
-      {/* Header */}
-      <div className="absolute top-10 text-center text-white z-10 px-4">
-
-        <h1 className="text-6xl sm:text-5xl md:text-7xl lg:text-9xl great-vibes-regular mt-8">
+      {/* Header Section - Compact */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-10 text-center text-white max-w-3xl mb-8"
+      >
+        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl great-vibes-regular mb-3 text-white drop-shadow-2xl">
           FilmClub
         </h1>
 
-
-        <p className=" text-sm sm:text-base max-w-xl mx-auto">
-          Discover and explore amazing films with us.
+        <p className="text-sm sm:text-base text-gray-300 max-w-2xl mx-auto leading-relaxed px-4">
+          Discover, explore, and celebrate the art of cinema through immersive experiences and meaningful conversations.
         </p>
-      </div>
 
-      {/* Cards Grid */}
-      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-32 w-full max-w-6xl">
+        {/* Simple Badge */}
+        <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+          <div className="w-1.5 h-1.5 rounded-full bg-[#4f0419]" />
+          <span className="text-xs text-gray-400">Powered by BSFDFC</span>
+        </div>
+      </motion.div>
+
+      {/* Cards Grid - Simplified */}
+      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full max-w-6xl px-4">
         {cards.map((card, index) => (
           <motion.div
             key={index}
-            whileHover={{ translateY: 10 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="bg-white/20 backdrop-blur-md border border-white/30 rounded-2xl p-6 w-full h-80 shadow-lg hover:shadow-2xl flex flex-col justify-between"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              delay: index * 0.1,
+              ease: "easeOut"
+            }}
+            whileHover={{ y: -6 }}
+            className="group relative cursor-pointer"
+            onClick={() => navigate(`/filmclub/${card.slug}`)}
           >
-            {/* Icon */}
-            <div className="w-12 h-12 bg-red-600 text-white flex items-center justify-center rounded-full shadow-md">
-              {card.icon}
-            </div>
+            {/* Simple Card Container */}
+            <div className="relative h-[320px] overflow-hidden rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl transition-all duration-300 group-hover:border-white/40 group-hover:shadow-2xl">
 
-            {/* Content */}
-            <div className="text-white text-center mt-6 flex-1">
-              <h2 className="text-lg font-semibold">{card.title}</h2>
-              <p className="mt-2 text-sm">{card.description}</p>
-            </div>
+              {/* Card Content */}
+              <div className="relative h-full p-6 flex flex-col justify-between z-10">
 
-            {/* Button */}
-            <button
-              onClick={() => navigate(`/filmclub/${card.slug}`)}
-              className="mt-4 bg-[#a92b43] text-white px-4 py-2 rounded-lg text-sm hover:bg-[#891737] transition"
-            >
-              Learn More
-            </button>
+                {/* Icon and Number Section */}
+                <div className="flex items-start justify-between">
+                  {/* Simple Icon */}
+                  <div className="w-12 h-12 bg-[#4f0419] flex items-center justify-center rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-105">
+                    {card.icon}
+                  </div>
+
+                  {/* Number Badge */}
+                  <div className="px-2.5 py-1 rounded-full bg-white/10 border border-white/20">
+                    <span className="text-xs font-medium text-white/70">0{index + 1}</span>
+                  </div>
+                </div>
+
+                {/* Text Content */}
+                <div className="flex-1 mt-5 mb-4">
+                  <h2 className="text-xl font-bold text-white mb-2.5">
+                    {card.title}
+                  </h2>
+                  <p className="text-sm text-gray-300 leading-relaxed">
+                    {card.description}
+                  </p>
+                </div>
+
+                {/* Simple CTA */}
+                <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                  <span className="text-sm font-medium text-gray-300 transition-all duration-300 group-hover:text-white">
+                    Explore Program
+                  </span>
+
+                  {/* Simple Arrow */}
+                  <div className="flex items-center justify-center w-9 h-9 rounded-full bg-white/10 border border-white/20 transition-all duration-300 group-hover:bg-[#4f0419] group-hover:border-[#4f0419] group-hover:translate-x-1">
+                    <IoIosArrowRoundForward className="text-xl text-white" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Simple Shine Effect on Hover */}
+              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none" />
+            </div>
           </motion.div>
         ))}
       </div>

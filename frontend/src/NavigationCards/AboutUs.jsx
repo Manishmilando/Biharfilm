@@ -65,30 +65,32 @@ export default function AboutUs() {
     ];
 
     return (
-        <div className="min-h-screen bg-white font-sans border ">
+        <div className="min-h-screen bg-white font-sans">
             <Navbar />
 
             {/* Hero Section */}
             <div className="relative bg-[#a92b4e] py-24 px-4 text-center text-white overflow-hidden">
                 <div className="absolute inset-0">
-                    <img src="/bannerBihar.png" alt="Bihar Banner" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#a92b4e]/90"></div>
+                    <img src="/bannerImgee.png" alt="Bihar Banner" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#a92b4e]/90"></div>
                 </div>
                 <div className="relative z-10 max-w-5xl mx-auto">
-                    <img src={Logo1} alt="Bihar Film Nigam" className="h-28 mx-auto mb-8 drop-shadow-xl" />
-                    <h1 className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight">
-                        Bihar: The Emerging Powerhouse of Indian Cinema
-                    </h1>
-                    <p className="text-xl md:text-2xl font-light text-yellow-100 max-w-4xl mx-auto">
-                        A land of rich heritage, iconic legends, and untold stories waiting to be captured.
-                    </p>
+                    <div className="py-10">
+                        <h1 className="text-2xl md:text-4xl font-extrabold mb-6 tracking-tight leading-tight">
+                            Bihar: The Emerging Powerhouse of Indian Cinema
+                        </h1>
+                        <p className="text-md md:text-xl font-light text-yellow-100 max-w-4xl mx-auto">
+                            A land of rich heritage, iconic legends, and untold stories waiting to be captured.
+                        </p>
+                    </div>
                 </div>
             </div>
 
             <div className="max-w-7xl mx-auto px-4 py-16 space-y-20">
 
                 {/* Legends Section */}
-                <div className="text-center space-y-8">
+                <div className="text-center space-y-8 px-10">
                     <h2 className="text-3xl md:text-4xl font-bold text-[#891737]">Legends from Bihar</h2>
                     <p className="text-gray-600 max-w-3xl mx-auto text-lg">
                         Bihar has been home to some of the most iconic personalities who have shaped Indian film history.
@@ -103,7 +105,7 @@ export default function AboutUs() {
                 </div>
 
                 {/* BSFDFC Section - Professional & Distinct */}
-                <div className="bg-gradient-to-br from-gray-50 to-white rounded-3xl p-10 md:p-16 shadow-lg border border-gray-100 relative overflow-hidden">
+                <div className="bg-gradient-to-br px-10 from-gray-50 to-white rounded-3xl p-10 md:p-16 shadow-lg border border-gray-100 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-[#a92b4e]/5 rounded-full blur-3xl -mr-16 -mt-16"></div>
                     <div className="relative z-10 text-center max-w-4xl mx-auto">
                         <h2 className="text-4xl font-bold text-gray-800 mb-8">BSFDFC: Nurturing Bihar’s Cinematic Legacy</h2>
@@ -185,40 +187,79 @@ export default function AboutUs() {
                 </div>
 
                 {/* Success Stories & Regional Cinema */}
-                <div className="grid md:grid-cols-2 gap-12">
-                    <div className="bg-gray-900 text-white rounded-3xl p-8 md:p-10 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#a92b4e] rounded-full blur-3xl opacity-20 -mr-16 -mt-16"></div>
-                        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                            <Star className="w-6 h-6 text-yellow-400" /> Implementation Success
-                        </h2>
-                        <p className="text-gray-300 mb-6">
-                            Since the introduction of the Bihar Film Policy, several national and international filmmakers have chosen Bihar for its authentic landscapes.
-                        </p>
-                        <ul className="space-y-3">
-                            {successStories.map((story, idx) => (
-                                <li key={idx} className="flex items-center gap-3 text-sm text-gray-300 border-b border-gray-800 pb-2 last:border-0">
-                                    <span className="w-1.5 h-1.5 bg-[#a92b4e] rounded-full"></span>
-                                    {story}
-                                </li>
-                            ))}
-                        </ul>
+                <div className="grid gap-6 md:grid-cols-4">
+                    {/* Left big card */}
+                    <div className="md:col-span-2 md:row-span-2 relative overflow-hidden rounded-3xl bg-gradient-to-br from-gray-900 via-gray-900 to-black border border-white/5">
+                        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(169,43,78,0.28),_transparent_60%)]" />
+                        <div className="relative flex h-full flex-col p-7 md:p-8">
+                            <div className="mb-6 flex items-center justify-between gap-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-yellow-400/10 border border-yellow-400/40">
+                                        <Star className="h-5 w-5 text-yellow-300" />
+                                    </div>
+                                    <div>
+                                        <h2 className="text-lg md:text-xl font-semibold text-white">
+                                            Implementation Success
+                                        </h2>
+                                        <p className="text-xs text-gray-400">
+                                            Real projects powered by Bihar Film Policy
+                                        </p>
+                                    </div>
+                                </div>
+                                <span className="rounded-full bg-white/5 px-3 py-1 text-xs text-gray-300 border border-white/10">
+                                    Live impact
+                                </span>
+                            </div>
+
+                            <p className="mb-5 text-sm leading-relaxed text-gray-300">
+                                Since the introduction of the Bihar Film Policy, several national and international filmmakers have chosen Bihar for its authentic landscapes.
+                            </p>
+
+                            <div className="space-y-3 text-sm text-gray-300">
+                                {successStories.map((story, idx) => (
+                                    <div
+                                        key={idx}
+                                        className="group flex items-start gap-3 rounded-2xl border border-white/5 bg-white/0 px-3 py-2.5 transition-all duration-200 hover:border-[#a92b4e]/40 hover:bg-white/5"
+                                    >
+                                        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-[#a92b4e]/80 group-hover:bg-[#a92b4e]" />
+                                        <p className="leading-snug">{story}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="space-y-8">
-                        <div className="bg-[#a92b4e]/5 rounded-3xl p-8 border border-[#a92b4e]/20">
-                            <h3 className="text-xl font-bold text-[#a92b4e] mb-4">Regional Cinema Hub</h3>
-                            <p className="text-gray-700 leading-relaxed">
-                                Bihar has become a hub for regional filmmaking, especially in Bhojpuri and Magahi cinema. Acclaimed films such as <em>Songhatiya</em>, <em>Suhagin Ke Senur</em>, and <em>Chatth</em> were shot across various districts, showcasing local talent and dialects.
-                            </p>
+                    {/* Top-right card */}
+                    <div className="md:col-span-2 rounded-3xl border border-[#a92b4e]/25 bg-[#ffff]/5 p-6 md:p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a92b4e]/50 hover:bg-[#a92b4e]/10">
+                        <div className="mb-4 flex items-center justify-between">
+                            <h3 className="text-base md:text-lg font-semibold text-[#a92b4e]">
+                                Regional Cinema Hub
+                            </h3>
+                            <span className="text-[11px] rounded-full bg-white/60 px-2.5 py-1 text-[#a92b4e]">
+                                Feature
+                            </span>
                         </div>
-                        <div className="bg-gray-50 rounded-3xl p-8 border border-gray-200">
-                            <h3 className="text-xl font-bold text-[#a92b4e] mb-4">Documentary Films</h3>
-                            <p className="text-gray-700 leading-relaxed">
-                                Documentary productions like <em>Bihar Ka Jalwa</em> highlight the state’s art, culture, and development narrative. These projects inspire filmmakers to explore Bihar's untold stories through a realistic lens.
-                            </p>
+                        <p className="text-sm leading-relaxed text-gray-700">
+                            Bihar has become a hub for regional filmmaking, especially in Bhojpuri and Magahi cinema. Acclaimed films such as <em>Songhatiya</em>, <em>Suhagin Ke Senur</em>, and <em>Chatth</em> were shot across various districts, showcasing local talent and dialects.
+                        </p>
+                    </div>
+
+                    {/* Bottom-right card */}
+                    <div className="md:col-span-2 rounded-3xl border border-gray-200 bg-gray-50 p-6 md:p-7 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#a92b4e]/30 hover:bg-white">
+                        <div className="mb-4 flex items-center justify-between">
+                            <h3 className="text-base md:text-lg font-semibold text-[#a92b4e]">
+                                Documentary Films
+                            </h3>
+                            <span className="text-[11px] rounded-full bg-[#a92b4e]/5 px-2.5 py-1 text-[#a92b4e] border border-[#a92b4e]/20">
+                                Stories
+                            </span>
                         </div>
+                        <p className="text-sm leading-relaxed text-gray-700">
+                            Documentary productions like <em>Bihar Ka Jalwa</em> highlight the state’s art, culture, and development narrative. These projects inspire filmmakers to explore Bihar&apos;s untold stories through a realistic lens.
+                        </p>
                     </div>
                 </div>
+
             </div>
             <ContactUs />
         </div>

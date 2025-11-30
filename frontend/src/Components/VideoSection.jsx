@@ -4,80 +4,113 @@ import Navbar from "../Components/Navbar";
 import { motion } from "framer-motion";
 import "../App.css";
 
-const videos = ["https://res.cloudinary.com/dgra109xv/video/upload/v1755760469/Snowtrain_uhyz1u.mp4", "https://res.cloudinary.com/dgra109xv/video/upload/v1755760406/Snow_s8nj0n.mp4", "https://res.cloudinary.com/dgra109xv/video/upload/v1755760514/watertemp_dxxjyl.mp4","https://res.cloudinary.com/dgra109xv/video/upload/v1755760270/mountain_wh9xkz.mp4", "https://res.cloudinary.com/dgra109xv/video/upload/v1755761000/Vrvideo_tv1ioj.mp4"];
-
-const textOverlays = [
-  [
-    {
-      title: "Roooling Reels, Rolling Fields",
-      description: "Capturing Bihar’s soul — one frame at a time.",
-      top: "25%",
-      left: "10%",
-    },
-    {
-      title: "Highway of Bihar, Frames of a journey",
-      description: "Where every mile tells a cinematic story.",
-      top: "50%",
-      left: "50%",
-    },
-  ],
-  [
-    {
-      title: "Whispers of the Riverbank",
-      description: "Where crystal waters kiss the sands of Bihar, stories begin in silence",
-      top: "30%",
-      left: "20%",
-    },
-    {
-      title: "River Rhythms of Bihar",
-      description: "Crystal waters, sandy banks, and children at play — the soul of the state, in motion.",
-      top: "55%",
-      left: "70%",
-    },
-  ],
-  [
-    {
-      title: "Karamchat Calm, Rohtas Proud",
-      description: "Blue waters and mountain echoes — where Bihar's natural heritage stands tall.",
-      top: "60%",
-      left: "25%",
-    },
-    {
-      title: "Rohtas Rises",
-      description: "Beneath the mountains. Beyond the waters. A spirit unshaken",
-      top: "30%",
-      left: "82%",
-    },
-  ],
-  [
-    {
-      title: "Echoes of the Plateau",
-      description: "Whispers of wind, strength of stone.",
-      top: "45%",
-      left: "30%",
-    },
-    {
-      title: "Roots of Rohtas",
-      description: "Where the ancient plateau meets emerald heights.",
-      top: "75%",
-      left: "60%",
-    },
-  ],
-  [
-    {
-      title: "Crystal Waters",
-      description: "Refreshing and clear water visuals.",
-      top: "50%",
-      left: "35%",
-    },
-    {
-      title: "Soothing Streams",
-      description: "Feel the calm of flowing water.",
-      top: "75%",
-      left: "55%",
-    },
-  ],
+const videoData = [
+  {
+    url: "https://res.cloudinary.com/dgra109xv/video/upload/v1755760469/Snowtrain_uhyz1u.mp4",
+    overlays: [
+      {
+        title: "Rolling Reels. Living Landscapes.",
+        description: "From rivers to highways, Bihar opens up as one continuous tracking shot.",
+        top: "25%",
+        left: "10%",
+      },
+      {
+        title: "Every Road Is a Storyboard",
+        description: "Highways, village paths, misty mornings — your next scene is already waiting here.",
+        top: "50%",
+        left: "50%",
+      },
+    ],
+  },
+  {
+    url: "https://res.cloudinary.com/dgra109xv/video/upload/v1755760406/Snow_s8nj0n.mp4",
+    overlays: [
+      {
+        title: "Where the River Writes the First Line",
+        description: "Quiet banks, soft light, endless horizon — a natural set for your opening frame.",
+        top: "30%",
+        left: "20%",
+      },
+      {
+        title: "River Rhythms of Bihar",
+        description: "Crystal water, sand, and laughter — the kind of texture cameras love to linger on.",
+        top: "55%",
+        left: "70%",
+      },
+    ],
+  },
+  {
+    url: "https://res.cloudinary.com/dgra109xv/video/upload/v1755760514/watertemp_dxxjyl.mp4",
+    overlays: [
+      {
+        title: "Rohtas in Reflection",
+        description: "Still waters, rugged hills — a mirror for every mood from romance to rebellion.",
+        top: "60%",
+        left: "25%",
+      },
+      {
+        title: "A Frame for Every Genre",
+        description: "Thriller, drama, docu or dreamscape — this blue expanse bends to your story.",
+        top: "30%",
+        left: "82%",
+      },
+    ],
+  },
+  {
+    url: "https://res.cloudinary.com/dgra109xv/video/upload/v1755760270/mountain_wh9xkz.mp4",
+    overlays: [
+      {
+        title: "Plateaus that Feel Like Sets",
+        description: "Wind, rock, horizon — minimal, powerful, and made for wide-angle storytelling.",
+        top: "45%",
+        left: "30%",
+      },
+      {
+        title: "Roots of Bihar. Scale of Cinema.",
+        description: "Ancient plateaus and emerald ridges that turn every frame into a poster shot.",
+        top: "75%",
+        left: "60%",
+      },
+    ],
+  },
+  // New Video 1
+  {
+    url: "https://res.cloudinary.com/dgra109xv/video/upload/v1764496103/pandu_pokhar_ikfdig.webm", // Placeholder URL
+    overlays: [
+      {
+        title: "New Perspectives Unfold",
+        description: "Fresh angles and unseen corners waiting to be captured.",
+        top: "40%",
+        left: "15%",
+      },
+      {
+        title: "Cinematic Horizons",
+        description: "Expand your visual vocabulary with these stunning vistas.",
+        top: "65%",
+        left: "65%",
+      },
+    ],
+  },
+  // New Video 2
+  {
+    url: "https://res.cloudinary.com/dgra109xv/video/upload/v1764496087/BuddhaSamyak_fcazmk.webm", // Placeholder URL
+    overlays: [
+      {
+        title: "Untouched Beauty",
+        description: "Raw, authentic locations that breathe life into your narrative.",
+        top: "35%",
+        left: "25%",
+      },
+      {
+        title: "The Director's Canvas",
+        description: "A blank slate of natural wonder for your next masterpiece.",
+        top: "60%",
+        left: "75%",
+      },
+    ],
+  },
 ];
+
 
 function App() {
   const [mouseTargetOffset, setMouseTargetOffset] = useState({ x: 0, y: 0 });
@@ -117,7 +150,7 @@ function App() {
   }, [currentVideoIndex]);
 
   const handleVideoEnd = () => {
-    setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
+    setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videoData.length);
   };
 
   return (
@@ -132,24 +165,23 @@ function App() {
             key={currentVideoIndex}
             id="videoPlayer"
             className="absolute w-full h-full object-cover top-0 left-0 transition-opacity duration-700 opacity-100"
-            src={videos[currentVideoIndex]}
+            src={videoData[currentVideoIndex].url}
             autoPlay
             muted
             onEnded={handleVideoEnd}
           />
           <video
             className="hidden"
-            src={videos[(currentVideoIndex + 1) % videos.length]}
+            src={videoData[(currentVideoIndex + 1) % videoData.length].url}
             preload="auto"
           />
         </div>
 
-        {textOverlays[currentVideoIndex].map((item, index) => (
+        {videoData[currentVideoIndex].overlays.map((item, index) => (
           <div
             key={index}
-            className={`absolute text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl transition-opacity duration-500 group z-10 max-w-[80%] md:max-w-[30%] text-center sm:text-left ${
-              visibleTexts[index] ? "opacity-100" : "opacity-0"
-            }`}
+            className={`absolute text-white font-bold text-sm sm:text-base md:text-lg lg:text-xl transition-opacity duration-500 group z-10 max-w-[80%] md:max-w-[30%] text-center sm:text-left ${visibleTexts[index] ? "opacity-100" : "opacity-0"
+              }`}
             style={{
               top: item.top,
               left: item.left,
@@ -165,13 +197,12 @@ function App() {
         ))}
 
         <div className="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-3 z-20">
-          {videos.map((_, index) => (
+          {videoData.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentVideoIndex(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                currentVideoIndex === index ? "bg-gray-900 scale-125" : "bg-gray-400"
-              }`}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${currentVideoIndex === index ? "bg-gray-900 scale-125" : "bg-gray-400"
+                }`}
             ></button>
           ))}
         </div>

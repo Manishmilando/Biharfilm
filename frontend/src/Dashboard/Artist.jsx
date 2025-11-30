@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Users, UserPlus, PlusCircle, Mail, Phone, Calendar, MapPin, Film, X, AlertCircle } from "lucide-react";
 import AddArtistForm from "./AddArtistForm";
+import { FaImdb } from "react-icons/fa";
 
 const Artist = ({ searchQuery }) => {
   const [artists, setArtists] = useState([]);
@@ -222,11 +223,7 @@ const Artist = ({ searchQuery }) => {
                     rel="noreferrer"
                     className="mb-2"
                   >
-                    <img
-                      className="h-8 opacity-80 hover:opacity-100 transition-opacity"
-                      src="/imdb.png"
-                      alt="IMDb"
-                    />
+                    <FaImdb color="" size={24} />
                   </a>
                 )}
               </div>

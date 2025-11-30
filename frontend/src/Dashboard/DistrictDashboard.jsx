@@ -132,7 +132,7 @@ const DistrictDashboard = ({ districtName = "Patna", activityOne = "Forwarded NO
                                             <td className="py-2 px-6">{item.End}</td>
                                             <td className="py-2 px-6 flex gap-2">
                                                 <button className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600">Accept</button>
-                                                <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Reject</button>
+                                                <button className="bg-red-500 text-white px-3 py-1 rounded hover:bg-[#4f0419]">Reject</button>
                                             </td>
                                         </tr>
                                     ))}

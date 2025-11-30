@@ -179,7 +179,7 @@ const categories = {
     {
       id: 1,
       title: "Budhh Smriti",
-      img: "/BudhhSmriti.jpg",
+      img: "/buddhaSmriti.png",
       description: "A serene urban park in Patna commemorating Buddha's teachings.",
       lat: 25.6090,
       lng: 85.1376
@@ -422,7 +422,7 @@ const Location = () => {
             <button
               key={category}
               className={`px-4 py-2 rounded-lg text-sm sm:text-base transition duration-300 ${selectedCategory === category
-                ? "bg-red-600 text-white"
+                ? "bg-[#4f0419] text-white"
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
                 }`}
               onClick={() => setSelectedCategory(category)}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavbarB from "../Components/NavbarB";
 import axios from "axios";
+import Navbar from "../Components/Navbar";
 
 const Tenders = () => {
   const navigate = useNavigate();
@@ -32,7 +32,8 @@ const Tenders = () => {
 
   return (
     <div className="min-h-screen bg-[#190108] px-4 sm:px-10 lg:px-20 py-10 text-white font-[Poppins] animate-fade">
-      <NavbarB />
+      <Navbar />
+
 
       {/* Back Button */}
       <div className="mb-10 mt-18">

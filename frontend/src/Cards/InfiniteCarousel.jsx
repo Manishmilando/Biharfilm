@@ -70,16 +70,15 @@ const FilterableCarousel = () => {
     <div className="w-full flex flex-col items-center justify-center bg-zinc-800 py-6">
       <h1 className="text-4xl font-bold mb-4 text-white">Top Shooting Locations</h1>
 
-  
+
       <div className="flex space-x-4 mb-6">
         {Object.keys(categories).map((category) => (
           <button
             key={category}
-            className={`px-4 py-2 rounded-lg text-lg ${
-              selectedCategory === category
-                ? "bg-red-600 text-white"
+            className={`px-4 py-2 rounded-lg text-lg ${selectedCategory === category
+                ? "bg-[#4f0419] text-white"
                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-            }`}
+              }`}
             onClick={() => {
               setSelectedCategory(category);
               setIndex(0);
@@ -90,7 +89,7 @@ const FilterableCarousel = () => {
         ))}
       </div>
 
-      
+
 
 
       <div className="overflow-hidden mt-4 w-[70%] relative bg-amber-700">
@@ -100,14 +99,14 @@ const FilterableCarousel = () => {
               key={card.id}
               className="w-72 h-80 border-2 border-white rounded-2xl overflow-hidden bg-transparent transform transition-transform duration ease-in-out hover:scale-95 group"
             >
-          
+
               <img
                 src={card.img}
                 alt={card.title}
                 className="w-full h-full object-cover transition-transform duration-[2000ms] ease-in-out group-hover:scale-110"
               />
 
-          
+
               <div className="absolute bottom-0 left-0 w-full bg-black/30 backdrop-blur-3xl text-white text-center py-3 z-10">
                 {card.title}
               </div>
@@ -125,7 +124,7 @@ const FilterableCarousel = () => {
           <IoIosArrowForward size={30} />
         </button>
       </div>
-  </div>
+    </div>
   );
 };
 

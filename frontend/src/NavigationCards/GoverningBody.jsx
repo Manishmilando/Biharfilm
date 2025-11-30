@@ -3,10 +3,11 @@ import "../App.css";
 
 const topImages = [
   {
-    src: "https://www.grandtrunkroadinitiatives.org/wp-content/uploads/2023/02/Dr.-Siddharth-Pic-1.jpeg",
+    src: "https://firebasestorage.googleapis.com/v0/b/gatishaktibihar.firebasestorage.app/o/biharfilm%2FDr.-Siddharth-Pic-1.jpeg?alt=media&token=94a2aea8-df19-467d-8a12-504c6cab5f98",
     alt: "Leader 1",
     name: "Shri Dr S Siddharth",
-    namee: "Development Commissioner, Goverment of Bihar",
+    namee: "Director-cum-Chairman, BSFDFC",
+    nameee: "(Development Commissioner, Goverment of Bihar)",
 
   },
   {
@@ -25,6 +26,11 @@ const boardMembers = [
     img: "https://www.grandtrunkroadinitiatives.org/wp-content/uploads/2023/02/Dr.-Siddharth-Pic-1.jpeg"
   },
   {
+    name: "Shri Pranav Kumar (I.A.S.)",
+    role: "Secretary, Art, Culture and Youth Department, Govt. of Bihar & Managing Director, Bihar State Film Development and Finance Corporation Limited",
+    img: "https://firebasestorage.googleapis.com/v0/b/gatishaktibihar.firebasestorage.app/o/biharfilm%2Fhome_secy.jpeg?alt=media&token=2f9b010e-0fed-4627-949d-a4779308a995"
+  },
+  {
     name: "B Kartikey Dhanji, IAS",
     role: "Secretary, Department of Industries, Govt. of Bihar & Nominee Director, Bihar State Film Development and Finance Corporation Limited",
     img: "https://pbs.twimg.com/media/G0k38jUb0AAtcUQ.jpg"
@@ -34,11 +40,7 @@ const boardMembers = [
     role: "Secretary, Information and Public Relations Department, Govt. of Bihar & Nominee Director, Bihar State Film Development and Finance Corporation Limited",
     img: "https://www.witnessinthecorridors.com/ImgNewsPolitical/240306161437635.png"
   },
-  {
-    name: "Shri Pranav Kumar (I.A.S.)",
-    role: "Secretary, Art, Culture and Youth Department, Govt. of Bihar & Managing Director, Bihar State Film Development and Finance Corporation Limited",
-    img: "https://firebasestorage.googleapis.com/v0/b/gatishaktibihar.firebasestorage.app/o/biharfilm%2Fhome_secy.jpeg?alt=media&token=2f9b010e-0fed-4627-949d-a4779308a995"
-  },
+
   {
     name: "Shri Mukesh Kumar Lal (I.A.A.S.)",
     role: "Special Secretary, Department of Finance, Govt. of Bihar & Nominee Director, Bihar State Film Development and Finance Corporation Limited",
@@ -48,10 +50,10 @@ const boardMembers = [
 
 const bodyMembers = [
   {
-    img: "https://static.wixstatic.com/media/cd3dbe_8f26ba759b334abc94aa6f69dd36f2cc~mv2.jpeg/v1/fill/w_667,h_375,al_c,q_80,enc_avif,quality_auto/cd3dbe_8f26ba759b334abc94aa6f69dd36f2cc~mv2.jpeg",
-    name: "Sri Arvind Ranjan Das",
-    role: "Consultant(Film)",
-    description: "0612-2219213",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+    name: "Smt. Ruby, I.A.S.",
+    role: "General Manager, BSFDFC",
+    description: "9473462229",
   },
   {
     img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
@@ -59,6 +61,13 @@ const bodyMembers = [
     role: "Consultant (Fin. & Account)",
     description: "7482075777",
   },
+  {
+    img: "https://firebasestorage.googleapis.com/v0/b/gatishaktibihar.firebasestorage.app/o/biharfilm%2Farvind-ranjan-das.jpeg?alt=media&token=3c9c7c30-d276-4d65-aacc-bbe00bc4ca9a",
+    name: "Sri Arvind Ranjan Das",
+    role: "Consultant(Film)",
+    description: "0612-2219213",
+  },
+
   {
     img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     name: "Sonika Kumari",
@@ -414,7 +423,7 @@ const GoverningComponent = () => {
     { id: "board", label: "Board of Directors" },
     { id: "management", label: "Management" },
     { id: "nodal", label: "Nodal Officers" },
-    { id: "districts", label: "Districts of Art and Culture" },
+    { id: "districts", label: "District Art and Culture Officers" },
   ];
 
   return (
@@ -459,7 +468,7 @@ const GoverningComponent = () => {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-6 py-3 rounded-lg text-sm sm:text-base font-medium transition-all duration-300 ${activeTab === tab.id
-              ? "bg-red-600 text-white shadow-lg scale-105"
+              ? "bg-[#4f0419] text-white shadow-lg scale-105"
               : "bg-slate-700/50 text-gray-300 hover:bg-slate-600 hover:text-white"
               }`}
           >

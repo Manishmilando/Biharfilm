@@ -36,14 +36,29 @@ function Cinemaecosystem() {
   };
 
   return (
-    <div id="Cinemaecosystem" className="pt-12 bg-[#380e1a] overflow-hidden px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 pb-18">
-      
+    <div
+      id="Cinemaecosystem"
+      className="relative pt-12 bg-[#190108] overflow-hidden px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 pb-18"
+    >
+      {/* ===== Doodle Background Layer (FIXED) ===== */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-5 bg-center bg-contain bg-no-repeat"
+        style={{
+          backgroundImage: `url(${"/doodles.png"})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "blur(1.5px)",
+          maskImage: "radial-gradient(circle at center, black 45%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(circle at center, black 45%, transparent 100%)",
+        }}
+      />
+
       {/* ===== Heading and Description ===== */}
       <div className="text-center text-white max-w-3xl mx-auto">
         <h2 className="text-3xl md:text-7xl tapestry-regular mb-4">Cinema Ecosystem</h2>
         <p className="text-base md:text-lg text-gray-300">
-          Explore the vibrant ecosystem that supports filmmaking — from props and production 
-          assets to local artists and security services. Each element plays a crucial role 
+          Explore the vibrant ecosystem that supports filmmaking — from props and production
+          assets to local artists and security services. Each element plays a crucial role
           in shaping authentic cinematic experiences.
         </p>
       </div>
@@ -56,8 +71,8 @@ function Cinemaecosystem() {
           scale: 1,
           transition: {
             duration: 1.5,
-            ease: "easeInOut",
-            type: "tween",
+            ease: 'easeInOut',
+            type: 'tween',
           },
         }}
         exit={{
@@ -65,38 +80,51 @@ function Cinemaecosystem() {
           y: 20,
           transition: {
             duration: 0.8,
-            ease: "easeInOut",
-            type: "tween",
+            ease: 'easeInOut',
+            type: 'tween',
           },
         }}
         viewport={{ amount: 0.3 }}
-        className="flex flex-wrap justify-center gap-6 sm:gap-10 pt-10 pb-14"
+        className="
+          flex
+          flex-col items-stretch
+          md:flex-row md:justify-between md:items-stretch
+          gap-6 sm:gap-8 lg:gap-10
+          pt-10 pb-14
+        "
       >
-        <Longcards
-          imageUrl="https://www.tbsnews.net/sites/default/files/styles/big_3/public/images/2022/04/17/shooting_village_bhadun_1.jpg"
-          title="Props & Production Assets"
-          description="Capturing raw storytelling from the heart of Bhadun village during an on-location shoot."
-          onClick={() => handleCardClick('map')}
-        />
+        {/* Each card: full-width on mobile, 1/3 on md+ */}
+        <div className="w-full md:basis-1/3 md:max-w-[32%]">
+          <Longcards
+            imageUrl="/vendor2.png"
+            title="Props & Production Assets"
+            description="Access a comprehensive inventory of props and production equipment tailored for diverse cinematic requirements."
+            onClick={() => handleCardClick('map')}
+          />
+        </div>
 
-        <Longcards
-          imageUrl="https://www.gramvikas.org/wp-content/uploads/2021/05/WhatsApp-Image-2021-05-03-at-10.23.14-PM.jpeg"
-          title="Local Artists"
-          description="A historical film set blending traditional architecture with cinematic creativity."
-          onClick={() => handleCardClick('localArtist')}
-        />
+        <div className="w-full md:basis-1/3 md:max-w-[32%]">
+          <Longcards
+            imageUrl="/localArtist.png"
+            title="Local Artists"
+            description="Connect with a pool of talented local artists and technicians to bring authentic regional flavor to your productions."
+            onClick={() => handleCardClick('localArtist')}
+          />
+        </div>
 
-        <Longcards
-          imageUrl="https://img.freepik.com/premium-photo/hengdian-world-studio-shooting-film-studio-ancient-village-chinese-screen_1048944-4451696.jpg"
-          title="Security & Safety Services"
-          description="Documenting cultural narratives from rural India — real stories, real locations."
-          onClick={() => handleCardClick('security')}
-        />
+        <div className="w-full md:basis-1/3 md:max-w-[32%]">
+          <Longcards
+            imageUrl="/securityEcosystem.png"
+            title="Security & Safety Services"
+            description="Ensure a secure filming environment with professional safety services and on-location security management."
+            onClick={() => handleCardClick('security')}
+          />
+        </div>
       </motion.div>
 
       {/* ===== Modal Popup ===== */}
       {activePopup && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4"
           onClick={handleBackdropClick}
         >
@@ -111,7 +139,7 @@ function Cinemaecosystem() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            
+
             {/* Modal Content */}
             <div className="h-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
               {activePopup === 'map' && <Map />}

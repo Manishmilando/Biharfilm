@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import Filmclub from "/Filmclub.mp4";
 import NavbarB from "../../Components/NavbarB";
+import { IoIosArrowBack } from "react-icons/io";
+import "../../App.css";
 
 const sessions = [
   {
@@ -54,56 +57,84 @@ const CoffeeWithFilm = () => {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen bg-black text-white overflow-hidden pt-20">
+    <div className="relative w-full min-h-screen bg-[#190108] text-white overflow-hidden">
       <NavbarB />
 
-      {/* Background Video */}
-      <video
-        className="absolute top-0 left-0 w-full h-full object-cover opacity-20 z-0"
-        src={Filmclub}
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
+      {/* Background Video with Overlay */}
+      <div className="fixed inset-0 z-0">
+        <video
+          className="absolute top-0 left-0 w-full h-full object-cover"
+          src={Filmclub}
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+        <div className="absolute inset-0 bg-[#190108]/80 backdrop-blur-[2px]" />
+      </div>
 
-      {/* Overlay Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 py-16">
-        {/* Back Button */}
-        <button
-          onClick={() => navigate(-1)}
-          className="mb-6 px-5 py-2 bg-[#a92b43] text-white rounded-md hover:bg-[#891737] transition duration-300"
+      {/* Main Content */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 py-24 sm:py-32">
+
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mb-12"
         >
-          ← Back to Film Club
-        </button>
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className="group flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-[#4f0419] hover:border-[#4f0419] transition-all duration-300 mb-8 backdrop-blur-sm"
+          >
+            <IoIosArrowBack className="text-lg text-gray-300 group-hover:text-white transition-colors" />
+            <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Back to Film Club</span>
+          </button>
 
-        {/* Title */}
-        <h1 className="text-4xl md:text-5xl font-extrabold text-center mb-16 bg-gradient-to-r from-yellow-400 via-pink-400 to-red-500 bg-clip-text text-transparent drop-shadow-md">
-          Coffee with Film
-        </h1>
+          {/* Title */}
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-4 great-vibes-regular drop-shadow-2xl">
+            Coffee with Film
+          </h1>
+          <p className="text-gray-300 text-lg max-w-4xl mx-auto leading-relaxed text-center">
+            A unique interactive platform where film producers and directors from Bihar showcase their films and share their filmmaking journeys. The audience gets an opportunity to interact with the filmmakers, gain insights into the creative process, and understand the challenges faced during film production.
+          </p>
+        </motion.div>
 
         {/* Grid of Sessions */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {sessions.map((item, index) => (
-            <div
+            <motion.div
               key={index}
-              className="rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl 
-                         transition-transform duration-300 hover:scale-105"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+              className="group relative h-[320px] rounded-2xl overflow-hidden bg-white/5 border border-white/10 backdrop-blur-md shadow-xl hover:shadow-2xl hover:shadow-[#4f0419]/20 transition-all duration-500 hover:-translate-y-2"
             >
-              <div className="relative h-74">
+              {/* Image Section */}
+              <div className="relative h-[65%] overflow-hidden">
                 <img
                   src={item.url}
                   alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
-                {/* Glass Effect Overlay */}
-                <div className="absolute bottom-0 left-0 w-full p-4 bg-black/50 backdrop-blur-md">
-                  <h2 className="text-lg font-semibold text-white">
-                    {item.title}
-                  </h2>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#190108] via-transparent to-transparent opacity-80" />
+
+                {/* Date Badge (extracted from title if possible, or just a generic icon) */}
+                <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-white/80" />
                 </div>
               </div>
-            </div>
+
+              {/* Content Section */}
+              <div className="absolute bottom-0 left-0 w-full h-[35%] p-5 flex flex-col justify-center bg-gradient-to-b from-[#190108]/90 to-[#190108]">
+                <h2 className="text-base font-medium text-white/90 leading-snug line-clamp-2 group-hover:text-white transition-colors">
+                  {item.title}
+                </h2>
+                <div className="mt-3 w-12 h-0.5 bg-[#4f0419] rounded-full transition-all duration-500 group-hover:w-full opacity-50 group-hover:opacity-100" />
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>

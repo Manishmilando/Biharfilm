@@ -55,11 +55,9 @@ function Home() {
   return (
     <>
       <VideoSection />
-      {/* <ButtonNOC /> */}
       <Vr />
       <FilmClubUI />
       <Actors />
-      {/* <ShootingLocationPage/> */}
       <Cinemaecosystem />
       <GoverningComponent />
       <FilemPolicyPage />

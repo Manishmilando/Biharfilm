@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { 
+import {
   Building2, Package, Star, Eye, MessageCircle, Calendar, MapPin, Phone, Mail, Globe,
   Edit3, Plus, BarChart3, X, Save, Loader, AlertCircle, CheckCircle, User, Camera,
   Image as ImageIcon, DollarSign
@@ -36,12 +36,18 @@ const VendorDashboard = () => {
   });
 
   const recentInquiries = [
-    { id: 1, customerName: "Raj Productions", productName: "Professional Camera Kit", 
-      message: "Need this for a 3-day shoot.", date: "2025-09-06", status: "pending" },
-    { id: 2, customerName: "Mumbai Films", productName: "LED Lighting Setup", 
-      message: "Looking for bulk rental.", date: "2025-09-05", status: "responded" },
-    { id: 3, customerName: "Creative Studios", productName: "Audio Equipment", 
-      message: "Available next week?", date: "2025-09-04", status: "pending" }
+    {
+      id: 1, customerName: "Raj Productions", productName: "Professional Camera Kit",
+      message: "Need this for a 3-day shoot.", date: "2025-09-06", status: "pending"
+    },
+    {
+      id: 2, customerName: "Mumbai Films", productName: "LED Lighting Setup",
+      message: "Looking for bulk rental.", date: "2025-09-05", status: "responded"
+    },
+    {
+      id: 3, customerName: "Creative Studios", productName: "Audio Equipment",
+      message: "Available next week?", date: "2025-09-04", status: "pending"
+    }
   ];
 
   useEffect(() => { fetchVendorProfile(); }, [vendorId]);
@@ -78,7 +84,7 @@ const VendorDashboard = () => {
         } catch {
           errorMessage = responseText || `HTTP ${response.status}`;
         }
-        
+
         throw new Error(`${response.status}: ${errorMessage}`);
       }
 
@@ -94,27 +100,27 @@ const VendorDashboard = () => {
 
     } catch (error) {
       console.error('API Call Error:', error);
-      
+
       // Specific error handling
       if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-        return { 
-          success: false, 
-          error: 'Network connection failed. Please check:\n• Your internet connection\n• Backend server is running\n• Server URL is correct' 
+        return {
+          success: false,
+          error: 'Network connection failed. Please check:\n• Your internet connection\n• Backend server is running\n• Server URL is correct'
         };
       } else if (error.message.includes('404')) {
-        return { 
-          success: false, 
-          error: 'API endpoint not found (404). Please check:\n• Backend server is running\n• API routes are configured correctly\n• URL spelling is correct' 
+        return {
+          success: false,
+          error: 'API endpoint not found (404). Please check:\n• Backend server is running\n• API routes are configured correctly\n• URL spelling is correct'
         };
       } else if (error.message.includes('CORS')) {
-        return { 
-          success: false, 
-          error: 'CORS error. Backend needs to allow your domain.' 
+        return {
+          success: false,
+          error: 'CORS error. Backend needs to allow your domain.'
         };
       } else {
-        return { 
-          success: false, 
-          error: error.message || 'Unknown error occurred' 
+        return {
+          success: false,
+          error: error.message || 'Unknown error occurred'
         };
       }
     }
@@ -123,9 +129,9 @@ const VendorDashboard = () => {
   const fetchVendorProfile = async () => {
     setLoading(true);
     setError(null);
-    
+
     const result = await makeApiCall(`https://biharfilmbackend-production.up.railway.app/api/vendor/vendors/${vendorId}`);
-    
+
     if (result.success) {
       setVendorData(prev => ({ ...prev, ...result.data, products: result.data.products || [] }));
       setStats(prev => ({ ...prev, totalProducts: result.data.products?.length || 0 }));
@@ -138,7 +144,7 @@ const VendorDashboard = () => {
     } else if (!result.error.includes('404')) {
       setError(result.error);
     }
-    
+
     setLoading(false);
   };
 
@@ -155,9 +161,9 @@ const VendorDashboard = () => {
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { 
-        alert('File must be less than 5MB'); 
-        return; 
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File must be less than 5MB');
+        return;
       }
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -172,9 +178,9 @@ const VendorDashboard = () => {
   const handleProductImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 5 * 1024 * 1024) { 
-        alert('File must be less than 5MB'); 
-        return; 
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File must be less than 5MB');
+        return;
       }
       const reader = new FileReader();
       reader.onload = (event) => {
@@ -240,7 +246,7 @@ const VendorDashboard = () => {
     }
 
     let apiUrl, method, requestData;
-    
+
     if (vendorData.id) {
       // Update existing vendor
       apiUrl = `https://biharfilmbackend-production.up.railway.app/api/vendor/updateVendorById/${vendorData.id}`;
@@ -251,7 +257,7 @@ const VendorDashboard = () => {
       // First try the original endpoint
       apiUrl = 'https://biharfilmbackend-production.up.railway.app/api/vendor/addVendor';
       method = 'POST';
-      requestData = { 
+      requestData = {
         ...profileFormData,
         // Remove nested structure as it might be causing issues
         products: []
@@ -269,7 +275,7 @@ const VendorDashboard = () => {
     // If the first attempt fails with 404, try alternative endpoints
     if (!result.success && result.error.includes('404') && !vendorData.id) {
       console.log('Trying alternative endpoint...');
-      
+
       // Try without /addVendor
       apiUrl = 'https://biharfilmbackend-production.up.railway.app/api/vendor';
       result = await makeApiCall(apiUrl, {
@@ -303,7 +309,7 @@ const VendorDashboard = () => {
   // Test different API endpoints
   const testApiEndpoints = async () => {
     console.log('Testing API endpoints...');
-    
+
     const endpoints = [
       'https://biharfilmbackend-production.up.railway.app/api/vendor/vendors/1',
       'https://biharfilmbackend-production.up.railway.app/api/vendor/addVendor',
@@ -321,13 +327,13 @@ const VendorDashboard = () => {
           headers: { 'Content-Type': 'application/json' },
           body: endpoint.includes('add') ? JSON.stringify({ test: 'data' }) : undefined
         });
-        
+
         console.log(`${endpoint}: ${response.status} ${response.statusText}`);
       } catch (error) {
         console.log(`${endpoint}: Error - ${error.message}`);
       }
     }
-    
+
     alert('Check console for API endpoint test results');
   };
 
@@ -392,7 +398,7 @@ const VendorDashboard = () => {
             <div className="flex gap-2 mt-2">
               <button
                 onClick={testApiEndpoints}
-                className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                className="bg-red-500 hover:bg-[#4f0419] text-white px-3 py-1 rounded text-sm"
               >
                 Test All Endpoints
               </button>
@@ -441,7 +447,7 @@ const VendorDashboard = () => {
                 </div>
               </div>
             </div>
-            <button 
+            <button
               onClick={() => setShowEditProfileModal(true)}
               className="bg-[#a92b4e] hover:bg-[#891737] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
             >
@@ -458,7 +464,7 @@ const VendorDashboard = () => {
             { label: "Views", value: stats.totalViews.toLocaleString(), icon: Eye, color: "green" },
             { label: "Inquiries", value: stats.totalInquiries, icon: MessageCircle, color: "purple" },
             { label: "Rating", value: stats.averageRating, icon: Star, color: "yellow" },
-            { label: "Revenue", value: `₹${(stats.monthlyRevenue/1000)}K`, icon: DollarSign, color: "red" },
+            { label: "Revenue", value: `₹${(stats.monthlyRevenue / 1000)}K`, icon: DollarSign, color: "red" },
             { label: "Bookings", value: stats.activeBookings, icon: Calendar, color: "orange" }
           ].map((stat, index) => (
             <div key={index} className="bg-white rounded-lg p-4 shadow-sm border">
@@ -479,7 +485,7 @@ const VendorDashboard = () => {
           <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6 border">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-gray-900">Recent Products</h2>
-              <button 
+              <button
                 onClick={() => setShowAddProductModal(true)}
                 className="bg-[#a92b4e] hover:bg-[#891737] text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-colors"
               >
@@ -487,7 +493,7 @@ const VendorDashboard = () => {
                 Add Product
               </button>
             </div>
-            
+
             <div className="space-y-3">
               {vendorData.products && vendorData.products.length > 0 ? (
                 vendorData.products.slice(0, 3).map((product) => (
@@ -515,7 +521,7 @@ const VendorDashboard = () => {
                   <Package className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                   <h3 className="font-semibold text-gray-900 mb-2">No products yet</h3>
                   <p className="text-gray-600 mb-4">Add your first product to get started</p>
-                  <button 
+                  <button
                     onClick={() => setShowAddProductModal(true)}
                     className="bg-[#a92b4e] hover:bg-[#891737] text-white px-4 py-2 rounded-lg"
                   >
@@ -532,15 +538,14 @@ const VendorDashboard = () => {
               <h2 className="text-lg font-bold text-gray-900">Recent Inquiries</h2>
               <button className="text-[#a92b4e] text-sm hover:underline">View All</button>
             </div>
-            
+
             <div className="space-y-3">
               {recentInquiries.map((inquiry) => (
                 <div key={inquiry.id} className="p-3 border rounded-lg">
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-semibold text-gray-900 text-sm">{inquiry.customerName}</h4>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      inquiry.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
-                    }`}>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${inquiry.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                      }`}>
                       {inquiry.status}
                     </span>
                   </div>
@@ -564,11 +569,11 @@ const VendorDashboard = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { icon: Plus, label: "Add Product", action: () => setShowAddProductModal(true) },
-              { icon: BarChart3, label: "Analytics", action: () => {} },
-              { icon: MessageCircle, label: "Inquiries", action: () => {} },
+              { icon: BarChart3, label: "Analytics", action: () => { } },
+              { icon: MessageCircle, label: "Inquiries", action: () => { } },
               { icon: Edit3, label: "Profile", action: () => setShowEditProfileModal(true) }
             ].map((item, index) => (
-              <button 
+              <button
                 key={index}
                 onClick={item.action}
                 className="flex flex-col items-center gap-2 p-4 border-2 border-dashed border-gray-200 rounded-lg hover:border-[#a92b4e] hover:bg-[#a92b4e]/5 transition-colors"
@@ -616,7 +621,7 @@ const VendorDashboard = () => {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            
+
             <form onSubmit={handleAddProduct} className="p-4 space-y-4">
               {/* Image Upload */}
               <div className="text-center">
@@ -732,7 +737,7 @@ const VendorDashboard = () => {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            
+
             <form onSubmit={handleUpdateProfile} className="p-4 space-y-4">
               {/* Logo Upload */}
               <div className="text-center">

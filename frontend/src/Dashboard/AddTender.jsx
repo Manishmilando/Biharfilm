@@ -3,7 +3,7 @@ import { Upload, FileText, X, Loader, Save, FolderOpen } from "lucide-react";
 import AlertBox from "../Components/AlertBox";
 
 function AddTender({ tenderData, onClose }) {
-  const MAX_WORDS = 50;
+  const MAX_WORDS = 30;
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [description, setDescription] = useState("");
@@ -41,9 +41,18 @@ function AddTender({ tenderData, onClose }) {
     const text = e.target.value;
     const words = text.trim().split(/\s+/).filter(Boolean);
 
-    if (words.length <= MAX_WORDS) {
+    // Strict check to prevent database error
+    if (words.length <= MAX_WORDS && text.length <= 190) {
       setDescription(text);
       setWordCount(words.length);
+    } else if (text.length > 190) {
+      // Allow typing but show warning or just truncate if strictly needed
+      // For now, let's just limit by length as well since DB column likely has char limit
+      // Assuming standard VARCHAR(191) or similar
+      if (text.length < description.length) {
+        setDescription(text); // Allow deleting
+        setWordCount(words.length);
+      }
     }
   };
 
@@ -98,7 +107,15 @@ function AddTender({ tenderData, onClose }) {
     formData.append("description", description);
     formData.append("pdf", pdf);
 
+    // Debug logging
+    console.log("Creating tender with data:");
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+    console.log("PDF File:", pdf);
+
     try {
+      console.log("Sending request to createTender...");
       const response = await fetch(
         "https://biharfilmbackend-production.up.railway.app/api/tender/createTender",
         {
@@ -108,7 +125,18 @@ function AddTender({ tenderData, onClose }) {
         }
       );
 
-      const result = await response.json();
+      console.log("Response Status:", response.status, response.statusText);
+
+      let result;
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        result = await response.json();
+        console.log("Response JSON:", result);
+      } else {
+        const text = await response.text();
+        console.error("Non-JSON response:", text);
+        throw new Error(`Server returned ${response.status} ${response.statusText}: ${text.substring(0, 100)}`);
+      }
 
       if (response.ok && result.success) {
         showAlert({
@@ -126,7 +154,8 @@ function AddTender({ tenderData, onClose }) {
           if (onClose) onClose();
         }, 2000);
       } else {
-        throw new Error(result.message || "Failed to create tender");
+        console.error("Request failed with result:", result);
+        throw new Error(result.message || `Failed to create tender: ${response.status} ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error creating tender:", error);
@@ -219,7 +248,7 @@ function AddTender({ tenderData, onClose }) {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 relative">
+    <div className="w-full max-w-lg mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden relative">
       <AlertBox {...alertConfig} onClose={closeAlert} />
 
       {/* Header */}

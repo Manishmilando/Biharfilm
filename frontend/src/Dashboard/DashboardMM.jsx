@@ -3,9 +3,10 @@ import "../App.css";
 import Logo1 from "/src/assets/Logo1.png";
 import { MdSpaceDashboard } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
-import { FileText, CheckCircle, Clock, XCircle } from "lucide-react";
+import { FileText, CheckCircle, Clock, XCircle, Building2 } from "lucide-react";
 import Dashboardactivity from "./Dashboardactivity";
 import Artist from "./Artist";
+import VendorDirectory from "./VendorDirectory";
 import { RiContractFill } from "react-icons/ri";
 import TenderMain from "../Dashboard/TenderMain";
 import NotificationMain from "./NotificationMain";
@@ -108,6 +109,8 @@ const Dashboard = () => {
         );
       case "Artist":
         return <Artist searchQuery={searchQuery} />;
+      case "Vendor Directory":
+        return <VendorDirectory searchQuery={searchQuery} />;
       case "Notifications":
         return <NotificationMain searchQuery={searchQuery} />;
       case "Tender":
@@ -137,6 +140,7 @@ const Dashboard = () => {
             {[
               { label: "Overview", icon: <MdSpaceDashboard /> },
               { label: "Artist", icon: <FaRegUser /> },
+              { label: "Vendor Directory", icon: <Building2 className="w-4 h-4" /> },
               {
                 label: "Notifications",
                 icon: (
