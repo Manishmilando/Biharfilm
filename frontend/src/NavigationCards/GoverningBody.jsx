@@ -56,17 +56,18 @@ const bodyMembers = [
     description: "9473462229",
   },
   {
-    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-    name: "V.D.Mishra",
-    role: "Consultant (Fin. & Account)",
-    description: "7482075777",
-  },
-  {
     img: "https://firebasestorage.googleapis.com/v0/b/gatishaktibihar.firebasestorage.app/o/biharfilm%2Farvind-ranjan-das.jpeg?alt=media&token=3c9c7c30-d276-4d65-aacc-bbe00bc4ca9a",
     name: "Sri Arvind Ranjan Das",
     role: "Consultant(Film)",
     description: "0612-2219213",
   },
+  {
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+    name: "V.D.Mishra",
+    role: "Consultant (Fin. & Account)",
+    description: "7482075777",
+  },
+
 
   {
     img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",

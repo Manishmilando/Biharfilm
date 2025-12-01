@@ -38,6 +38,7 @@ import Artist from "./Dashboard/Artist";
 import PrivacyPolicy from "./NavigationCards/PrivacyPolicy";
 import AboutUs from "./NavigationCards/AboutUs";
 import PDFViewerPage from "./NavigationCards/PDFViewerPage";
+import Scholarship from "../src/NavigationCards/ScholarshipAndExpenses";
 
 // Home Page
 function Home() {
@@ -131,6 +132,7 @@ export default function App() {
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/about-us" element={<AboutUs />} />
       <Route path="/document/:docId" element={<PDFViewerPage />} />
+      <Route path="/scholarship" element={<Scholarship />} />
 
 
       <Route path="*" element={<navigate to="/" replace />} />

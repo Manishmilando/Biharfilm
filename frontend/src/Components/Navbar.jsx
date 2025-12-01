@@ -174,6 +174,15 @@ const Navbar = () => {
                   >
                     Organization structure
                   </li>
+                  <li
+                    onClick={() => {
+                      navigate("/scholarship");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Scholarships
+                  </li>
                 </ul>
               )}
             </li>

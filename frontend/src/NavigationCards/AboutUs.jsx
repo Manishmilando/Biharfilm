@@ -23,22 +23,22 @@ export default function AboutUs() {
     const subsidies = [
         {
             title: "Feature Films",
-            desc: "Grants up to ₹4 crore if 75% of the film is shot in Bihar.",
+            desc: "Grants ranging from ₹2 crore to ₹4 crore based on shooting days (50% - 75%) and film category (1st, 2nd, or 3rd film).",
             icon: <Film className="w-8 h-8 text-white" />
         },
         {
             title: "Television Serials / Shows",
-            desc: "Subsidy up to ₹1 crore, or 25% of production cost, for a minimum of 90 days of shooting within the state.",
+            desc: "Subsidy up to ₹50 Lakhs for 45 days of shooting, or up to ₹1 crore for 90 days of shooting in Bihar.",
             icon: <Video className="w-8 h-8 text-white" />
         },
         {
             title: "Web Series / OTT Content",
-            desc: "Up to ₹3 crore, or 25% of production cost, for a minimum of 60 days (or 70% of total days) of shooting in Bihar.",
+            desc: "Subsidy up to ₹2 crore (min 30 days/50%) or ₹3 crore (min 60 days/70%) of shooting in Bihar.",
             icon: <Globe className="w-8 h-8 text-white" />
         },
         {
             title: "Infrastructure Development",
-            desc: "Projects investing ₹2 crore or more can avail a grant up to ₹1.5 crore or 25% of total investment.",
+            desc: "Grants up to ₹1.5 crore for Film Cities/Studios, and up to ₹1 crore for equipment/tech setups (25% of investment).",
             icon: <MapPin className="w-8 h-8 text-white" />
         }
     ];

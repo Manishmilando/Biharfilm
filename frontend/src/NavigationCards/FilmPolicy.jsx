@@ -2,6 +2,7 @@ import React from "react";
 import FilmSubsidyTable from "../Budget/FilmSubsidyTable.jsx";
 import InvestmentSubsidyTable from "../Budget/InvestmentSubsidyTable.jsx";
 import FilmSubsidy from "../Budget/FilmSubsidy.jsx";
+import OTTSubsidy from "../Budget/OTTSubsidy.jsx";
 import "../App.css";
 import { File } from 'lucide-react';
 
@@ -42,12 +43,19 @@ export default function FilmPolicyNOC() {
       </div>
 
       {/* Mobile Friendly Summary */}
-      <div className="mt-10 w-full max-w-4xl">
+      <div className="mt-10 w-full max-w-4xl space-y-8">
         <div className="bg-white shadow-xl rounded-2xl p-4 sm:p-6 border-l-4 border-[#a92b4e] transition hover:scale-[1.01] hover:shadow-[#a92b4e] duration-300">
           <h2 className="text-lg sm:text-xl font-medium text-[#891737] mb-4">
-            Film Subsidy Details (Mobile Summary)
+            Financial assistance for shooting of TV serials/shows in the State
           </h2>
           <FilmSubsidy />
+        </div>
+
+        <div className="bg-white shadow-xl rounded-2xl p-4 sm:p-6 border-l-4 border-[#a92b4e] transition hover:scale-[1.01] hover:shadow-[#a92b4e] duration-300">
+          <h2 className="text-lg sm:text-xl font-medium text-[#891737] mb-4">
+            Financial assistance for web series to be exhibited on OTT platforms
+          </h2>
+          <OTTSubsidy />
         </div>
       </div>
       {/* Download Film Policy Button */}

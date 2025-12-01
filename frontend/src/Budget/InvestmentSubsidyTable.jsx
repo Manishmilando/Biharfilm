@@ -3,28 +3,32 @@ import React from 'react';
 const InvestmentSubsidyTable = () => {
   const subsidyData = [
     {
-      purpose: 'Studio / Film City / Tech Setup',
-      minInvestment: '₹200 lakh',
+      slNo: 1,
+      purpose: 'For setting up infrastructure like Film Set / Film City / Theme Park / Theme Village, Film Studio for VFX, Animation, Sound Recording / Dubbing, Color Correction.',
+      minInvestment: '200',
       subsidyPercent: '25%',
-      maxSubsidy: '₹150 lakh',
+      maxSubsidy: '150',
     },
     {
-      purpose: 'Film Lighting / Equipment Rental',
-      minInvestment: '₹100 lakh',
+      slNo: 2,
+      purpose: 'For Film Lighting, High Resolution Camera, Sound System, Dubbing etc. for film production and processing.',
+      minInvestment: '100',
       subsidyPercent: '25%',
-      maxSubsidy: '₹100 lakh',
+      maxSubsidy: '100',
     },
     {
-      purpose: 'Full-fledged Studio Setup',
-      minInvestment: '₹50 lakh',
+      slNo: 3,
+      purpose: 'For the establishment of a fully equipped studio.',
+      minInvestment: '50',
       subsidyPercent: '25%',
-      maxSubsidy: '₹25 lakh',
+      maxSubsidy: '25',
     },
     {
-      purpose: 'Animation Lab, Editing Suite, Tech Setup',
-      minInvestment: '₹50 lakh',
+      slNo: 4,
+      purpose: 'For the establishment of Animation and Computer Graphics Center and other technical facilities etc.',
+      minInvestment: '50',
       subsidyPercent: '25%',
-      maxSubsidy: '₹25 lakh',
+      maxSubsidy: '25',
     },
   ];
 
@@ -33,19 +37,21 @@ const InvestmentSubsidyTable = () => {
       <table className="min-w-full text-sm text-left border border-gray-300">
         <thead className="bg-gray-100">
           <tr>
-            <th className="p-3 border">Purpose</th>
-            <th className="p-3 border">Min Investment (₹ lakh)</th>
-            <th className="p-3 border">Subsidy %</th>
-            <th className="p-3 border">Max Subsidy (₹ lakh)</th>
+            <th className="p-3 border">Sl. No.</th>
+            <th className="p-3 border">Grant Scheme</th>
+            <th className="p-3 border">Min Project Cost (in Lakhs)</th>
+            <th className="p-3 border">Max Incentive (%)</th>
+            <th className="p-3 border">Max Grant Limit (in Lakhs)</th>
           </tr>
         </thead>
         <tbody>
           {subsidyData.map((item, index) => (
             <tr key={index} className="hover:bg-gray-50">
+              <td className="p-3 border text-center">{item.slNo}</td>
               <td className="p-3 border">{item.purpose}</td>
-              <td className="p-3 border">{item.minInvestment}</td>
-              <td className="p-3 border">{item.subsidyPercent}</td>
-              <td className="p-3 border">{item.maxSubsidy}</td>
+              <td className="p-3 border text-center">{item.minInvestment}</td>
+              <td className="p-3 border text-center">{item.subsidyPercent}</td>
+              <td className="p-3 border text-center">{item.maxSubsidy}</td>
             </tr>
           ))}
         </tbody>
