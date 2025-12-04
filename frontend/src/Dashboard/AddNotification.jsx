@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Upload, FileText, X, Loader, Save, Bell } from "lucide-react";
+import { Upload, FileText, X, Loader, Check, AlertCircle } from "lucide-react";
 import AlertBox from "../Components/AlertBox";
 
 function AddNotification({ onClose, editData }) {
@@ -20,29 +20,22 @@ function AddNotification({ onClose, editData }) {
     autoClose: false
   });
 
-  // ✅ Load previous data when editData is available
+  // Load previous data when editData is available
   useEffect(() => {
     if (editData) {
       console.log("Loading edit data:", editData);
 
-      // Set title
-      setTitle(editData.notificationTitle || "");
+      setTitle(editData.title || "");
 
-      // Set description
-      const desc = editData.notificationDescription || "";
+      const desc = editData.description || "";
       setDescription(desc);
       setWordCount(desc.trim().split(/\s+/).filter(Boolean).length);
 
-      // Set date - format it properly for date input
-      if (editData.notificationDate) {
-        // If date is in ISO format: "2025-11-27T00:00:00.000Z"
-        const dateObj = new Date(editData.notificationDate);
+      if (editData.date) {
+        const dateObj = new Date(editData.date);
         const formattedDate = dateObj.toISOString().split('T')[0];
         setDate(formattedDate);
       }
-
-      // Note: Existing PDF info is stored but we can't set file input
-      // Show message about existing file
     }
   }, [editData]);
 
@@ -90,7 +83,7 @@ function AddNotification({ onClose, editData }) {
     setAlertConfig(prev => ({ ...prev, isOpen: false }));
   };
 
-  // ✅ Separate CREATE function
+  // Create notification
   const handleCreateNotification = async () => {
     if (!title || !date || !description || !pdfFile) {
       showAlert({
@@ -126,10 +119,7 @@ function AddNotification({ onClose, editData }) {
           title: "Success",
           message: "Notification created successfully!",
           autoClose: true,
-          duration: 2000,
-          onConfirm: () => {
-            if (onClose) onClose();
-          }
+          duration: 2000
         });
 
         setTimeout(() => {
@@ -150,7 +140,7 @@ function AddNotification({ onClose, editData }) {
     }
   };
 
-  // ✅ Separate UPDATE function
+  // Update notification
   const handleUpdateNotification = async () => {
     if (!title || !date || !description) {
       showAlert({
@@ -167,7 +157,6 @@ function AddNotification({ onClose, editData }) {
     formData.append("notificationDate", date);
     formData.append("notificationDescription", description);
 
-    // Only append PDF if a new one is selected
     if (pdfFile) {
       formData.append("notificationPdf", pdfFile);
     }
@@ -190,10 +179,7 @@ function AddNotification({ onClose, editData }) {
           title: "Success",
           message: "Notification updated successfully!",
           autoClose: true,
-          duration: 2000,
-          onConfirm: () => {
-            if (onClose) onClose();
-          }
+          duration: 2000
         });
 
         setTimeout(() => {
@@ -214,7 +200,7 @@ function AddNotification({ onClose, editData }) {
     }
   };
 
-  // ✅ Main submit handler that routes to correct function
+  // Main submit handler
   const handleSubmit = () => {
     if (editData) {
       handleUpdateNotification();
@@ -224,77 +210,72 @@ function AddNotification({ onClose, editData }) {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 relative">
+    <div className="w-full max-w-lg mx-auto bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
       <AlertBox {...alertConfig} onClose={closeAlert} />
 
       {/* Header */}
-      <div className="bg-[#891737] px-6 py-4 text-white flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
-            <Bell className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold">
-              {editData ? "Edit Notification" : "Create Notification"}
-            </h2>
-            <p className="text-white/80 text-xs">
-              {editData ? "Update notification details" : "Add official notification"}
-            </p>
-          </div>
+      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <h2 className="text-base font-semibold text-gray-900">
+            {editData ? "Edit Notification" : "Create Notification"}
+          </h2>
+          <p className="text-xs text-gray-500 mt-0.5">
+            {editData ? "Update notification details" : "Add official notification"}
+          </p>
         </div>
         {onClose && (
           <button
             onClick={onClose}
-            className="text-white/80 hover:text-white hover:bg-white/10 p-1 rounded-full transition-colors"
+            className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 text-gray-500" />
           </button>
         )}
       </div>
 
       {/* Form Content */}
-      <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto custom-scrollbar">
-        {/* Title & Date */}
-        <div className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-700 block uppercase tracking-wide">
-              Title *
-            </label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., Film Policy Update 2024"
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:border-[#891737] focus:ring-2 focus:ring-[#891737]/20 outline-none transition-all bg-gray-50 focus:bg-white text-sm text-gray-900"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-700 block uppercase tracking-wide">
-              Date *
-            </label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:border-[#891737] focus:ring-2 focus:ring-[#891737]/20 outline-none transition-all bg-gray-50 focus:bg-white text-sm text-gray-900"
-            />
-          </div>
+      <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+        {/* Title */}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            Title <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="e.g., Film Policy Update 2024"
+            className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors"
+          />
+        </div>
+
+        {/* Date */}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            Date <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors"
+          />
         </div>
 
         {/* Description */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-gray-700 block uppercase tracking-wide">
-            Description *
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            Description <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <textarea
-              rows="3"
+              rows="4"
               value={description}
               onChange={handleDescriptionChange}
               placeholder="Enter a brief description..."
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:border-[#891737] focus:ring-2 focus:ring-[#891737]/20 outline-none transition-all bg-gray-50 focus:bg-white resize-none text-sm text-gray-900"
+              className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors resize-none"
             ></textarea>
-            <div className={`absolute bottom-2 right-2 text-[10px] font-medium px-1.5 py-0.5 rounded ${wordCount >= MAX_WORDS ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-500"
+            <div className={`absolute bottom-2 right-2 text-xs px-2 py-0.5 rounded ${wordCount >= MAX_WORDS ? "bg-red-50 text-red-600" : "bg-gray-50 text-gray-500"
               }`}>
               {wordCount}/{MAX_WORDS}
             </div>
@@ -302,19 +283,21 @@ function AddNotification({ onClose, editData }) {
         </div>
 
         {/* PDF Upload */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-gray-700 block uppercase tracking-wide">
-            Attachment (PDF) {editData ? "" : "*"}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            Attachment (PDF) {!editData && <span className="text-red-500">*</span>}
           </label>
+
           {editData && !pdfFile && (
-            <div className="mb-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-xs text-blue-700 flex items-center gap-2">
-                <FileText className="w-3 h-3" />
+            <div className="mb-2 p-3 bg-blue-50 border border-blue-100 rounded-lg flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-blue-700">
                 Current PDF is already uploaded. Upload a new file to replace it.
               </p>
             </div>
           )}
-          <div className={`border-2 border-dashed rounded-xl p-4 transition-all text-center ${pdfFile ? "border-[#891737] bg-[#891737]/5" : "border-gray-300 hover:border-[#891737] hover:bg-gray-50"
+
+          <div className={`border-2 border-dashed rounded-lg p-4 transition-all ${pdfFile ? "border-gray-200 bg-gray-50" : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
             }`}>
             <input
               type="file"
@@ -325,80 +308,66 @@ function AddNotification({ onClose, editData }) {
             />
 
             {pdfFile ? (
-              <div className="flex items-center justify-between bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
-                <div className="flex items-center space-x-3 overflow-hidden">
-                  <div className="w-8 h-8 bg-red-100 rounded flex items-center justify-center flex-shrink-0">
-                    <FileText className="w-4 h-4 text-red-600" />
+              <div className="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-100">
+                <div className="flex items-center gap-3 overflow-hidden flex-1">
+                  <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-5 h-5 text-red-600" />
                   </div>
-                  <div className="text-left min-w-0">
-                    <p className="font-medium text-gray-900 truncate text-sm">{pdfFile.name}</p>
-                    <p className="text-[10px] text-gray-500">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-gray-900 truncate">{pdfFile.name}</p>
+                    <p className="text-xs text-gray-500">
                       {(pdfFile.size / 1024 / 1024).toFixed(2)} MB
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setPdfFile(null)}
-                  className="p-1.5 hover:bg-red-50 rounded-full text-red-500 transition-colors"
+                  className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors flex-shrink-0 ml-2"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
             ) : (
-              <label htmlFor="pdfUpload" className="cursor-pointer flex flex-col items-center justify-center py-2">
-                <Upload className="w-6 h-6 text-gray-400 mb-1 group-hover:text-[#891737]" />
-                <p className="text-gray-900 font-medium text-sm">
+              <label htmlFor="pdfUpload" className="cursor-pointer flex flex-col items-center justify-center py-3">
+                <div className="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center mb-2">
+                  <Upload className="w-6 h-6 text-gray-400" />
+                </div>
+                <p className="text-sm font-medium text-gray-900 mb-0.5">
                   {editData ? "Upload New PDF (Optional)" : "Upload PDF"}
                 </p>
-                <p className="text-[10px] text-gray-500">Max 10MB</p>
+                <p className="text-xs text-gray-500">Maximum file size 10MB</p>
               </label>
             )}
           </div>
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-end space-x-3">
+      {/* Footer */}
+      <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
         <button
-          className="px-4 py-2 rounded-lg text-gray-600 font-medium hover:bg-gray-200 transition-colors text-sm"
           onClick={onClose}
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
         >
           Cancel
         </button>
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="px-6 py-2 bg-[#891737] hover:bg-[#6e1129] text-white rounded-lg font-medium shadow-md shadow-[#891737]/20 flex items-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all active:scale-95 text-sm"
+          className="px-4 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#891737]/90 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           {loading ? (
             <>
               <Loader className="w-4 h-4 animate-spin" />
-              <span>{editData ? "Updating..." : "Saving..."}</span>
+              {editData ? "Updating..." : "Saving..."}
             </>
           ) : (
             <>
-              <Save className="w-4 h-4" />
-              <span>{editData ? "Update" : "Publish"}</span>
+              <Check className="w-4 h-4" />
+              {editData ? "Update" : "Publish"}
             </>
           )}
         </button>
       </div>
-
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #e5e7eb;
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #d1d5db;
-        }
-      `}</style>
     </div>
   );
 }

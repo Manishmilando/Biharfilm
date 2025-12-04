@@ -5,6 +5,27 @@ import {
   Image as ImageIcon, DollarSign
 } from "lucide-react";
 import AlertBox from "../Components/AlertBox"; // ✅ Import AlertBox
+import CategoryDropdown from "./CategoryDropdown";
+
+const VENDOR_CATEGORIES = [
+  "Human Resources (Actors, Technicians, Assistants, Junior Artists)",
+  "Art Sets & Props",
+  "Costumes",
+  "Makeup & Hair Styling",
+  "Choreography & Dancers",
+  "Still Photography & BTS",
+  "Camera & Shooting Equipment (Grips, Walkie-talkies, etc.)",
+  "Lighting Equipment (Lights, accessories, light types)",
+  "Sound Equipment & Studios",
+  "Generator Services",
+  "Vanity Vans",
+  "Transport Vehicles",
+  "Travel Bookings (Train, Bus, Flight)",
+  "Hotel Accommodation",
+  "Food & Beverage Supplies",
+  "Spot Boy Suppliers",
+  "Security"
+];
 
 const VendorDashboard = () => {
   const [vendorId, setVendorId] = useState(null);
@@ -624,7 +645,7 @@ const VendorDashboard = () => {
         <AlertBox {...alertConfig} onClose={closeAlert} />
 
         {/* Main screen */}
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        <div className="min-h-screen flex items-center justify-center p-6">
           <div className="text-center max-w-lg bg-white rounded-xl p-6 shadow-lg">
             <div className="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
               <Building2 className="w-8 h-8 text-blue-600" />
@@ -684,22 +705,12 @@ const VendorDashboard = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
-                    <select
-                      name="category"
+                    <CategoryDropdown
                       value={profileFormData.category}
-                      onChange={handleProfileInputChange}
+                      onChange={(value) => setProfileFormData(prev => ({ ...prev, category: value }))}
+                      options={VENDOR_CATEGORIES}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent"
-                    >
-                      <option value="">Select category</option>
-                      <option value="Photography & Videography">Photography & Videography</option>
-                      <option value="Equipment Rental">Equipment Rental</option>
-                      <option value="Production Services">Production Services</option>
-                      <option value="Post Production">Post Production</option>
-                      <option value="Security">Security</option>
-                      <option value="Other">Other</option>
-                    </select>
+                    />
                   </div>
                 </div>
 
@@ -782,7 +793,7 @@ const VendorDashboard = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen  p-4">
       {/* ✅ Custom Alert Component */}
       <AlertBox
         {...alertConfig}
@@ -791,83 +802,96 @@ const VendorDashboard = () => {
 
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
-        <div className="bg-white rounded-xl p-6 border border-gray-100">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-r from-[#a92b4e] to-[#891737] flex items-center justify-center overflow-hidden">
-                  {vendorData.logoUrl ? (
-                    <img src={vendorData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                  ) : (
-                    <User className="w-8 h-8 text-white" />
+        <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+          <div className="p-6">
+            <div className="flex items-start justify-between gap-4">
+              {/* Profile Info */}
+              <div className="flex items-start gap-4 flex-1 min-w-0">
+                {/* Logo/Avatar */}
+                <div className="relative flex-shrink-0">
+                  <div className="w-16 h-16 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-gray-50">
+                    {vendorData.logoUrl ? (
+                      <img src={vendorData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-7 h-7 text-gray-400" />
+                    )}
+                  </div>
+                  {vendorId && (
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                      <CheckCircle className="w-3 h-3 text-white" />
+                    </div>
                   )}
                 </div>
-                {vendorId && (
-                  <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white">
-                    <CheckCircle className="w-3 h-3 text-white" />
-                  </div>
-                )}
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {vendorData.vendorName || "Set up your profile"}
-                </h1>
-                <p className="text-gray-600">
-                  {vendorData.category || "Select category"} • Member since {new Date(vendorData.createdAt).toLocaleDateString()}
-                </p>
-                <div className="flex items-center gap-4 mt-1">
-                  <span className="flex items-center gap-1 text-sm text-gray-500">
-                    <MapPin className="w-4 h-4" />
-                    {vendorData.address || "Add address"}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <button
-              onClick={() => setShowEditProfileModal(true)}
-              className="bg-[#a92b4e] hover:bg-[#891737] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-            >
-              <Edit3 className="w-4 h-4" />
-              {vendorId ? 'Edit Profile' : 'Create Profile'}
-            </button>
-          </div>
-        </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-          {[
-            { label: "Products", value: stats.totalProducts, icon: Package, color: "blue" },
-            { label: "Views", value: stats.totalViews.toLocaleString(), icon: Eye, color: "green" },
-            { label: "Inquiries", value: stats.totalInquiries, icon: MessageCircle, color: "purple" },
-            { label: "Rating", value: stats.averageRating, icon: Star, color: "yellow" },
-            { label: "Revenue", value: `₹${(stats.monthlyRevenue / 1000)}K`, icon: DollarSign, color: "red" },
-            { label: "Bookings", value: stats.activeBookings, icon: Calendar, color: "orange" }
-          ].map((stat, index) => {
-            const colors = getStatColorClasses(stat.color);
-            return (
-              <div key={index} className="bg-white rounded-lg p-4 border border-gray-100">
-                <div className="flex items-center justify-between mb-2">
-                  <div className={`w-8 h-8 ${colors.bg} rounded-lg flex items-center justify-center`}>
-                    <stat.icon className={`w-4 h-4 ${colors.text}`} />
+                {/* Details */}
+                <div className="flex-1 min-w-0">
+                  <h1 className="text-lg font-semibold text-gray-900 mb-1">
+                    {vendorData.vendorName || "Complete your profile"}
+                  </h1>
+
+                  <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                    {vendorData.category ? (
+                      <>
+                        <span className="font-medium text-gray-700">{vendorData.category}</span>
+                        <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-gray-400">No category</span>
+                        <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                      </>
+                    )}
+                    <span>
+                      Member since {new Date(vendorData.createdAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </span>
                   </div>
+
+                  {/* Location */}
+                  {vendorData.address ? (
+                    <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                      <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                      <span className="truncate">{vendorData.address}</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                      <MapPin className="w-3.5 h-3.5" />
+                      <span>Location not provided</span>
+                    </div>
+                  )}
                 </div>
-                <p className="text-xs text-gray-600 mb-1">{stat.label}</p>
-                <p className="text-lg font-bold text-gray-900">{stat.value}</p>
               </div>
-            );
-          })}
+
+              {/* Edit Button */}
+              <button
+                onClick={() => setShowEditProfileModal(true)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#891737]/90 rounded-lg transition-colors flex-shrink-0"
+              >
+                <Edit3 className="w-4 h-4" />
+                {vendorId ? 'Edit Profile' : 'Create Profile'}
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Products */}
-          <div className="lg:col-span-2 bg-white rounded-xl p-6 border border-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-gray-900">Products</h2>
+          <div className="lg:col-span-2 bg-white rounded-xl border border-gray-100 overflow-hidden">
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h2 className="text-sm font-semibold text-gray-900">Products & Services</h2>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {vendorData.products?.length || 0} {vendorData.products?.length === 1 ? 'item' : 'items'}
+                </p>
+              </div>
               {vendorId && (
                 <button
                   onClick={() => setShowAddProductModal(true)}
-                  className="bg-[#a92b4e] hover:bg-[#891737] text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#891737]/90 rounded-lg transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   Add Product
@@ -875,50 +899,73 @@ const VendorDashboard = () => {
               )}
             </div>
 
-            <div className="space-y-3">
+            {/* Products List */}
+            <div className="p-6">
               {vendorData.products && vendorData.products.length > 0 ? (
-                vendorData.products.map((product) => (
-                  <div key={product.id} className="flex items-center gap-4 p-3 border border-gray-100 rounded-lg hover:bg-gray-50">
-                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
-                      <img
-                        src={product.imageUrl || "/api/placeholder/48/48"}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
+                <div className="space-y-3">
+                  {vendorData.products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="flex items-start gap-3 p-3 border border-gray-100 rounded-lg hover:border-gray-200 hover:bg-gray-50/50 transition-all"
+                    >
+                      {/* Product Image */}
+                      <div className="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                        <img
+                          src={product.imageUrl || "/api/placeholder/56/56"}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      {/* Product Details */}
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-sm font-medium text-gray-900 mb-0.5">{product.name}</h3>
+                        <p className="text-xs text-gray-500 mb-1">{product.type}</p>
+                        {product.description && (
+                          <p className="text-xs text-gray-600 line-clamp-2">
+                            {product.description}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Price & Actions */}
+                      <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                        <p className="text-sm font-semibold text-gray-900">
+                          {product.price ? `₹${product.price.toLocaleString()}` : (
+                            <span className="text-gray-400 font-normal">Not set</span>
+                          )}
+                        </p>
+                        {vendorId && (
+                          <button
+                            onClick={() => handleDeleteProduct(product.id)}
+                            className="text-xs font-medium text-red-600 hover:text-red-700 transition-colors"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900">{product.name}</h3>
-                      <p className="text-sm text-gray-600">{product.type}</p>
-                      <p className="text-xs text-gray-500 mt-1">{product.description.substring(0, 50)}...</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-gray-900">
-                        {product.price ? `₹${product.price.toLocaleString()}` : 'Price not set'}
-                      </p>
-                      {vendorId && (
-                        <button
-                          onClick={() => handleDeleteProduct(product.id)}
-                          className="text-red-600 text-xs hover:underline mt-1"
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))
+                  ))}
+                </div>
               ) : (
-                <div className="text-center py-8">
-                  <Package className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                  <h3 className="font-semibold text-gray-900 mb-2">No products yet</h3>
-                  <p className="text-gray-600 mb-4">
-                    {vendorId ? 'Add your first product to get started' : 'Create your vendor profile first'}
+                /* Empty State */
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gray-50 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <Package className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">No products yet</h3>
+                  <p className="text-xs text-gray-500 mb-4 max-w-xs mx-auto">
+                    {vendorId
+                      ? 'Start building your catalog by adding your first product or service'
+                      : 'Create your vendor profile to add products'}
                   </p>
                   {vendorId && (
                     <button
                       onClick={() => setShowAddProductModal(true)}
-                      className="bg-[#a92b4e] hover:bg-[#891737] text-white px-4 py-2 rounded-lg"
+                      className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#891737]/90 rounded-lg transition-colors"
                     >
-                      Add Product
+                      <Plus className="w-4 h-4" />
+                      Add First Product
                     </button>
                   )}
                 </div>
@@ -926,136 +973,253 @@ const VendorDashboard = () => {
             </div>
           </div>
 
+
           {/* Contact Info */}
-          <div className="bg-white rounded-xl p-6 border border-gray-100">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Contact Information</h2>
-            <div className="space-y-3">
-              {[
-                { icon: Phone, label: "Phone", value: vendorData.phoneNumber || "Add phone" },
-                { icon: Mail, label: "Email", value: vendorData.email || "Add email" },
-                { icon: Globe, label: "Website", value: vendorData.website || "Add website" },
-                { icon: Building2, label: "Category", value: vendorData.category || "Select category" }
-              ].map((item, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="w-8 h-8 bg-[#a92b4e]/10 rounded-lg flex items-center justify-center">
-                    <item.icon className="w-4 h-4 text-[#a92b4e]" />
+          <div className="bg-white rounded-xl border border-gray-100 overflow-hidden">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <h2 className="text-sm font-semibold text-gray-900">Contact Information</h2>
+            </div>
+
+            <div className="p-6">
+              <div className="space-y-3">
+                {/* Phone */}
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-4 h-4 text-gray-600" />
                   </div>
-                  <div>
-                    <p className="text-xs text-gray-600">{item.label}</p>
-                    <p className="font-semibold text-gray-900 text-sm truncate">{item.value}</p>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-gray-500 mb-0.5">Phone</p>
+                    {vendorData.phoneNumber ? (
+                      <a
+                        href={`tel:${vendorData.phoneNumber}`}
+                        className="text-sm text-gray-900 hover:text-[#891737] transition-colors"
+                      >
+                        {vendorData.phoneNumber}
+                      </a>
+                    ) : (
+                      <p className="text-sm text-gray-400">Not provided</p>
+                    )}
                   </div>
                 </div>
-              ))}
+
+                {/* Email */}
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Mail className="w-4 h-4 text-gray-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-gray-500 mb-0.5">Email</p>
+                    {vendorData.email ? (
+                      <a
+                        href={`mailto:${vendorData.email}`}
+                        className="text-sm text-gray-900 hover:text-[#891737] transition-colors truncate block"
+                      >
+                        {vendorData.email}
+                      </a>
+                    ) : (
+                      <p className="text-sm text-gray-400">Not provided</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Website */}
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Globe className="w-4 h-4 text-gray-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-gray-500 mb-0.5">Website</p>
+                    {vendorData.website ? (
+                      <a
+                        href={vendorData.website.startsWith('http') ? vendorData.website : `https://${vendorData.website}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-[#891737] hover:text-[#891737]/80 font-medium transition-colors"
+                      >
+                        View Website
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-3.5 h-3.5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                          />
+                        </svg>
+                      </a>
+                    ) : (
+                      <p className="text-sm text-gray-400">Not provided</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Category */}
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Building2 className="w-4 h-4 text-gray-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-gray-500 mb-0.5">Category</p>
+                    {vendorData.category ? (
+                      <p className="text-sm text-gray-900">{vendorData.category}</p>
+                    ) : (
+                      <p className="text-sm text-gray-400">Not specified</p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
 
       {/* Add Product Modal */}
       {showAddProductModal && vendorId && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-[#a92b4e] text-white rounded-t-xl">
-              <h2 className="font-bold">Add New Product</h2>
-              <button onClick={() => setShowAddProductModal(false)}>
-                <X className="w-5 h-5" />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-2xl">
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h2 className="text-base font-semibold text-gray-900">Add New Product</h2>
+                <p className="text-xs text-gray-500 mt-0.5">Fill in the product details below</p>
+              </div>
+              <button
+                onClick={() => setShowAddProductModal(false)}
+                className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors"
+              >
+                <X className="w-4 h-4 text-gray-500" />
               </button>
             </div>
 
-            <form onSubmit={handleAddProduct} className="p-4 space-y-4">
-              <div className="text-center">
-                <label className="cursor-pointer">
-                  <div className="w-24 h-24 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-gray-300 mx-auto">
-                    {productImagePreview ? (
-                      <img src={productImagePreview} alt="Preview" className="w-full h-full object-cover" />
-                    ) : (
-                      <ImageIcon className="w-8 h-8 text-gray-400" />
-                    )}
+            {/* Form */}
+            <form onSubmit={handleAddProduct} className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+              <div className="space-y-4">
+                {/* Image Upload */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-2">Product Image</label>
+                  <label className="cursor-pointer block">
+                    <div className="w-full h-32 rounded-lg bg-gray-50 border-2 border-dashed border-gray-200 hover:border-gray-300 flex items-center justify-center overflow-hidden transition-colors">
+                      {productImagePreview ? (
+                        <img src={productImagePreview} alt="Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="text-center">
+                          <ImageIcon className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                          <p className="text-xs text-gray-500">Click to upload image</p>
+                          <p className="text-xs text-gray-400 mt-0.5">Max 5MB</p>
+                        </div>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleProductImageUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                {/* Name & Type */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-2">
+                      Product Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={productFormData.name}
+                      onChange={handleProductInputChange}
+                      required
+                      className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors"
+                      placeholder="Enter name"
+                    />
                   </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleProductImageUpload}
-                    className="hidden"
-                  />
-                </label>
-                <p className="text-xs text-gray-500 mt-1">Max 5MB</p>
-              </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-2">
+                      Type <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="type"
+                      value={productFormData.type}
+                      onChange={handleProductInputChange}
+                      required
+                      className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors appearance-none bg-white"
+                    >
+                      <option value="">Select type</option>
+                      <option value="Cameras">Cameras</option>
+                      <option value="Lighting">Lighting</option>
+                      <option value="Sound">Sound</option>
+                      <option value="Props">Props</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
 
-              <div className="grid grid-cols-2 gap-3">
+                {/* Description */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={productFormData.name}
+                  <label className="block text-xs font-medium text-gray-700 mb-2">
+                    Description <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    name="description"
+                    value={productFormData.description}
                     onChange={handleProductInputChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent"
-                    placeholder="Product name"
+                    rows={3}
+                    className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors resize-none"
+                    placeholder="Describe your product..."
                   />
                 </div>
+
+                {/* Price */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Type *</label>
-                  <select
-                    name="type"
-                    value={productFormData.type}
+                  <label className="block text-xs font-medium text-gray-700 mb-2">
+                    Price (₹) <span className="text-gray-400 text-xs font-normal">Optional</span>
+                  </label>
+                  <input
+                    type="number"
+                    name="price"
+                    value={productFormData.price}
                     onChange={handleProductInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent"
-                  >
-                    <option value="">Select type</option>
-                    <option value="Cameras">Cameras</option>
-                    <option value="Lighting">Lighting</option>
-                    <option value="Sound">Sound</option>
-                    <option value="Props">Props</option>
-                    <option value="Other">Other</option>
-                  </select>
+                    min="0"
+                    step="0.01"
+                    className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors"
+                    placeholder="0.00"
+                  />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
-                <textarea
-                  name="description"
-                  value={productFormData.description}
-                  onChange={handleProductInputChange}
-                  required
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent resize-none"
-                  placeholder="Product description..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
-                <input
-                  type="number"
-                  name="price"
-                  value={productFormData.price}
-                  onChange={handleProductInputChange}
-                  min="0"
-                  step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent"
-                  placeholder="0.00"
-                />
-              </div>
-
-              <div className="flex gap-3 pt-2">
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-6 mt-6 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={() => setShowAddProductModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 bg-[#a92b4e] hover:bg-[#891737] text-white px-4 py-2 rounded-lg disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#891737]/90 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
                 >
-                  {isSubmitting ? <Loader className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-                  {isSubmitting ? 'Adding...' : 'Add Product'}
+                  {isSubmitting ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" />
+                      Adding...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="w-4 h-4" />
+                      Add Product
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -1063,142 +1227,186 @@ const VendorDashboard = () => {
         </div>
       )}
 
+
       {/* Edit Profile Modal (Added to Main View) */}
       {showEditProfileModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-[#a92b4e] text-white rounded-t-xl">
-              <h2 className="font-bold">{vendorId ? 'Edit Profile' : 'Create Profile'}</h2>
-              <button onClick={() => setShowEditProfileModal(false)}>
-                <X className="w-5 h-5" />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl">
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h2 className="text-base font-semibold text-gray-900">
+                  {vendorId ? 'Edit Profile' : 'Create Profile'}
+                </h2>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  {vendorId ? 'Update your vendor information' : 'Set up your vendor profile'}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowEditProfileModal(false)}
+                className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors"
+              >
+                <X className="w-4 h-4 text-gray-500" />
               </button>
             </div>
 
-            <form onSubmit={vendorId ? handleUpdateProfile : handleCreateProfile} className="p-4 space-y-4">
-              <div className="text-center">
-                <label className="cursor-pointer">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-r from-[#a92b4e] to-[#891737] flex items-center justify-center overflow-hidden mx-auto">
-                    {logoPreview || vendorData.logoUrl ? (
-                      <img src={logoPreview || vendorData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                    ) : (
-                      <User className="w-8 h-8 text-white" />
-                    )}
+            {/* Form */}
+            <form onSubmit={vendorId ? handleUpdateProfile : handleCreateProfile} className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+              <div className="space-y-5">
+                {/* Logo Upload */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-2">Profile Logo</label>
+                  <div className="flex items-center gap-4">
+                    <label className="cursor-pointer">
+                      <div className="w-20 h-20 rounded-lg bg-gray-100 border-2 border-gray-200 hover:border-gray-300 flex items-center justify-center overflow-hidden transition-colors">
+                        {logoPreview || vendorData.logoUrl ? (
+                          <img src={logoPreview || vendorData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                        ) : (
+                          <User className="w-8 h-8 text-gray-400" />
+                        )}
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleLogoUpload}
+                        className="hidden"
+                      />
+                    </label>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={() => document.querySelector('input[type="file"]').click()}
+                        className="text-sm font-medium text-[#891737] hover:text-[#891737]/80 transition-colors"
+                      >
+                        {logoPreview || vendorData.logoUrl ? 'Change Logo' : 'Upload Logo'}
+                      </button>
+                      <p className="text-xs text-gray-500 mt-1">PNG, JPG up to 5MB</p>
+                    </div>
                   </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLogoUpload}
-                    className="hidden"
-                  />
-                </label>
-                <p className="text-sm font-medium mt-2">Click to upload logo</p>
-              </div>
+                </div>
 
-              <div className="grid grid-cols-2 gap-3">
+                {/* Vendor Name & Category */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-2">
+                      Vendor Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="vendorName"
+                      value={profileFormData.vendorName}
+                      onChange={handleProfileInputChange}
+                      required
+                      className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors"
+                      placeholder="Enter vendor name"
+                    />
+                  </div>
+                  <div>
+                    <CategoryDropdown
+                      value={profileFormData.category}
+                      onChange={(value) => setProfileFormData(prev => ({ ...prev, category: value }))}
+                      options={VENDOR_CATEGORIES}
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Phone & Email */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-2">
+                      Phone Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      name="phoneNumber"
+                      value={profileFormData.phoneNumber}
+                      onChange={handleProfileInputChange}
+                      required
+                      className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors"
+                      placeholder="+91 9876543210"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-2">
+                      Email Address <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={profileFormData.email}
+                      onChange={handleProfileInputChange}
+                      required
+                      className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors"
+                      placeholder="vendor@example.com"
+                    />
+                  </div>
+                </div>
+
+                {/* Address */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Vendor Name *</label>
-                  <input
-                    type="text"
-                    name="vendorName"
-                    value={profileFormData.vendorName}
+                  <label className="block text-xs font-medium text-gray-700 mb-2">
+                    Business Address <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    name="address"
+                    value={profileFormData.address}
                     onChange={handleProfileInputChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent"
+                    rows={2}
+                    className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors resize-none"
+                    placeholder="Complete business address..."
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
-                  <select
-                    name="category"
-                    value={profileFormData.category}
-                    onChange={handleProfileInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent"
-                  >
-                    <option value="">Select category</option>
-                    <option value="Photography & Videography">Photography & Videography</option>
-                    <option value="Equipment Rental">Equipment Rental</option>
-                    <option value="Production Services">Production Services</option>
-                    <option value="Post Production">Post Production</option>
-                    <option value="Security">Security</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-3">
+                {/* Website */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-2">
+                    Website <span className="text-gray-400 text-xs font-normal">Optional</span>
+                  </label>
                   <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={profileFormData.phoneNumber}
+                    type="url"
+                    name="website"
+                    value={profileFormData.website}
                     onChange={handleProfileInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent"
-                    placeholder="+91 9876543210"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={profileFormData.email}
-                    onChange={handleProfileInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent"
-                    placeholder="vendor@example.com"
+                    className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors"
+                    placeholder="https://yourwebsite.com"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Address *</label>
-                <textarea
-                  name="address"
-                  value={profileFormData.address}
-                  onChange={handleProfileInputChange}
-                  required
-                  rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent resize-none"
-                  placeholder="Complete address..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
-                <input
-                  type="url"
-                  name="website"
-                  value={profileFormData.website}
-                  onChange={handleProfileInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a92b4e] focus:border-transparent"
-                  placeholder="https://example.com"
-                />
-              </div>
-
-              <div className="flex gap-3 pt-2">
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-6 mt-6 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={() => setShowEditProfileModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={profileUpdateLoading}
-                  className="flex-1 bg-[#a92b4e] hover:bg-[#891737] text-white px-4 py-2 rounded-lg disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#891737]/90 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
                 >
-                  {profileUpdateLoading ? <Loader className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                  {profileUpdateLoading ? 'Saving...' : (vendorId ? 'Update' : 'Create')}
+                  {profileUpdateLoading ? (
+                    <>
+                      <Loader className="w-4 h-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4" />
+                      {vendorId ? 'Update Profile' : 'Create Profile'}
+                    </>
+                  )}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
+
     </div>
   );
 };

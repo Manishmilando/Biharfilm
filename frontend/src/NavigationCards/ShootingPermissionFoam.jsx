@@ -74,6 +74,7 @@ const Response = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [activeSection, setActiveSection] = useState("projectinformation");
   const [notification, setNotification] = useState({
     show: false,
@@ -82,186 +83,186 @@ const Response = () => {
   });
   const [saveStatus, setSaveStatus] = useState("idle");
 
-const onSubmit = async () => {
-  try {
-    setSaveStatus("saving");
-    
-    // ✅ Get JWT token from localStorage
-    const token = localStorage.getItem("authToken");
-    
-    if (!token) {
+  const handleFinalSubmit = async () => {
+    try {
+      setSaveStatus("saving");
+
+      // ✅ Get JWT token from localStorage
+      const token = localStorage.getItem("authToken");
+
+      if (!token) {
+        setNotification({
+          show: true,
+          message: "Please login to submit the form",
+          type: "error",
+        });
+        setSaveStatus("idle");
+        return;
+      }
+
+      const formToSubmit = new FormData();
+
+      // Append all form fields to FormData
+      Object.entries(formData).forEach(([sectionKey, sectionData]) => {
+        Object.entries(sectionData).forEach(([fieldKey, fieldValue]) => {
+          if (fieldValue instanceof File) {
+            formToSubmit.append(fieldKey, fieldValue);
+          } else if (fieldValue && fieldValue !== "") {
+            formToSubmit.append(fieldKey, fieldValue);
+          }
+        });
+      });
+
+      // ✅ Debug: Log what's being sent
+      console.log('Submitting NOC form with token:', token ? 'Present' : 'Missing');
+
+      // ✅ Add Authorization header with JWT token
+      const response = await axios.post(
+        "https://biharfilmbackend-production.up.railway.app/api/noc/submit",
+        formToSubmit,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "Authorization": `Bearer ${token}`, // ✅ CRITICAL: Add JWT token
+          },
+        }
+      );
+
+      console.log("✅ Form submitted:", response.data);
+
+      setSaveStatus("success");
       setNotification({
         show: true,
-        message: "Please login to submit the form",
+        message: "Application submitted successfully!",
+        type: "success",
+      });
+
+      // Clear localStorage after successful submission
+      const keys = [
+        "projectInformation",
+        "productionHouseDetails",
+        "applicantDetails",
+        "creativeandcast",
+        "technicalRequirements",
+        "legalAndBranding",
+        "declaration",
+        "annexureA",
+      ];
+      keys.forEach(key => localStorage.removeItem(key));
+
+      // Reset form data to initial state
+      setFormData({
+        projectInformation: {
+          typeOfProject: "",
+          language: "",
+          genre: "",
+          duration: "",
+          title: "",
+          directorAndMainCast: "",
+        },
+        productionHouseDetails: {
+          producerHouse: "",
+          synopsis: "",
+          contactOfProductionHouse: "",
+          productionHouseAddress: "",
+          emailOfProductionHouse: "",
+          productionHouseConstitution: "",
+        },
+        applicantDetails: {
+          registrationNumber: "",
+          representativeName: "",
+          designationOfApplicant: "",
+          addressOfApplicant: "",
+          contactOfApplicant: "",
+          emailOfApplicant: "",
+        },
+        creativeandcast: {
+          briefSynopsis: "",
+          mainArtistsAtLocation: "",
+          numberOfShootingLocations: "",
+          dronePermissionRequired: "",
+          animalPartOfShooting: "",
+        },
+        technicalRequirements: {
+          fireOrBlastingScene: "",
+          temporaryStructureCreation: "",
+          otherDetails: "",
+          lineProducerDetails: "",
+          policeOrSecurityRequirements: "",
+          siteContactPersonalDetails: "",
+        },
+        legalAndBranding: {
+          mibCertificate: "",
+          meaCertificate: "",
+          inFilmBrandingOrAssetUse: "",
+          otherParticulars: "",
+        },
+        declaration: {
+          authorizedApplicantName: "",
+          seal: "",
+          date: "",
+          signature: "",
+        },
+        annexureA: {
+          location: "",
+          landmark: "",
+          locationType: "",
+          startDateTime: "",
+          endDateTime: "",
+          crewInvolvement: "",
+          personCount: "",
+          permissionDetails: "",
+          locationFee: "",
+          securityDeposit: "",
+          paymentRef: "",
+          locationManager: "",
+          sceneDetails: "",
+          forestType: "",
+          forestDetails: "",
+        },
+      });
+
+      // Reset to first section
+      setActiveSection("projectinformation");
+
+      // ✅ Notify parent component if callback exists
+      if (window.onNOCSubmitSuccess) {
+        window.onNOCSubmitSuccess(response.data.data);
+      }
+
+    } catch (err) {
+      console.error("❌ Error submitting form:", err);
+      console.error("Error response:", err.response?.data);
+
+      setSaveStatus("error");
+
+      // ✅ Better error messages based on error type
+      let errorMessage = "Failed to submit application. Please try again.";
+
+      if (err.response?.status === 401) {
+        errorMessage = "Session expired. Please login again.";
+        // Optionally redirect to login
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 2000);
+      } else if (err.response?.status === 400) {
+        errorMessage = err.response.data?.message || "Invalid form data. Please check all fields.";
+      } else if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+
+      setNotification({
+        show: true,
+        message: errorMessage,
         type: "error",
       });
-      setSaveStatus("idle");
-      return;
-    }
-
-    const formToSubmit = new FormData();
-
-    // Append all form fields to FormData
-    Object.entries(formData).forEach(([sectionKey, sectionData]) => {
-      Object.entries(sectionData).forEach(([fieldKey, fieldValue]) => {
-        if (fieldValue instanceof File) {
-          formToSubmit.append(fieldKey, fieldValue);
-        } else if (fieldValue && fieldValue !== "") {
-          formToSubmit.append(fieldKey, fieldValue);
-        }
-      });
-    });
-
-    // ✅ Debug: Log what's being sent
-    console.log('Submitting NOC form with token:', token ? 'Present' : 'Missing');
-    
-    // ✅ Add Authorization header with JWT token
-    const response = await axios.post(
-      "https://biharfilmbackend-production.up.railway.app/api/noc/submit",
-      formToSubmit,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "Authorization": `Bearer ${token}`, // ✅ CRITICAL: Add JWT token
-        },
-      }
-    );
-
-    console.log("✅ Form submitted:", response.data);
-
-    setSaveStatus("success");
-    setNotification({
-      show: true,
-      message: "Application submitted successfully!",
-      type: "success",
-    });
-
-    // Clear localStorage after successful submission
-    const keys = [
-      "projectInformation",
-      "productionHouseDetails",
-      "applicantDetails",
-      "creativeandcast",
-      "technicalRequirements",
-      "legalAndBranding",
-      "declaration",
-      "annexureA",
-    ];
-    keys.forEach(key => localStorage.removeItem(key));
-
-    // Reset form data to initial state
-    setFormData({
-      projectInformation: {
-        typeOfProject: "",
-        language: "",
-        genre: "",
-        duration: "",
-        title: "",
-        directorAndMainCast: "",
-      },
-      productionHouseDetails: {
-        producerHouse: "",
-        synopsis: "",
-        contactOfProductionHouse: "",
-        productionHouseAddress: "",
-        emailOfProductionHouse: "",
-        productionHouseConstitution: "",
-      },
-      applicantDetails: {
-        registrationNumber: "",
-        representativeName: "",
-        designationOfApplicant: "",
-        addressOfApplicant: "",
-        contactOfApplicant: "",
-        emailOfApplicant: "",
-      },
-      creativeandcast: {
-        briefSynopsis: "",
-        mainArtistsAtLocation: "",
-        numberOfShootingLocations: "",
-        dronePermissionRequired: "",
-        animalPartOfShooting: "",
-      },
-      technicalRequirements: {
-        fireOrBlastingScene: "",
-        temporaryStructureCreation: "",
-        otherDetails: "",
-        lineProducerDetails: "",
-        policeOrSecurityRequirements: "",
-        siteContactPersonalDetails: "",
-      },
-      legalAndBranding: {
-        mibCertificate: "",
-        meaCertificate: "",
-        inFilmBrandingOrAssetUse: "",
-        otherParticulars: "",
-      },
-      declaration: {
-        authorizedApplicantName: "",
-        seal: "",
-        date: "",
-        signature: "",
-      },
-      annexureA: {
-        location: "",
-        landmark: "",
-        locationType: "",
-        startDateTime: "",
-        endDateTime: "",
-        crewInvolvement: "",
-        personCount: "",
-        permissionDetails: "",
-        locationFee: "",
-        securityDeposit: "",
-        paymentRef: "",
-        locationManager: "",
-        sceneDetails: "",
-        forestType: "",
-        forestDetails: "",
-      },
-    });
-
-    // Reset to first section
-    setActiveSection("projectinformation");
-    
-    // ✅ Notify parent component if callback exists
-    if (window.onNOCSubmitSuccess) {
-      window.onNOCSubmitSuccess(response.data.data);
-    }
-
-  } catch (err) {
-    console.error("❌ Error submitting form:", err);
-    console.error("Error response:", err.response?.data);
-    
-    setSaveStatus("error");
-    
-    // ✅ Better error messages based on error type
-    let errorMessage = "Failed to submit application. Please try again.";
-    
-    if (err.response?.status === 401) {
-      errorMessage = "Session expired. Please login again.";
-      // Optionally redirect to login
+    } finally {
       setTimeout(() => {
-        window.location.href = "/login";
-      }, 2000);
-    } else if (err.response?.status === 400) {
-      errorMessage = err.response.data?.message || "Invalid form data. Please check all fields.";
-    } else if (err.response?.data?.message) {
-      errorMessage = err.response.data.message;
+        setNotification({ show: false, message: "", type: "" });
+        setSaveStatus("idle");
+      }, 5000);
     }
-    
-    setNotification({
-      show: true,
-      message: errorMessage,
-      type: "error",
-    });
-  } finally {
-    setTimeout(() => {
-      setNotification({ show: false, message: "", type: "" });
-      setSaveStatus("idle");
-    }, 5000);
-  }
-};
+  };
 
 
   const handleInputChange = (section, field, value) => {
@@ -408,8 +409,8 @@ const onSubmit = async () => {
 
     // Input type determination
     let inputType = "text";
-    if (key.toLowerCase().includes("datetime") || 
-        (key.toLowerCase().includes("date") && key.toLowerCase().includes("time"))) {
+    if (key.toLowerCase().includes("datetime") ||
+      (key.toLowerCase().includes("date") && key.toLowerCase().includes("time"))) {
       inputType = "datetime-local";
     } else if (key.toLowerCase().includes("date")) {
       inputType = "date";
@@ -503,10 +504,10 @@ const onSubmit = async () => {
             key === "briefSynopsis"
               ? "Max 500 words"
               : key === "synopsis"
-              ? "Max 250 words"
-              : key === "sceneDetails"
-              ? "Max 100 words"
-              : ""
+                ? "Max 250 words"
+                : key === "sceneDetails"
+                  ? "Max 100 words"
+                  : ""
           }
         />
       );
@@ -593,12 +594,12 @@ const onSubmit = async () => {
           <div className="w-12 h-12 bg-gradient-to-r from-[#a92b4e] to-[#8a2340] rounded-lg flex items-center justify-center mr-4">
             <span className="text-white text-lg font-bold">
               {mappedSectionName === "projectinformation" ? "1" :
-               mappedSectionName === "productionhousedetails" ? "2" :
-               mappedSectionName === "applicantdetails" ? "3" :
-               mappedSectionName === "creativeandcast" ? "4" :
-               mappedSectionName === "technicalrequirements" ? "5" :
-               mappedSectionName === "legalandbranding" ? "6" :
-               mappedSectionName === "declaration" ? "7" : "8"}
+                mappedSectionName === "productionhousedetails" ? "2" :
+                  mappedSectionName === "applicantdetails" ? "3" :
+                    mappedSectionName === "creativeandcast" ? "4" :
+                      mappedSectionName === "technicalrequirements" ? "5" :
+                        mappedSectionName === "legalandbranding" ? "6" :
+                          mappedSectionName === "declaration" ? "7" : "8"}
             </span>
           </div>
           <div>
@@ -631,16 +632,15 @@ const onSubmit = async () => {
             {isLastSection ? (
               <button
                 type="submit"
-                className={`inline-flex items-center px-8 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-[#a92b4e] to-[#8a2340] hover:from-[#8a2340] hover:to-[#a92b4e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#a92b4e] transition-all duration-200 ${
-                  saveStatus === "saving" ? "opacity-70 cursor-wait" : ""
-                }`}
+                className={`inline-flex items-center px-8 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-[#a92b4e] to-[#8a2340] hover:from-[#8a2340] hover:to-[#a92b4e] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#a92b4e] transition-all duration-200 ${saveStatus === "saving" ? "opacity-70 cursor-wait" : ""
+                  }`}
                 disabled={saveStatus === "saving"}
               >
                 {saveStatus === "saving"
                   ? "Submitting..."
                   : saveStatus === "success"
-                  ? "✓ Submitted!"
-                  : "Submit Application →"}
+                    ? "✓ Submitted!"
+                    : "Submit Application →"}
               </button>
             ) : (
               <button
@@ -651,6 +651,220 @@ const onSubmit = async () => {
                 Save & Continue →
               </button>
             )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const handlePreviewRequest = () => {
+    const errors = validateCurrentSection();
+    if (errors.length > 0) {
+      setNotification({
+        show: true,
+        message: `Please fill all required fields: ${errors.slice(0, 3).join(", ")}${errors.length > 3 ? "..." : ""}`,
+        type: "warning",
+      });
+      setTimeout(() => setNotification({ show: false, message: "", type: "" }), 5000);
+      return;
+    }
+    setShowPreview(true);
+  };
+
+  const renderPreview = () => {
+    if (!showPreview) return null;
+
+    const labelMappings = {
+      typeOfProject: "Type",
+      language: "Language",
+      genre: "Genre",
+      duration: "Duration",
+      title: "Title",
+      directorAndMainCast: "Director & Cast",
+      producerHouse: "Production House",
+      synopsis: "Synopsis",
+      contactOfProductionHouse: "Contact",
+      productionHouseAddress: "Address",
+      emailOfProductionHouse: "Email",
+      productionHouseConstitution: "Constitution",
+      registrationNumber: "Registration No",
+      representativeName: "Representative",
+      designationOfApplicant: "Designation",
+      addressOfApplicant: "Address",
+      contactOfApplicant: "Contact",
+      emailOfApplicant: "Email",
+      briefSynopsis: "Brief Synopsis",
+      mainArtistsAtLocation: "Main Artists",
+      numberOfShootingLocations: "No. of Locations",
+      dronePermissionRequired: "Drone Used",
+      animalPartOfShooting: "Animal Involved",
+      fireOrBlastingScene: "Fire Scene",
+      temporaryStructureCreation: "Structure",
+      otherDetails: "Other Details",
+      lineProducerDetails: "Line Producer",
+      policeOrSecurityRequirements: "Security",
+      siteContactPersonalDetails: "Site Contact",
+      mibCertificate: "MIB Certificate",
+      meaCertificate: "MEA Certificate",
+      inFilmBrandingOrAssetUse: "Branding",
+      otherParticulars: "Other Particulars",
+      authorizedApplicantName: "Authorized Applicant",
+      seal: "Seal",
+      date: "Date",
+      signature: "Signature",
+      location: "Location",
+      landmark: "Landmark",
+      locationType: "Location Type",
+      startDateTime: "Start Time",
+      endDateTime: "End Time",
+      crewInvolvement: "Crew Involvement",
+      personCount: "Person Count",
+      permissionDetails: "Permission",
+      locationFee: "Fee",
+      securityDeposit: "Security Deposit",
+      paymentRef: "Payment Ref",
+      locationManager: "Manager",
+      sceneDetails: "Scene Details",
+      forestType: "Forest Type",
+      forestDetails: "Forest Info",
+    };
+
+    const sections = [
+      { title: "Project Information", data: formData.projectInformation },
+      { title: "Production Details", data: formData.productionHouseDetails },
+      { title: "Applicant Information", data: formData.applicantDetails },
+      { title: "Creative Details", data: formData.creativeandcast },
+      { title: "Technical & Security", data: formData.technicalRequirements },
+      { title: "Legal/Branding", data: formData.legalAndBranding },
+      { title: "Declaration", data: formData.declaration },
+      { title: "Location Details (Annexure A)", data: formData.annexureA }
+    ];
+
+    return (
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden border border-gray-200 flex flex-col">
+
+          {/* HEADER */}
+          <div className="bg-gray-50 border-b border-gray-200 p-5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center p-2 border-2 border-[#891737]/20">
+                  <img
+                    src="/Logo1.png"
+                    alt="BSFDFC Logo"
+                    className="w-full h-full object-contain"
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-[#891737]">
+                    BSFDFC Application Preview
+                  </h2>
+                  <p className="text-gray-600 text-sm">
+                    Department of Art & Culture, Govt. of Bihar
+                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="w-2 h-2 bg-[#891737] rounded-full"></div>
+                    <span className="text-xs font-medium text-gray-700">
+                      NOC Application - Review Before Submission
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowPreview(false)}
+                className="w-10 h-10 bg-gray-100 hover:bg-[#891737]/10 rounded-full flex items-center justify-center transition-colors duration-200"
+                aria-label="Close"
+              >
+                <span className="text-gray-600 hover:text-[#891737] text-2xl transition-colors duration-200">&times;</span>
+              </button>
+            </div>
+          </div>
+
+          {/* CONTENT */}
+          <div className="overflow-y-auto flex-1 p-6 space-y-5">
+            {sections.map((section, index) => {
+              const validFields = Object.entries(section.data).filter(([key, value]) => {
+                return value && value !== "" && value !== "N/A";
+              });
+
+              if (validFields.length === 0) return null;
+
+              return (
+                <div key={index} className="border border-gray-200 rounded-xl overflow-hidden">
+                  <div className="px-4 py-3 border-b border-[#891737]/20 bg-gray-50">
+                    <h3 className="text-lg font-bold text-[#891737] flex items-center gap-2">
+                      <div className="w-1 h-5 bg-[#891737] rounded-full"></div>
+                      {section.title}
+                    </h3>
+                  </div>
+
+                  <div className="p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
+                      {validFields.map(([key, value], fieldIndex) => {
+                        const displayLabel = labelMappings[key] || key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
+
+                        let displayValue = value;
+                        if (value instanceof File) {
+                          displayValue = value.name;
+                        } else if (typeof value === 'object' && value !== null && value.name) {
+                          displayValue = value.name;
+                        }
+
+                        return (
+                          <div key={fieldIndex} className="flex flex-col space-y-1">
+                            <dt className="text-sm font-semibold text-[#891737] uppercase tracking-wide">
+                              {displayLabel}
+                            </dt>
+                            <dd className="text-base text-gray-900 font-medium">
+                              {typeof displayValue === 'string' && displayValue.length > 60 ? (
+                                <details className="cursor-pointer">
+                                  <summary className="hover:text-[#891737] transition-colors">
+                                    {displayValue.substring(0, 60)}...
+                                  </summary>
+                                  <div className="mt-1 text-gray-700 leading-relaxed">
+                                    {displayValue}
+                                  </div>
+                                </details>
+                              ) : (
+                                <span>{displayValue}</span>
+                              )}
+                            </dd>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* FOOTER */}
+          <div className="border-t border-gray-200 bg-gray-50">
+            <div className="flex justify-center gap-3 py-4">
+              <button
+                onClick={() => setShowPreview(false)}
+                className="bg-white hover:bg-gray-50 text-[#891737] border border-[#891737] hover:border-[#6e1129] px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => setShowPreview(false)}
+                className="bg-white hover:bg-gray-50 text-[#891737] border border-[#891737] hover:border-[#6e1129] px-8 py-3 rounded-lg font-semibold transition-colors duration-200"
+              >
+                Edit
+              </button>
+              <button
+                onClick={handleFinalSubmit}
+                disabled={saveStatus === "saving"}
+                className={`bg-[#891737] hover:bg-[#6e1129] text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-sm hover:shadow-md ${saveStatus === "saving" ? "opacity-70 cursor-wait" : ""
+                  }`}
+              >
+                {saveStatus === "saving" ? "Submitting..." : "Confirm & Submit"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -677,22 +891,20 @@ const onSubmit = async () => {
               key={tab.id}
               type="button"
               onClick={() => setActiveSection(tab.id)}
-              className={`relative px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                activeSection === tab.id
-                  ? "bg-gradient-to-r from-[#a92b4e] to-[#8a2340] text-white shadow-lg transform scale-105"
-                  : isSectionCompleted(tab.id)
+              className={`relative px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${activeSection === tab.id
+                ? "bg-gradient-to-r from-[#a92b4e] to-[#8a2340] text-white shadow-lg transform scale-105"
+                : isSectionCompleted(tab.id)
                   ? "bg-green-50 text-green-700 border border-green-200 hover:bg-green-100"
                   : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
-              }`}
+                }`}
             >
               <span className="inline-flex items-center">
-                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2 ${
-                  activeSection === tab.id
-                    ? "bg-white/20 text-white"
-                    : isSectionCompleted(tab.id)
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs mr-2 ${activeSection === tab.id
+                  ? "bg-white/20 text-white"
+                  : isSectionCompleted(tab.id)
                     ? "bg-green-500 text-white"
                     : "bg-gray-200 text-gray-600"
-                }`}>
+                  }`}>
                   {isSectionCompleted(tab.id) ? "✓" : tab.step}
                 </span>
                 {tab.label}
@@ -737,7 +949,7 @@ const onSubmit = async () => {
   const getNextSection = (currentSection) => {
     const sections = [
       "projectinformation",
-      "productionhousedetails", 
+      "productionhousedetails",
       "applicantdetails",
       "creativeandcast",
       "technicalrequirements",
@@ -753,7 +965,7 @@ const onSubmit = async () => {
     const sections = [
       "projectinformation",
       "productionhousedetails",
-      "applicantdetails", 
+      "applicantdetails",
       "creativeandcast",
       "technicalrequirements",
       "legalandbranding",
@@ -874,20 +1086,22 @@ const onSubmit = async () => {
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Preview Modal */}
+      {renderPreview()}
+
       {/* Notification */}
       {notification.show && (
         <div
-          className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg flex items-center max-w-sm ${
-            notification.type === "success"
-              ? "bg-green-500 text-white"
-              : notification.type === "warning"
+          className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg flex items-center max-w-sm ${notification.type === "success"
+            ? "bg-green-500 text-white"
+            : notification.type === "warning"
               ? "bg-yellow-500 text-white"
               : "bg-red-500 text-white"
-          }`}
+            }`}
         >
           <span className="mr-3">
-            {notification.type === "success" ? "✓" : 
-             notification.type === "warning" ? "⚠" : "✗"}
+            {notification.type === "success" ? "✓" :
+              notification.type === "warning" ? "⚠" : "✗"}
           </span>
           <span className="text-sm font-medium">{notification.message}</span>
         </div>
@@ -916,7 +1130,7 @@ const onSubmit = async () => {
         {/* Form */}
         <form onSubmit={(e) => {
           e.preventDefault();
-          onSubmit();
+          handlePreviewRequest();
         }}>
           {renderSection("Project Information", formData.projectInformation, "", "projectInformation")}
           {renderSection("Production House Details", formData.productionHouseDetails, "", "productionHouseDetails")}

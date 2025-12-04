@@ -11,6 +11,8 @@ const Navbar = () => {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [isDocumentsDropdownOpen, setIsDocumentsDropdownOpen] = useState(false);
   const [isHomeDropdownOpen, setIsHomeDropdownOpen] = useState(false);
+  const [isPolicyDropdownOpen, setIsPolicyDropdownOpen] = useState(false);
+  const [isImpactDropdownOpen, setIsImpactDropdownOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -110,19 +112,16 @@ const Navbar = () => {
 
   const menuItems = [
     { id: "Vr", label: "VR" },
-    { id: "FilmPolicy", label: "Policy" },
   ];
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 ${
-        showNavbar ? "opacity-100" : "opacity-0"
-      } ${navbarVisible ? "transform-none" : "-translate-y-full"} group`}
+      className={`fixed top-0 left-0 w-full z-50 transition-opacity duration-500 ${showNavbar ? "opacity-100" : "opacity-0"
+        } ${navbarVisible ? "transform-none" : "-translate-y-full"} group`}
     >
       <div
-        className={`px-4 sm:px-6 lg:px-16 py-2 md:py-3 relative transition-colors duration-300 ${
-          navbarVisible && hasScrolled ? "bg-white" : "bg-transparent"
-        }`}
+        className={`px-4 sm:px-6 lg:px-16 py-2 md:py-3 relative transition-colors duration-300 ${navbarVisible && hasScrolled ? "bg-white" : "bg-transparent"
+          }`}
       >
         <div className="absolute top-0 left-0 w-full h-full bg-white opacity-0 group-hover:opacity-100 z-0 pointer-events-none transition-opacity duration-300"></div>
 
@@ -133,9 +132,8 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <ul
-            className={`hidden md:flex items-center gap-10 text-lg relative z-10 transition-colors duration-300 ${
-              navbarVisible && hasScrolled ? "text-black" : "text-white"
-            } group-hover:text-black`}
+            className={`hidden md:flex items-center gap-10 text-lg relative z-10 transition-colors duration-300 ${navbarVisible && hasScrolled ? "text-black" : "text-white"
+              } group-hover:text-black`}
           >
             <li
               className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
@@ -174,14 +172,24 @@ const Navbar = () => {
                   >
                     Organization structure
                   </li>
+
                   <li
                     onClick={() => {
-                      navigate("/scholarship");
+                      navigate("/contact-bsfdfc");
                       setIsMobileMenuOpen(false);
                     }}
                     className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
                   >
-                    Scholarships
+                    Contact Us
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate("/gallery");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Gallery
                   </li>
                 </ul>
               )}
@@ -196,6 +204,88 @@ const Navbar = () => {
                 {item.label}
               </li>
             ))}
+
+            {/* Policy Dropdown */}
+            <li
+              className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
+              onMouseEnter={() => setIsPolicyDropdownOpen(true)}
+              onMouseLeave={() => setIsPolicyDropdownOpen(false)}
+            >
+              Policy <ChevronDown size={16} className="ml-1" />
+              {isPolicyDropdownOpen && (
+                <ul className="absolute top-full left-0 w-56 bg-white text-black shadow-lg rounded-md overflow-hidden z-50">
+                  <li
+                    onClick={() => {
+                      navigate("/document/film-policy");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    BSFDFC Policy
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate("/document/film-policy");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Film Policy
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate("/NOCguide");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Operational Guideline
+                  </li>
+                  <li
+                    onClick={() => {
+                      const link = document.createElement("a");
+                      link.href = "/moa.pdf";
+                      link.download = "moa.pdf";
+                      link.click();
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    MOA
+                  </li>
+                </ul>
+              )}
+            </li>
+
+            {/* Impact Dropdown */}
+            <li
+              className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
+              onMouseEnter={() => setIsImpactDropdownOpen(true)}
+              onMouseLeave={() => setIsImpactDropdownOpen(false)}
+            >
+              Impact <ChevronDown size={16} className="ml-1" />
+              {isImpactDropdownOpen && (
+                <ul className="absolute top-full left-0 w-56 bg-white text-black shadow-lg rounded-md overflow-hidden z-50">
+                  <li
+                    onClick={() => {
+                      navigate("/shooting-in-bihar");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Shooting in Bihar
+                  </li>
+                  <li
+                    onClick={() => {
+                      navigate("/scholarship");
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
+                  >
+                    Scholarship
+                  </li>
+                </ul>
+              )}
+            </li>
 
             <li
               className="relative cursor-pointer hover:text-red-600 font-semibold transition flex items-center"
@@ -301,9 +391,8 @@ const Navbar = () => {
             {!isMobileMenuOpen && (
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
-                className={`p-2 rounded-md focus:outline-none transition-colors duration-300 ${
-                  navbarVisible && hasScrolled ? "text-black" : "text-white"
-                }`}
+                className={`p-2 rounded-md focus:outline-none transition-colors duration-300 ${navbarVisible && hasScrolled ? "text-black" : "text-white"
+                  }`}
               >
                 <Menu size={28} />
               </button>
@@ -312,11 +401,10 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu */}
-       <div
-  className={`md:hidden fixed top-0 left-0 w-full h-screen bg-black text-white p-6 z-[40] shadow-xl overflow-y-auto overscroll-contain transform transition-transform duration-500 ease-in-out ${
-    isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
-  }`}
->
+        <div
+          className={`md:hidden fixed top-0 left-0 w-full h-screen bg-black text-white p-6 z-[40] shadow-xl overflow-y-auto overscroll-contain transform transition-transform duration-500 ease-in-out ${isMobileMenuOpen ? "translate-y-0" : "-translate-y-full"
+            }`}
+        >
 
           {/* Close Button */}
           <button
@@ -376,6 +464,74 @@ const Navbar = () => {
                 {item.label}
               </li>
             ))}
+
+            {/* Policy Section */}
+            <li className="mt-2 text-gray-300 border-b border-gray-700 pb-1">
+              Policy
+            </li>
+            <ul className="ml-4 flex flex-col gap-3">
+              <li
+                onClick={() => {
+                  navigate("/document/film-policy");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                BSFDFC Policy
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/document/film-policy");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Film Policy
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/NOCguide");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Operational Guideline
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/document/film-policy");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                MOA
+              </li>
+            </ul>
+
+            {/* Impact Section */}
+            <li className="mt-2 text-gray-300 border-b border-gray-700 pb-1">
+              Impact
+            </li>
+            <ul className="ml-4 flex flex-col gap-3">
+              <li
+                onClick={() => {
+                  navigate("/shooting-in-bihar");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Shooting in Bihar
+              </li>
+              <li
+                onClick={() => {
+                  navigate("/scholarship");
+                  setIsMobileMenuOpen(false);
+                }}
+                className="cursor-pointer hover:text-red-500 transition-colors"
+              >
+                Scholarship
+              </li>
+            </ul>
 
             <li
               onClick={() => {
@@ -456,8 +612,8 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-      </div>
-    </nav>
+      </div >
+    </nav >
   );
 };
 

@@ -6,6 +6,23 @@ import "../App.css";
 
 const videoData = [
   {
+    url: "https://res.cloudinary.com/dgra109xv/video/upload/v1764496087/BuddhaSamyak_fcazmk.webm", // Placeholder URL
+    overlays: [
+      {
+        title: "Untouched Beauty",
+        description: "Raw, authentic locations that breathe life into your narrative.",
+        top: "35%",
+        left: "25%",
+      },
+      {
+        title: "The Director's Canvas",
+        description: "A blank slate of natural wonder for your next masterpiece.",
+        top: "60%",
+        left: "75%",
+      },
+    ],
+  },
+  {
     url: "https://res.cloudinary.com/dgra109xv/video/upload/v1755760469/Snowtrain_uhyz1u.mp4",
     overlays: [
       {
@@ -92,23 +109,7 @@ const videoData = [
     ],
   },
   // New Video 2
-  {
-    url: "https://res.cloudinary.com/dgra109xv/video/upload/v1764496087/BuddhaSamyak_fcazmk.webm", // Placeholder URL
-    overlays: [
-      {
-        title: "Untouched Beauty",
-        description: "Raw, authentic locations that breathe life into your narrative.",
-        top: "35%",
-        left: "25%",
-      },
-      {
-        title: "The Director's Canvas",
-        description: "A blank slate of natural wonder for your next masterpiece.",
-        top: "60%",
-        left: "75%",
-      },
-    ],
-  },
+  
 ];
 
 

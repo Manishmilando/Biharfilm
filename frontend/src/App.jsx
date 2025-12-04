@@ -38,8 +38,11 @@ import Artist from "./Dashboard/Artist";
 import PrivacyPolicy from "./NavigationCards/PrivacyPolicy";
 import AboutUs from "./NavigationCards/AboutUs";
 import PDFViewerPage from "./NavigationCards/PDFViewerPage";
-import Scholarship from "../src/NavigationCards/ScholarshipAndExpenses";
-
+import NOCGuideProcess from "./Components/NOCGuideProcess";
+import ShootingInBihar from "./NavigationCards/ShootingInBihar";
+import ScholarshipAndExpenses from "./NavigationCards/ScholarshipAndExpenses";
+import ContactBSFDFC from "./NavigationCards/ContactBSFDFC";
+import Gallery from "./NavigationCards/Gallery";
 // Home Page
 function Home() {
   const location = useLocation();
@@ -132,8 +135,11 @@ export default function App() {
       <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       <Route path="/about-us" element={<AboutUs />} />
       <Route path="/document/:docId" element={<PDFViewerPage />} />
-      <Route path="/scholarship" element={<Scholarship />} />
-
+      <Route path="/NOCguide" element={<NOCGuideProcess />} />
+      <Route path="/shooting-in-bihar" element={<ShootingInBihar />} />
+      <Route path="/scholarship" element={<ScholarshipAndExpenses />} />
+      <Route path="/contact-bsfdfc" element={<ContactBSFDFC />} />
+      <Route path="/gallery" element={<Gallery />} />
 
       <Route path="*" element={<navigate to="/" replace />} />
 

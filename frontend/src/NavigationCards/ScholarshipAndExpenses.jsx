@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-    User, Users, Video, Pen, Coffee, UsersRound, Clapperboard,
-    Film, Music, Camera, Mic, Zap, Lightbulb, Palette, Shirt,
+    User, Users, Video, Pen, UsersRound, Clapperboard,
+    Music, Camera, Mic, Zap, Lightbulb, Palette, Shirt,
     Truck, MapPin, Plane, Building, Scissors, Star, UserCircle,
-    Sparkles, GraduationCap, FileText, CreditCard, CheckCircle
+    Sparkles, GraduationCap, FileText, CreditCard
 } from 'lucide-react';
 import Navbar from '../Components/Navbar';
 import ContactUs from './ContactUs';
@@ -11,138 +11,166 @@ import ContactUs from './ContactUs';
 const ScholarshipAndExpenses = () => {
     const scholarshipDetails = [
         {
-            id: '',
-            text: 'Under Clause 9.13 of Bihar Film Promotion Policy 2024, annual scholarship is also provided to students from Bihar who are studying at Film & Television Institute, Pune, Satyajit Ray Film & Television Institute, Kolkata, National School of Drama, New Delhi, Rangshala, Bangalore, Amritlal, and Varanasi. Accordingly, annual scholarship will be considered for students studying in degree/diploma programs at these institutions.',
+            id: 'Eligibility',
+            text: 'Under Clause 9.13 of Bihar Film Promotion Policy 2024, annual scholarship is provided to students from Bihar studying at premier institutes like FTII Pune, SRFTI Kolkata, NSD New Delhi, and others.',
             icon: <GraduationCap className="w-6 h-6" />
         },
         {
-            id: '',
-            text: 'The scholarship will be provided after submitting the application along with proof of admission, nomination proof, Aadhar card, and detailed course fee receipts from the managing director.',
+            id: 'Requirements',
+            text: 'Applications must include proof of admission, nomination proof, Aadhar card, and detailed course fee receipts from the managing director.',
             icon: <FileText className="w-6 h-6" />
         },
         {
-            id: '',
-            text: 'As a form of scholarship, course fee (tuition fee only) will be paid, with direct payment to the institution.',
+            id: 'Benefit',
+            text: 'The scholarship covers the course fee (tuition fee only), paid directly to the institution.',
             icon: <CreditCard className="w-6 h-6" />
         }
     ];
 
     const eligibleExpenses = [
-        { id: 1, name: 'Lead Actors', icon: <Star className="w-5 h-5" /> },
-        { id: 2, name: 'Producer', icon: <UserCircle className="w-5 h-5" /> },
-        { id: 3, name: 'Director', icon: <Clapperboard className="w-5 h-5" /> },
-        { id: 4, name: 'Supporting Cast', icon: <Users className="w-5 h-5" /> },
-        { id: 5, name: 'Writer', icon: <Pen className="w-5 h-5" /> },
-        { id: 6, name: 'Entourage', icon: <UsersRound className="w-5 h-5" /> },
-        { id: 7, name: 'Extras & Features', icon: <Users className="w-5 h-5" /> },
-        { id: 8, name: 'Direction Department Fees', icon: <Video className="w-5 h-5" /> },
-        { id: 9, name: 'Line Producer Fees', icon: <User className="w-5 h-5" /> },
-        { id: 10, name: 'Sync Sound & Sync Security', icon: <Mic className="w-5 h-5" /> },
-        { id: 11, name: 'Art Department Fees Including Wages', icon: <Palette className="w-5 h-5" /> },
-        { id: 12, name: 'Costume Department Fees', icon: <Shirt className="w-5 h-5" /> },
-        { id: 13, name: 'Make-up & Make-up Material', icon: <Sparkles className="w-5 h-5" /> },
-        { id: 14, name: 'Choreographer Fees', icon: <Music className="w-5 h-5" /> },
-        { id: 15, name: 'Photographer Fees', icon: <Camera className="w-5 h-5" /> },
-        { id: 16, name: 'Camera & Equipment Hire', icon: <Camera className="w-5 h-5" /> },
-        { id: 17, name: 'Sound Equipment Hire', icon: <Mic className="w-5 h-5" /> },
-        { id: 18, name: 'Light & Grip Hire', icon: <Lightbulb className="w-5 h-5" /> },
-        { id: 19, name: 'Generator Hire', icon: <Zap className="w-5 h-5" /> },
-        { id: 20, name: 'Vanity Van, Walkies & Picture Vehicles Hire', icon: <Truck className="w-5 h-5" /> },
-        { id: 21, name: 'Costume Hire', icon: <Shirt className="w-5 h-5" /> },
-        { id: 22, name: 'Art, Set & Props Hire', icon: <Palette className="w-5 h-5" /> },
-        { id: 23, name: 'Transport', icon: <Truck className="w-5 h-5" /> },
-        { id: 24, name: 'Location', icon: <MapPin className="w-5 h-5" /> },
-        { id: 25, name: 'Flights & Hotel Accommodation', icon: <Plane className="w-5 h-5" /> },
-        { id: 26, name: 'Production Office Cost', icon: <Building className="w-5 h-5" /> },
-        { id: 27, name: 'Post Production', icon: <Scissors className="w-5 h-5" /> }
+        { id: 1, name: 'Lead Actors', icon: <Star className="w-4 h-4" /> },
+        { id: 2, name: 'Producer', icon: <UserCircle className="w-4 h-4" /> },
+        { id: 3, name: 'Director', icon: <Clapperboard className="w-4 h-4" /> },
+        { id: 4, name: 'Supporting Cast', icon: <Users className="w-4 h-4" /> },
+        { id: 5, name: 'Writer', icon: <Pen className="w-4 h-4" /> },
+        { id: 6, name: 'Entourage', icon: <UsersRound className="w-4 h-4" /> },
+        { id: 7, name: 'Extras & Features', icon: <Users className="w-4 h-4" /> },
+        { id: 8, name: 'Direction Dept.', icon: <Video className="w-4 h-4" /> },
+        { id: 9, name: 'Line Producer', icon: <User className="w-4 h-4" /> },
+        { id: 10, name: 'Sync Sound', icon: <Mic className="w-4 h-4" /> },
+        { id: 11, name: 'Art Dept.', icon: <Palette className="w-4 h-4" /> },
+        { id: 12, name: 'Costume Dept.', icon: <Shirt className="w-4 h-4" /> },
+        { id: 13, name: 'Make-up', icon: <Sparkles className="w-4 h-4" /> },
+        { id: 14, name: 'Choreographer', icon: <Music className="w-4 h-4" /> },
+        { id: 15, name: 'Photographer', icon: <Camera className="w-4 h-4" /> },
+        { id: 16, name: 'Camera Hire', icon: <Camera className="w-4 h-4" /> },
+        { id: 17, name: 'Sound Equip.', icon: <Mic className="w-4 h-4" /> },
+        { id: 18, name: 'Light & Grip', icon: <Lightbulb className="w-4 h-4" /> },
+        { id: 19, name: 'Generator', icon: <Zap className="w-4 h-4" /> },
+        { id: 20, name: 'Vehicles', icon: <Truck className="w-4 h-4" /> },
+        { id: 21, name: 'Costume Hire', icon: <Shirt className="w-4 h-4" /> },
+        { id: 22, name: 'Art/Props Hire', icon: <Palette className="w-4 h-4" /> },
+        { id: 23, name: 'Transport', icon: <Truck className="w-4 h-4" /> },
+        { id: 24, name: 'Location', icon: <MapPin className="w-4 h-4" /> },
+        { id: 25, name: 'Travel/Stay', icon: <Plane className="w-4 h-4" /> },
+        { id: 26, name: 'Production Office', icon: <Building className="w-4 h-4" /> },
+        { id: 27, name: 'Post Production', icon: <Scissors className="w-4 h-4" /> }
+    ];
+
+    const recipients = [
+        { name: "Ashish Kumar", reg: "R/16/2024", sem: "1st, 2nd", session: "" },
+        { name: "Ravi Kumar Sah", reg: "R/EDM/217/23-25", sem: "1st", session: "23-25" },
+        { name: "Nishant Kumar", reg: "R/865/20-23", sem: "4th", session: "20-23" },
+        { name: "Sujeet Kumar", reg: "R/1039/23-26", sem: "1st, 2nd", session: "23-26" },
+        { name: "Chandrabhan Singh", reg: "R/968/2022-25", sem: "3rd, 4th", session: "22-25" },
+        { name: "Hema Kumari", reg: "R/993/2022-25", sem: "3rd, 4th", session: "22-25" },
+        { name: "Chandan Kumar Priyadarshi", amount: "₹82,688", reg: "R/EDM/191/22-24", sem: "2nd, 3rd", session: "22-24" }
     ];
 
     return (
-        <div className="min-h-screen bg-white font-sans">
+        <div className="min-h-screen bg-[#190108] font-sans text-gray-100">
             <Navbar />
 
-            {/* Hero Section */}
-            <div className="relative bg-[#a92b4e] py-24 px-4 text-center text-white overflow-hidden">
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#a92b4e]/90"></div>
-                    <img src="/bannerImgee.png" alt="Scholarship Banner" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#a92b4e]/90"></div>
-                </div>
-                <div className="relative z-10 max-w-5xl mx-auto">
-                    <div className="py-10">
-                        <h1 className="text-2xl md:text-4xl font-extrabold mb-6 tracking-tight leading-tight">
-                            Scholarships & Eligible Production Expenses
-                        </h1>
-                        <p className="text-md md:text-xl font-light text-yellow-100 max-w-4xl mx-auto">
-                            Empowering Bihar's future filmmakers through education support and transparent production cost guidelines.
-                        </p>
-                    </div>
+            {/* Header Section */}
+            <div className="pt-32 pb-16 px-4 text-center border-b border-white/5">
+                <div className="max-w-4xl mx-auto">
+                    <h1 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight text-white">
+                        Scholarships & <span className="text-[#a92b4e]">Expenses</span>
+                    </h1>
+                    <p className="text-lg text-gray-400 font-light max-w-2xl mx-auto leading-relaxed">
+                        Empowering Bihar's future filmmakers through education support and transparent production cost guidelines.
+                    </p>
                 </div>
             </div>
 
-            {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 py-16 space-y-20">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 space-y-24">
 
-                {/* Section 8: Scholarship for Students */}
-                <div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-[#891737] mb-8 text-center">Student Scholarship Program</h2>
-                    <p className="text-gray-600 text-center max-w-3xl mx-auto mb-10 text-lg">
-                        Supporting talented students from Bihar pursuing education in premier film and television institutes across India.
-                    </p>
-                    <div className="space-y-5">
-                        {scholarshipDetails.map((detail) => (
-                            <div
-                                key={detail.id}
-                                className="flex gap-4 p-6 bg-white rounded-2xl border border-gray-200 hover:border-[#a92b4e]/30 hover:shadow-xl transition-all duration-300"
-                            >
-                                <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-[#a92b4e] to-[#891737] rounded-full flex items-center justify-center text-white shadow-lg">
-                                    {detail.icon}
+                {/* Scholarship Program */}
+                <section>
+                    <div className="flex flex-col md:flex-row gap-12 items-start">
+                        <div className="md:w-1/3 sticky top-24">
+                            <h2 className="text-3xl font-bold text-white mb-4">Student Scholarship</h2>
+                            <p className="text-gray-400 leading-relaxed mb-6">
+                                We support talented students from Bihar pursuing education in premier film and television institutes across India.
+                            </p>
+                            <div className="h-1 w-20 bg-[#a92b4e] rounded-full"></div>
+                        </div>
+                        <div className="md:w-2/3 grid grid-cols-1 gap-6">
+                            {scholarshipDetails.map((detail, idx) => (
+                                <div key={idx} className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-colors duration-300">
+                                    <div className="flex items-start gap-6">
+                                        <div className="p-3 bg-[#a92b4e]/20 rounded-xl text-[#a92b4e]">
+                                            {detail.icon}
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-semibold text-white mb-3">{detail.id}</h3>
+                                            <p className="text-gray-400 leading-relaxed">{detail.text}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex-1">
-                                    <span className="font-bold text-[#a92b4e] text-xl">{detail.id}</span>
-                                    <p className="text-gray-700 text-base mt-2 leading-relaxed">{detail.text}</p>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* Recipients */}
+                <section>
+                    <div className="mb-12">
+                        <h2 className="text-3xl font-bold text-white mb-4">SRFTI Recipients</h2>
+                        <p className="text-gray-400">Proud beneficiaries from Bihar studying at Satyajit Ray Film & Television Institute.</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {recipients.map((student, idx) => (
+                            <div key={idx} className="group bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-[#a92b4e]/50 transition-all duration-300">
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#a92b4e] to-[#891737] flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                                        {student.name.split(' ').map(n => n[0]).join('')}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-lg font-bold text-white group-hover:text-[#a92b4e] transition-colors">{student.name}</h3>
+                                        <p className="text-xs text-gray-500 uppercase tracking-wider">Scholar</p>
+                                    </div>
+                                </div>
+                                <div className="space-y-2 text-sm text-gray-400 pl-16">
+                                    <div className="flex justify-between border-b border-white/5 pb-1">
+                                        <span>Reg No</span>
+                                        <span className="text-gray-200">{student.reg}</span>
+                                    </div>
+                                    <div className="flex justify-between border-b border-white/5 pb-1">
+                                        <span>Semester</span>
+                                        <span className="text-gray-200">{student.sem}</span>
+                                    </div>
+                                    {student.session && (
+                                        <div className="flex justify-between border-b border-white/5 pb-1">
+                                            <span>Session</span>
+                                            <span className="text-gray-200">{student.session}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}
                     </div>
-                </div>
+                </section>
 
-                {/* Section 9: Appendix "A" - Eligible Expenses */}
-                <div>
-                    <h2 className="text-3xl md:text-4xl font-bold text-[#891737] mb-4 text-center">Eligible Production Expenses</h2>
-                    <p className="text-gray-600 text-center max-w-3xl mx-auto mb-10 text-base leading-relaxed">
-                        (According to Bihar Film Promotion Policy–2024) The total project cost of web series/documentary/serial/OTT platform includes eligible expenses within the approved subsidies presented in the application submitted by the applicant with necessary expenditure incurred in the following expense items, which will be considered eligible:
-                    </p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                {/* Eligible Expenses */}
+                <section>
+                    <div className="mb-12">
+                        <h2 className="text-3xl font-bold text-white mb-4">Eligible Expenses</h2>
+                        <p className="text-gray-400 max-w-3xl">
+                            According to Bihar Film Promotion Policy–2024, the following expense categories are considered eligible within the total project cost.
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         {eligibleExpenses.map((expense) => (
-                            <div
-                                key={expense.id}
-                                className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-200 hover:border-[#a92b4e]/40 hover:bg-[#a92b4e]/5 hover:shadow-md transition-all duration-300 cursor-pointer group"
-                            >
-                                <div className="flex-shrink-0 w-12 h-12 bg-[#a92b4e]/10 group-hover:bg-gradient-to-br group-hover:from-[#a92b4e] group-hover:to-[#891737] rounded-xl flex items-center justify-center text-[#a92b4e] group-hover:text-white transition-all duration-300 shadow-sm">
+                            <div key={expense.id} className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors duration-200">
+                                <div className="text-[#a92b4e]">
                                     {expense.icon}
                                 </div>
-                                <div className="flex-1">
-                                    <span className="text-gray-500 text-xs font-semibold">{expense.id}.</span>
-                                    <p className="text-gray-800 text-sm font-semibold leading-tight group-hover:text-[#891737] transition-colors">{expense.name}</p>
-                                </div>
+                                <span className="text-sm text-gray-300 font-medium">{expense.name}</span>
                             </div>
                         ))}
                     </div>
-
-                    <div className="bg-gradient-to-r from-[#a92b4e]/5 to-[#891737]/5 border-l-4 border-[#a92b4e] p-6 rounded-r-2xl shadow-md">
-                        <p className="text-gray-700 text-base leading-relaxed mb-3">
-                            <span className="font-bold text-[#891737] text-lg">Note:</span> In addition to the above details, the Managing Director, Bihar State Film Development and Finance Corporation Limited, Patna will be authorized to consider including other eligible expense items in the provided list.
-                        </p>
-                        <p className="text-gray-700 text-base leading-relaxed">
-                            All forms and appendices related to Film Shooting are available on the website of Bihar State Film Development and Finance Corporation at{' '}
-                            <a href="https://film.bihar.gov.in" target="_blank" rel="noopener noreferrer" className="text-[#a92b4e] hover:text-[#891737] underline font-semibold transition-colors">
-                                film.bihar.gov.in
-                            </a>
-                        </p>
-                    </div>
-                </div>
+                </section>
 
             </div>
 

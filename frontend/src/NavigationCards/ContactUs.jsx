@@ -59,7 +59,7 @@ const Footer = () => {
             <div className="lg:w-1/3">
               <h3 className="text-2xl font-bold mb-4">About BSFDFC</h3>
               <p className="text-sm sm:text-base leading-relaxed">
-                The Bihar State Film Development and Finance Corporation Ltd. (BSFDFC) promotes a vibrant film culture and supports all forms of cinematic expression. Through landmark initiatives, it provides a dynamic platform for national and international filmmakers, redefining Bihar as a premier destination for diverse storytelling.
+                The Bihar State Film Development and Finance Corporation Ltd. (BSFDFC) promotes film culture and incentivizes regional cinema. Through landmark initiatives, it provides a dynamic platform for national and international filmmakers, redefining Bihar’s cinematic identity.
               </p>
             </div>
 

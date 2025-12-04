@@ -6,59 +6,65 @@ import Adminsvgg from "../assets/adminsvgg.svg";
 import { MdEmail } from "react-icons/md";
 import { IoIosLock } from "react-icons/io";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaArrowLeftLong } from "react-icons/fa6";
+
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  const email = e.target.email.value;
-  const password = e.target.password.value;
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-  try {
-    const res = await axios.post(
-      "https://biharfilmbackend-production.up.railway.app/api/auth/login",
-      { email, password }
-    );
+    try {
+      const res = await axios.post(
+        "https://biharfilmbackend-production.up.railway.app/api/auth/login",
+        { email, password }
+      );
 
-    if (res.data.success) {
-      const user = res.data.user;
-      const token = res.data.token;
+      if (res.data.success) {
+        const user = res.data.user;
+        const token = res.data.token;
 
-      // Store authentication data
-      localStorage.setItem("authToken", token);
-      localStorage.setItem("user", JSON.stringify({
-        id: user.id,
-        name: user.name || user.email,
-        role: user.role,
-        districtId: user.districtId,
-        districtName: user.districtName,
-        email: user.email
-      }));
+        // Store authentication data
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("user", JSON.stringify({
+          id: user.id,
+          name: user.name || user.email,
+          role: user.role,
+          districtId: user.districtId,
+          districtName: user.districtName,
+          email: user.email
+        }));
 
-      // Route mapping
-      const roleRoutes = {
-        filmmaker: '/dashboard-user',
-        artist: '/dashboard-user',
-        vendor: '/dashboard-user',
-        admin: '/dashboard',
-        district_admin: '/MainDash'
-      };
+        // Route mapping
+        const roleRoutes = {
+          filmmaker: '/dashboard-user',
+          artist: '/dashboard-user',
+          vendor: '/dashboard-user',
+          admin: '/dashboard',
+          district_admin: '/MainDash'
+        };
 
-      // Use window.location for a full page reload (ensures localStorage is ready)
-      window.location.href = roleRoutes[user.role] || '/login';
+        // Use window.location for a full page reload (ensures localStorage is ready)
+        window.location.href = roleRoutes[user.role] || '/login';
+      }
+    } catch (err) {
+      console.error("Login failed:", err.response?.data || err.message);
+      alert(err.response?.data?.message || "Invalid credentials");
     }
-  } catch (err) {
-    console.error("Login failed:", err.response?.data || err.message);
-    alert(err.response?.data?.message || "Invalid credentials");
-  }
-};
+  };
 
 
   return (
     <div className="flex h-screen w-full items-center justify-center px-4 relative">
+      {/* <button onClick={() => navigate('/')} className="absolute flex items-center gap-2 top-4 left-4 text-[10px] z-50 bg-[#a92b42] text-white px-4 py-2 rounded-full">
+        <FaArrowLeftLong /> Back to Home
+      </button>
+       */}
       <img
         src="https://res.cloudinary.com/dgra109xv/image/upload/v1755760897/Bgg_m1ikjp.svg"
         alt="Background"
@@ -93,22 +99,20 @@ const handleLogin = async (e) => {
               <button
                 type="button"
                 onClick={() => setIsAdmin(false)}
-                className={`px-6 py-2 rounded-full border text-sm font-medium transition ${
-                  !isAdmin
-                    ? "border-[#a92b43] text-[#a92b43]"
-                    : "border-gray-300 text-gray-600"
-                }`}
+                className={`px-6 py-2 rounded-full border text-sm font-medium transition ${!isAdmin
+                  ? "border-[#a92b43] text-[#a92b43]"
+                  : "border-gray-300 text-gray-600"
+                  }`}
               >
                 User
               </button>
               <button
                 type="button"
                 onClick={() => setIsAdmin(true)}
-                className={`px-6 py-2 rounded-full border text-sm font-medium transition ${
-                  isAdmin
-                    ? "border-[#a92b43] text-[#a92b43]"
-                    : "border-gray-300 text-gray-600"
-                }`}
+                className={`px-6 py-2 rounded-full border text-sm font-medium transition ${isAdmin
+                  ? "border-[#a92b43] text-[#a92b43]"
+                  : "border-gray-300 text-gray-600"
+                  }`}
               >
                 Admin
               </button>
@@ -180,6 +184,17 @@ const handleLogin = async (e) => {
                 Sign up
               </Link>
             </p>
+            <div className="mt-4 text-center">
+              <Link
+                to="/NOCguide"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-[#a92b43] font-medium hover:underline flex items-center justify-center gap-1"
+              >
+                Learn how to apply for NOC Form
+                <span className="text-xs">↗</span>
+              </Link>
+            </div>
           </form>
         </div>
       </div>
@@ -188,5 +203,3 @@ const handleLogin = async (e) => {
 };
 
 export default LoginPage;
-
-

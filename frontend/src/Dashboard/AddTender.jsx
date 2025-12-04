@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Upload, FileText, X, Loader, Save, FolderOpen } from "lucide-react";
+import { Upload, FileText, X, Loader, Check, AlertCircle } from "lucide-react";
 import AlertBox from "../Components/AlertBox";
 
 function AddTender({ tenderData, onClose }) {
@@ -41,16 +41,12 @@ function AddTender({ tenderData, onClose }) {
     const text = e.target.value;
     const words = text.trim().split(/\s+/).filter(Boolean);
 
-    // Strict check to prevent database error
     if (words.length <= MAX_WORDS && text.length <= 190) {
       setDescription(text);
       setWordCount(words.length);
     } else if (text.length > 190) {
-      // Allow typing but show warning or just truncate if strictly needed
-      // For now, let's just limit by length as well since DB column likely has char limit
-      // Assuming standard VARCHAR(191) or similar
       if (text.length < description.length) {
-        setDescription(text); // Allow deleting
+        setDescription(text);
         setWordCount(words.length);
       }
     }
@@ -107,15 +103,12 @@ function AddTender({ tenderData, onClose }) {
     formData.append("description", description);
     formData.append("pdf", pdf);
 
-    // Debug logging
     console.log("Creating tender with data:");
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
-    console.log("PDF File:", pdf);
 
     try {
-      console.log("Sending request to createTender...");
       const response = await fetch(
         "https://biharfilmbackend-production.up.railway.app/api/tender/createTender",
         {
@@ -125,17 +118,14 @@ function AddTender({ tenderData, onClose }) {
         }
       );
 
-      console.log("Response Status:", response.status, response.statusText);
-
       let result;
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.indexOf("application/json") !== -1) {
         result = await response.json();
-        console.log("Response JSON:", result);
       } else {
         const text = await response.text();
         console.error("Non-JSON response:", text);
-        throw new Error(`Server returned ${response.status} ${response.statusText}: ${text.substring(0, 100)}`);
+        throw new Error(`Server returned ${response.status} ${response.statusText}`);
       }
 
       if (response.ok && result.success) {
@@ -144,18 +134,14 @@ function AddTender({ tenderData, onClose }) {
           title: "Success",
           message: "Tender created successfully!",
           autoClose: true,
-          duration: 2000,
-          onConfirm: () => {
-            if (onClose) onClose();
-          }
+          duration: 2000
         });
 
         setTimeout(() => {
           if (onClose) onClose();
         }, 2000);
       } else {
-        console.error("Request failed with result:", result);
-        throw new Error(result.message || `Failed to create tender: ${response.status} ${response.statusText}`);
+        throw new Error(result.message || `Failed to create tender: ${response.status}`);
       }
     } catch (error) {
       console.error("Error creating tender:", error);
@@ -206,7 +192,7 @@ function AddTender({ tenderData, onClose }) {
       } else {
         const text = await response.text();
         console.error("Non-JSON response:", text);
-        throw new Error(`Server returned ${response.status} ${response.statusText}.`);
+        throw new Error(`Server returned ${response.status} ${response.statusText}`);
       }
 
       if (response.ok && result.success) {
@@ -215,10 +201,7 @@ function AddTender({ tenderData, onClose }) {
           title: "Success",
           message: "Tender updated successfully!",
           autoClose: true,
-          duration: 2000,
-          onConfirm: () => {
-            if (onClose) onClose();
-          }
+          duration: 2000
         });
 
         setTimeout(() => {
@@ -248,68 +231,72 @@ function AddTender({ tenderData, onClose }) {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden relative">
+    <div className="w-full max-w-lg mx-auto bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
       <AlertBox {...alertConfig} onClose={closeAlert} />
 
       {/* Header */}
-      <div className="bg-[#a92b4e] px-6 py-4 text-white flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
-            <FolderOpen className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold">
-              {tenderData ? "Edit Tender" : "Create Tender"}
-            </h2>
-            <p className="text-white/80 text-xs">
-              {tenderData ? "Update tender details" : "Add new tender notice"}
-            </p>
-          </div>
+      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <h2 className="text-base font-semibold text-gray-900">
+            {tenderData ? "Edit Tender" : "Create Tender"}
+          </h2>
+          <p className="text-xs text-gray-500 mt-0.5">
+            {tenderData ? "Update tender details" : "Add new tender notice"}
+          </p>
         </div>
         {onClose && (
-          <button onClick={onClose} className="text-white/80 hover:text-white hover:bg-white/10 p-1 rounded-full transition-colors">
-            <X className="w-5 h-5" />
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors"
+          >
+            <X className="w-4 h-4 text-gray-500" />
           </button>
         )}
       </div>
 
       {/* Form Content */}
-      <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto custom-scrollbar">
-        {/* Title & Date */}
-        <div className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-700 block uppercase tracking-wide">Title *</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., Procurement of Film Equipment"
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:border-[#a92b4e] focus:ring-2 focus:ring-[#a92b4e]/20 outline-none transition-all bg-gray-50 focus:bg-white text-sm text-gray-900"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-700 block uppercase tracking-wide">Date *</label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:border-[#a92b4e] focus:ring-2 focus:ring-[#a92b4e]/20 outline-none transition-all bg-gray-50 focus:bg-white text-sm text-gray-900"
-            />
-          </div>
+      <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+        {/* Title */}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            Title <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="e.g., Procurement of Film Equipment"
+            className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors"
+          />
+        </div>
+
+        {/* Date */}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            Date <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors"
+          />
         </div>
 
         {/* Description */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-gray-700 block uppercase tracking-wide">Description *</label>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            Description <span className="text-red-500">*</span>
+          </label>
           <div className="relative">
             <textarea
-              rows="3"
+              rows="4"
               value={description}
               onChange={handleDescriptionChange}
               placeholder="Enter a brief description..."
-              className="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:border-[#a92b4e] focus:ring-2 focus:ring-[#a92b4e]/20 outline-none transition-all bg-gray-50 focus:bg-white resize-none text-sm text-gray-900"
+              className="w-full px-3 py-2 text-sm text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-300 transition-colors resize-none"
             ></textarea>
-            <div className={`absolute bottom-2 right-2 text-[10px] font-medium px-1.5 py-0.5 rounded ${wordCount >= MAX_WORDS ? "bg-red-100 text-red-600" : "bg-gray-100 text-gray-500"
+            <div className={`absolute bottom-2 right-2 text-xs px-2 py-0.5 rounded ${wordCount >= MAX_WORDS ? "bg-red-50 text-red-600" : "bg-gray-50 text-gray-500"
               }`}>
               {wordCount}/{MAX_WORDS}
             </div>
@@ -317,19 +304,21 @@ function AddTender({ tenderData, onClose }) {
         </div>
 
         {/* PDF Upload */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-gray-700 block uppercase tracking-wide">
-            Attachment (PDF) {tenderData ? "" : "*"}
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1.5">
+            Attachment (PDF) {!tenderData && <span className="text-red-500">*</span>}
           </label>
+
           {tenderData && !pdf && (
-            <div className="mb-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-xs text-blue-700 flex items-center gap-2">
-                <FileText className="w-3 h-3" />
+            <div className="mb-2 p-3 bg-blue-50 border border-blue-100 rounded-lg flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-blue-700">
                 Current PDF is already uploaded. Upload a new file to replace it.
               </p>
             </div>
           )}
-          <div className={`border-2 border-dashed rounded-xl p-4 transition-all text-center ${pdf ? "border-[#a92b4e] bg-[#a92b4e]/5" : "border-gray-300 hover:border-[#a92b4e] hover:bg-gray-50"
+
+          <div className={`border-2 border-dashed rounded-lg p-4 transition-all ${pdf ? "border-gray-200 bg-gray-50" : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
             }`}>
             <input
               type="file"
@@ -340,78 +329,66 @@ function AddTender({ tenderData, onClose }) {
             />
 
             {pdf ? (
-              <div className="flex items-center justify-between bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
-                <div className="flex items-center space-x-3 overflow-hidden">
-                  <div className="w-8 h-8 bg-red-100 rounded flex items-center justify-center flex-shrink-0">
-                    <FileText className="w-4 h-4 text-red-600" />
+              <div className="flex items-center justify-between bg-white p-3 rounded-lg border border-gray-100">
+                <div className="flex items-center gap-3 overflow-hidden flex-1">
+                  <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-5 h-5 text-red-600" />
                   </div>
-                  <div className="text-left min-w-0">
-                    <p className="font-medium text-gray-900 truncate text-sm">{pdf.name}</p>
-                    <p className="text-[10px] text-gray-500">{(pdf.size / 1024 / 1024).toFixed(2)} MB</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-gray-900 truncate">{pdf.name}</p>
+                    <p className="text-xs text-gray-500">
+                      {(pdf.size / 1024 / 1024).toFixed(2)} MB
+                    </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setPdf(null)}
-                  className="p-1.5 hover:bg-red-50 rounded-full text-red-500 transition-colors"
+                  className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors flex-shrink-0 ml-2"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
             ) : (
-              <label htmlFor="pdfUpload" className="cursor-pointer flex flex-col items-center justify-center py-2">
-                <Upload className="w-6 h-6 text-gray-400 mb-1 group-hover:text-[#a92b4e]" />
-                <p className="text-gray-900 font-medium text-sm">
+              <label htmlFor="pdfUpload" className="cursor-pointer flex flex-col items-center justify-center py-3">
+                <div className="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center mb-2">
+                  <Upload className="w-6 h-6 text-gray-400" />
+                </div>
+                <p className="text-sm font-medium text-gray-900 mb-0.5">
                   {tenderData ? "Upload New PDF (Optional)" : "Upload PDF"}
                 </p>
-                <p className="text-[10px] text-gray-500">Max 10MB</p>
+                <p className="text-xs text-gray-500">Maximum file size 10MB</p>
               </label>
             )}
           </div>
         </div>
       </div>
 
-      {/* Actions */}
-      <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-end space-x-3">
+      {/* Footer */}
+      <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
         <button
-          className="px-4 py-2 rounded-lg text-gray-600 font-medium hover:bg-gray-200 transition-colors text-sm"
           onClick={onClose}
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
         >
           Cancel
         </button>
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="px-6 py-2 bg-[#a92b4e] hover:bg-[#8f2442] text-white rounded-lg font-medium shadow-md shadow-[#a92b4e]/20 flex items-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed transition-all active:scale-95 text-sm"
+          className="px-4 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#891737]/90 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           {loading ? (
             <>
               <Loader className="w-4 h-4 animate-spin" />
-              <span>{tenderData ? "Updating..." : "Saving..."}</span>
+              {tenderData ? "Updating..." : "Saving..."}
             </>
           ) : (
             <>
-              <Save className="w-4 h-4" />
-              <span>{tenderData ? "Update" : "Publish"}</span>
+              <Check className="w-4 h-4" />
+              {tenderData ? "Update" : "Publish"}
             </>
           )}
         </button>
       </div>
-
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #e5e7eb;
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #d1d5db;
-        }
-      `}</style>
     </div>
   );
 }

@@ -1,15 +1,243 @@
 import React from "react";
 import { Film, Clapperboard, MapPin, Users, Globe, CheckCircle, Star, Award, Camera, Video } from "lucide-react";
+import { motion } from "framer-motion";
 import Logo1 from "/src/assets/Logo1.png";
 import Navbar from "../Components/Navbar";
 import ContactUs from "./ContactUs";
 
 export default function AboutUs() {
     const legends = [
-        "Ashok Kumar", "Shatrughan Sinha", "Manoj Bajpayee", "Pankaj Tripathi", "Kumkum",
-        "Chitragupt", "Vishwanath Prasad Sahabadi", "Shivendra Sinha", "Shailendra",
-        "Girish Ranjan", "Prakash Jha", "Kunal Singh", "Akhilendra Mishra", "Neeraj Pandey",
-        "Sanjay Mishra", "Pankaj Jha", "Vineet Kumar", "Vinay Pathak", "Manoj Tiwari"
+        {
+            id: 1,
+            name: "Manoj Bajpayee",
+            occupation: "Actor",
+            dob: "23 April 1969",
+            district: "West Champaran",
+            img: "https://th-i.thgim.com/public/incoming/n3k61b/article68075789.ece/alternates/FREE_1200/MANOJ-SHHHH.jpg",
+            description: "Renowned for powerful roles in independent and commercial films.",
+            bestWork: "The Family Man",
+            imdb: "https://www.imdb.com/name/nm0048075/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 2,
+            name: "Pankaj Tripathi",
+            occupation: "Actor",
+            dob: "5 September 1976",
+            district: "Gopalganj",
+            img: "https://media.assettype.com/freepressjournal/2022-01/bdc02614-b127-4db2-a440-2f44b9f5f284/Screenshot_2022_01_25_at_5_43_01_AM.png?width=1200",
+            description: "Famous for his versatility and natural acting style.",
+            bestWork: "Mirzapur",
+            imdb: "https://www.imdb.com/name/nm2690647/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 3,
+            name: "Prakash Jha",
+            occupation: "Producer & Actor",
+            dob: "27 February 1952",
+            district: "Bettiah, West Champaran",
+            img: "https://m.media-amazon.com/images/M/MV5BMTc1NjMwNDE4Ml5BMl5BanBnXkFtZTgwODA1ODA0OTE@._V1_.jpg",
+            description: "Renowned filmmaker known for his political and socio-political films.",
+            bestWork: "Crook",
+            imdb: "https://www.imdb.com/name/nm2777281/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 4,
+            name: "Shatrughan Sinha",
+            occupation: "Actor",
+            dob: "15 July 1946",
+            district: "Patna",
+            img: "https://sm.mashable.com/mashable_in/seo/8/88864/88864_trrd.png",
+            description: "Veteran actor and politician, iconic in 70s-80s cinema.",
+            bestWork: "Kalicharan",
+            imdb: "https://www.imdb.com/name/nm0802374/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 5,
+            name: "Sushant Singh Rajput",
+            occupation: "Actor",
+            dob: "21 January 1986",
+            district: "Patna",
+            img: "https://i.pinimg.com/736x/40/60/63/406063a5d7bf517313bf00ee5d6ab840.jpg",
+            description: "Talented actor known for heartfelt performances.",
+            bestWork: "MS Dhoni: The Untold Story",
+            imdb: "https://www.imdb.com/name/nm3818286/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 6,
+            name: "Neha Sharma",
+            occupation: "Actress",
+            dob: "21 November 1987",
+            district: "Bhagalpur",
+            img: "https://akm-img-a-in.tosshub.com/aajtak/images/video/202403/6600096b7e220-will-neha-sharma-contest-elections-from-bihar-240722280-16x9.png",
+            description: "Actress and model with presence in films and web series.",
+            bestWork: "Crook",
+            imdb: "https://www.imdb.com/name/nm2777281/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 7,
+            name: "Neetu Chandra",
+            occupation: "Actress",
+            dob: "20 June 1984",
+            district: "Patna",
+            img: "https://www.filmibeat.com/wimg/desktop/2019/08/neetu-chandra_10.jpg",
+            description: "Indian actress known for her roles in Hindi, Tamil, and Telugu cinema. ",
+            bestWork: "Garam Masala (2005)",
+            imdb: "https://www.imdb.com/name/nm1911617/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 8,
+            name: "Vinay Pathak",
+            occupation: "Actor",
+            dob: "27 July 1968",
+            district: "Bhojpur, Bihar ",
+            img: "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201808/Vinay_Pathak-BAN-08052018.jpeg",
+            description: "Actor known for comedy roles in Bheja Fry and Khosla Ka Ghosla. ",
+            bestWork: "Bheja Fry (2007)",
+            imdb: "https://www.imdb.com/name/nm0665555/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 9,
+            name: "Imtiaz Ali",
+            occupation: "Film Director & Writer",
+            dob: "16 June 1971",
+            district: "Jamshedpur (then Bihar)",
+            img: "https://m.media-amazon.com/images/M/MV5BMTYwOTUwMTk3MF5BMl5BanBnXkFtZTgwMjA1NDEzMTE@._V1_.jpg",
+            description: "Renowned Indian film director, producer, and writer known for his brilliant work",
+            bestWork: "Jab We Met",
+            imdb: "https://www.imdb.com/name/nm2777281/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 10,
+            name: "Sanjay Mishra",
+            occupation: "Actor",
+            dob: "6 October 1963",
+            district: "Darbhangha",
+            img: "https://i.pinimg.com/564x/33/cf/5a/33cf5a9baf45e25e6b8ce5adc89f8b54.jpg",
+            description: "Celebrated for comic timing and strong character roles.",
+            bestWork: "Ankhon Dekhi",
+            imdb: "https://www.imdb.com/name/nm0592799/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 11,
+            name: "Arunabh Kumar",
+            occupation: "Entrepreneur, Producer, Director, Actor",
+            dob: "26 November 1982",
+            district: "Muzaffarpur",
+            img: "https://www.iwmbuzz.com/wp-content/uploads/2025/06/arunabh-kumar-shares-a-heartfelt-note-on-his-wedding-anniversary-15.jpg",
+            description: "Founder of TVF, known for web series like 'Permanent Roommates' and 'Pitchers'.",
+            bestWork: "TVF Pitchers",
+            imdb: "https://www.imdb.com/name/nm2837311/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 12,
+            name: "Gurmeet Choudhary",
+            occupation: "Actor",
+            dob: "22 February 1984",
+            district: "Bhagalpur",
+            img: "https://www.gethucinema.com/tmdb/eCeElyYgPm1ZvV1NWlBeQbUCp8c.jpg",
+            description: "TV and film actor popular for mythological and action roles.",
+            bestWork: "Khamoshiyan",
+            imdb: "https://www.imdb.com/name/nm3073211/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 13,
+            name: "Chandan Roy",
+            occupation: "Actor",
+            dob: "20 December 1995",
+            district: "Mahnar (Vaishali district)",
+            img: "https://images.filmibeat.com/img/popcorn/profile_photos/chandanroy-20240530112240-60861.jpg",
+            description: "Known for his warm, authentic portrayal of Vikas Shukla in 'Panchayat'..",
+            bestWork: "Panchayat (web series)",
+            imdb: "https://www.imdb.com/name/nm0788686/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 14,
+            name: "Ashok Yadav",
+            occupation: "Actor",
+            dob: "3 January 1985",
+            district: "Darveshpur, near Siwan",
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbBuxF26RW4NAbH3bAhnym5oFJpbXEu4bfpw&s",
+            description: "Bihari-born actor known for winning hearts as 'Binod' in Panchayat.",
+            bestWork: "Panchayat (web series)",
+            imdb: "https://www.imdb.com/name/nm9859083/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 15,
+            name: "Pankaj Jha",
+            occupation: "Actor, Painter, Writer, Director",
+            dob: "2 February 1970",
+            district: "Saharsa",
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh1qXBXYNfRXOj44qO6zQ5A_S8XqZ9tuWDQw&s",
+            description: "Actor, acclaimed for his grounded portrayal of MLA Chandu Singh in Panchayat",
+            bestWork: "Panchayat (web series)",
+            imdb: "https://www.imdb.com/name/nm13792834/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 16,
+            name: "Durgesh Kumar",
+            occupation: "Actor",
+            dob: "21 October 1984",
+            district: "Darbhanga, Bihar",
+            img: "https://static.toiimg.com/thumb/msid-110440378,width-400,resizemode-4/110440378.jpg",
+            description: "Actor known for playing Bhushan in Panchayat .",
+            bestWork: "Panchayat (web series)",
+            imdb: "https://www.imdb.com/name/nm6294201/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 17,
+            name: "Bulloo Kumar",
+            occupation: "Actor",
+            dob: "5 February 1986",
+            district: "Nawada",
+            img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAtnRcu4PHPQgiqJxR60fwzozDEYf76VJm3w&s",
+            description: "Actor from Bihar, known for his comical role as Madhav in  Panchayat.",
+            bestWork: "Panchayat (web series)",
+            imdb: "https://www.imdb.com/name/nm12872303/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 18,
+            name: "Ustad Bismillah Khan",
+            occupation: "Shehnai Maestro",
+            dob: "21 March 1916",
+            district: "Dumraon (Buxar)",
+            img: "https://akm-img-a-in.tosshub.com/indiatoday/bismillah-khan-647_032116095003.jpg",
+            description: "Legendary Shehnai player, Bharat Ratna awardee.",
+            bestWork: "Goonj Uthi Shehnai (music)",
+            imdb: "https://www.imdb.com/name/nm0451190/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 19,
+            name: "Sharda Sinha",
+            occupation: "Folk Singer",
+            dob: "1 October 1952",
+            district: "Samastipur",
+            img: "https://cf-img-a-in.tosshub.com/sites/visualstory/wp/2024/11/India-Today_Sharda-Sinha-YIM6937-1-1-scaled.jpg?size=*:900",
+            description: "Voice of Bihar's folk heritage, especially during Chhath.",
+            bestWork: "Maine Pyar Kiya (singer)",
+            imdb: "https://www.imdb.com/name/nm0788686/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 20,
+            name: "Maithili Thakur",
+            occupation: "Folk/Classic Singer",
+            dob: "25 July 2000",
+            district: "Madhubani",
+            img: "https://c.saavncdn.com/artists/Maithili_Thakur_002_20230227072619_500x500.jpg",
+            description: "Young prodigy promoting Indian classical and folk music.",
+            bestWork: "Primarily Music Albums",
+            imdb: "https://www.imdb.com/name/nm9859083/?ref_=ext_shr_lnk",
+        },
+        {
+            id: 21,
+            name: "Chandan Tiwari",
+            occupation: "Folk Singer",
+            dob: "15 August 1985",
+            district: "Patna",
+            img: "https://chandantiwari.in/wp-content/uploads/2024/11/PHOTO-2024-03-27-16-07-40-1.jpg",
+            description: "Folk singer reviving Bhojpuri and regional traditions.",
+            bestWork: "Live Performances & Albums",
+            imdb: "https://www.imdb.com/name/nm13792834/?ref_=ext_shr_lnk",
+        },
     ];
 
     const objectives = [
@@ -71,10 +299,24 @@ export default function AboutUs() {
             {/* Hero Section */}
             <div className="relative bg-[#a92b4e] py-24 px-4 text-center text-white overflow-hidden">
                 <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#a92b4e]/90"></div>
-                    <img src="/bannerImgee.png" alt="Bihar Banner" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#a92b4e]/90"></div>
+                    <div className="relative w-full h-[400px]">
+                        <img
+                            src="/aboutBanner.png"
+                            alt="Bihar Banner"
+                            className="w-full h-full object-cover object-[center_20%] z-50 grayscale"
+                        />
+
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-[#a92b4e]/90" />
+
+                        <div className="relative z-10">
+                            {/* content */}
+                        </div>
+                    </div>
+
+
+
                 </div>
+
                 <div className="relative z-10 max-w-5xl mx-auto">
                     <div className="py-10">
                         <h1 className="text-2xl md:text-4xl font-extrabold mb-6 tracking-tight leading-tight">
@@ -90,17 +332,37 @@ export default function AboutUs() {
             <div className="max-w-7xl mx-auto px-4 py-16 space-y-20">
 
                 {/* Legends Section */}
-                <div className="text-center space-y-8 px-10">
+                <div className="text-center space-y-8 px-4 md:px-10 overflow-hidden">
                     <h2 className="text-3xl md:text-4xl font-bold text-[#891737]">Legends from Bihar</h2>
                     <p className="text-gray-600 max-w-3xl mx-auto text-lg">
                         Bihar has been home to some of the most iconic personalities who have shaped Indian film history.
                     </p>
-                    <div className="flex flex-wrap justify-center gap-3">
-                        {legends.map((legend, idx) => (
-                            <span key={idx} className="px-4 py-2 bg-gray-100 text-[#a92b4e] rounded-full text-sm md:text-base font-medium hover:bg-[#a92b4e] hover:text-white transition-colors duration-300 shadow-sm border border-gray-200">
-                                {legend}
-                            </span>
-                        ))}
+
+                    <div className="relative w-full py-6">
+                        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-32 z-10  pointer-events-none"></div>
+                        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-32 z-10  pointer-events-none"></div>
+
+                        <motion.div
+                            className="flex space-x-8 md:space-x-12 w-max"
+                            animate={{ x: ["0%", "-50%"] }}
+                            transition={{
+                                duration: 60,
+                                ease: "linear",
+                                repeat: Infinity,
+                            }}
+                        >
+                            {[...legends, ...legends].map((legend, idx) => (
+                                <div key={idx} className="flex flex-col items-center space-y-3 w-32 md:w-40 flex-shrink-0 group cursor-pointer">
+                                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-gray-100 shadow-lg group-hover:border-[#a92b4e] group-hover:scale-105 transition-all duration-300">
+                                        <img src={legend.img} alt={legend.name} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="text-center">
+                                        <h3 className="text-sm md:text-base font-bold text-gray-800 group-hover:text-[#a92b4e] transition-colors">{legend.name}</h3>
+                                        <p className="text-xs text-gray-500 line-clamp-1">{legend.occupation}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </motion.div>
                     </div>
                 </div>
 

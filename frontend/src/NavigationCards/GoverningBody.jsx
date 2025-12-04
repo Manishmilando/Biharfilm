@@ -3,9 +3,9 @@ import "../App.css";
 
 const topImages = [
   {
-    src: "https://firebasestorage.googleapis.com/v0/b/gatishaktibihar.firebasestorage.app/o/biharfilm%2FDr.-Siddharth-Pic-1.jpeg?alt=media&token=94a2aea8-df19-467d-8a12-504c6cab5f98",
+    src: "https://firebasestorage.googleapis.com/v0/b/gatishaktibihar.firebasestorage.app/o/startup_bihar%2FOfficers%2FACS%20Industry.jpeg?alt=media&token=48a4ed7a-4f70-4113-b59b-de5ecb9aa6c3",
     alt: "Leader 1",
-    name: "Shri Dr S Siddharth",
+    name: "Mihir Kumar Singh,IAS",
     namee: "Director-cum-Chairman, BSFDFC",
     nameee: "(Development Commissioner, Goverment of Bihar)",
 
@@ -21,9 +21,9 @@ const topImages = [
 
 const boardMembers = [
   {
-    name: "Dr. S. Siddharth, IAS",
+    name: "Mihir Kumar Singh,IAS",
     role: "Development Commissioner, Govt. of Bihar, & Director-cum-Chairman, Bihar State Film Development and Finance Corporation Limited",
-    img: "https://www.grandtrunkroadinitiatives.org/wp-content/uploads/2023/02/Dr.-Siddharth-Pic-1.jpeg"
+    img: "https://firebasestorage.googleapis.com/v0/b/gatishaktibihar.firebasestorage.app/o/startup_bihar%2FOfficers%2FACS%20Industry.jpeg?alt=media&token=48a4ed7a-4f70-4113-b59b-de5ecb9aa6c3"
   },
   {
     name: "Shri Pranav Kumar (I.A.S.)",
@@ -31,9 +31,9 @@ const boardMembers = [
     img: "https://firebasestorage.googleapis.com/v0/b/gatishaktibihar.firebasestorage.app/o/biharfilm%2Fhome_secy.jpeg?alt=media&token=2f9b010e-0fed-4627-949d-a4779308a995"
   },
   {
-    name: "B Kartikey Dhanji, IAS",
+    name: "Sri Kundan Kumar, IAS",
     role: "Secretary, Department of Industries, Govt. of Bihar & Nominee Director, Bihar State Film Development and Finance Corporation Limited",
-    img: "https://pbs.twimg.com/media/G0k38jUb0AAtcUQ.jpg"
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkiPticRwETbwqYFSc-9QSq31XbbnW7pzyxw&s"
   },
   {
     name: "Anupam Kumar, IAS",
@@ -359,26 +359,257 @@ const nodalOfficers = [
 
 const districtOfficers = [
   {
-    district: "Patna",
-    officer: "Suresh Mehta",
-    designation: "District Art Officer",
-    contact: "0612-123456",
+    district: "Bhagalpur",
+    officer: "ANKIT RANJAN",
+    designation: "District Art & Culture Officer",
+    contact: "9431020456",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Araria",
+    officer: "SANIYAL KUMAR",
+    designation: "District Art & Culture Officer",
+    contact: "8434553767",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Aurangabad",
+    officer: "KUMAR PAPPU RAJ",
+    designation: "District Art & Culture Officer",
+    contact: "7488153690",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Begusarai",
+    officer: "SHYAM KUMAR SAHANI",
+    designation: "District Art & Culture Officer",
+    contact: "9582088060",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Bhojpur",
+    officer: "ANUPRIYA",
+    designation: "District Art & Culture Officer",
+    contact: "7004260621",
     img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
   },
   {
     district: "Gaya",
-    officer: "Ramesh Gupta",
-    designation: "District Art Officer",
-    contact: "0631-123456",
+    officer: "SURBHI BALA",
+    designation: "District Art & Culture Officer",
+    contact: "8252347604",
     img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
   },
   {
-    district: "Bhagalpur",
-    officer: "Sunita Devi",
-    designation: "District Art Officer",
-    contact: "0641-123456",
+    district: "Gopalganj",
+    officer: "CHANDRAMAULI KUMAR",
+    designation: "District Art & Culture Officer",
+    contact: "7982579634",
     img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
   },
+  {
+    district: "Katihar",
+    officer: "KUMARI RINA GUPTA",
+    designation: "District Art & Culture Officer",
+    contact: "7906809506",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Sitamarhi",
+    officer: "GHANSHYAM KUMAR",
+    designation: "District Art & Culture Officer",
+    contact: "9123437298",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Kishanganj",
+    officer: "PRAHALAD KUMAR",
+    designation: "District Art & Culture Officer",
+    contact: "8409401938",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Madhepura",
+    officer: "AMRAPALI KUMARI",
+    designation: "District Art & Culture Officer",
+    contact: "9334819118",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Munger",
+    officer: "SUKANYA",
+    designation: "District Art & Culture Officer",
+    contact: "7584953429",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Nawada",
+    officer: "PRATIBHA KUMARI",
+    designation: "District Art & Culture Officer",
+    contact: "9123168934",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Patna",
+    officer: "KIRTY AALOK",
+    designation: "District Art & Culture Officer",
+    contact: "9576656757",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Rohtas",
+    officer: "PANKAJ KUMAR",
+    designation: "District Art & Culture Officer",
+    contact: "8709664245",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Samastipur",
+    officer: "JUHI KUMARI",
+    designation: "District Art & Culture Officer",
+    contact: "8448369635",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Saran",
+    officer: "VIBHA BHARTI",
+    designation: "District Art & Culture Officer",
+    contact: "9031291904",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Sheikhpura",
+    officer: "SUJEET KUMAR SUMAN",
+    designation: "District Art & Culture Officer",
+    contact: "9110090570",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Vaishali",
+    officer: "SHALINI SHARMA",
+    designation: "District Art & Culture Officer",
+    contact: "9504437983",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "West Champaran",
+    officer: "RAKESH KUMAR",
+    designation: "District Art & Culture Officer",
+    contact: "8972595783",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Muzaffarpur",
+    officer: "SUSHMITA KUMARI",
+    designation: "District Art & Culture Officer",
+    contact: "7091172375",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Jehanabad",
+    officer: "CHANDANI KUMARI",
+    designation: "District Art & Culture Officer",
+    contact: "9142416449",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Lakhisarai",
+    officer: "MRINAL RANJAN",
+    designation: "District Art & Culture Officer",
+    contact: "9852836524",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Purnea",
+    officer: "PANKAJ PATEL",
+    designation: "District Art & Culture Officer",
+    contact: "7985487243",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Siwan",
+    officer: "RICHA VERMA",
+    designation: "District Art & Culture Officer",
+    contact: "9450100910",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Jamui",
+    officer: "VIKESH KUMAR",
+    designation: "District Art & Culture Officer",
+    contact: "9973720710",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Banka",
+    officer: "PRITY KUMARI",
+    designation: "District Art & Culture Officer",
+    contact: "7979911553",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Arwal",
+    officer: "SUNAINA KUMARI",
+    designation: "District Art & Culture Officer",
+    contact: "8271163637",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Buxar",
+    officer: "PRATIMA KUMARI",
+    designation: "District Art & Culture Officer",
+    contact: "7970629396",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Supaul",
+    officer: "TARKESHWAR PATEL",
+    designation: "District Art & Culture Officer",
+    contact: "8092281780",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Kaimur",
+    officer: "SUMAN SAURAV",
+    designation: "District Art & Culture Officer",
+    contact: "7677515231",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Darbhanga",
+    officer: "CHANDAN KUMAR",
+    designation: "District Art & Culture Officer",
+    contact: "9315822497",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Nalanda",
+    officer: "SHALINI PRAKASH",
+    designation: "District Art & Culture Officer",
+    contact: "8982773558",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Madhubani",
+    officer: "NITISH KUMAR",
+    designation: "District Art & Culture Officer",
+    contact: "9958601845",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "Saharsa",
+    officer: "SNEHA KUMARI",
+    designation: "District Art & Culture Officer",
+    contact: "7549717814",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  },
+  {
+    district: "East Champaran",
+    officer: "FAHAD SIDDIQUI",
+    designation: "District Art & Culture Officer",
+    contact: "9660688737",
+    img: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+  }
 ];
 
 const MemberRow = ({ img, name, role, description }) => (

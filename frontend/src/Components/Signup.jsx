@@ -45,7 +45,7 @@ const SignupPage = () => {
 
     try {
       setLoading(true);
-      
+
       const res = await axios.post(
         "https://biharfilmbackend-production.up.railway.app/api/auth/signup",
         {
@@ -62,7 +62,7 @@ const SignupPage = () => {
         localStorage.setItem("userId", res.data.user.id);  // ✅ Store userId
         localStorage.setItem("userData", JSON.stringify(res.data.user));
         alert("Signup successful!");
-        
+
         // ✅ NEW: Redirect based on role
         if (selectedRole.toLowerCase() === "vendor") {
           navigate("/vendor-dashboard");
@@ -115,11 +115,10 @@ const SignupPage = () => {
                   key={role}
                   type="button"
                   onClick={() => setSelectedRole(role)}
-                  className={`px-5 py-2 rounded-full border text-sm font-medium transition ${
-                    selectedRole === role
+                  className={`px-5 py-2 rounded-full border text-sm font-medium transition ${selectedRole === role
                       ? "border-[#a92b43] bg-[#a92b43] text-white"
                       : "border-gray-300 text-gray-600 hover:border-[#a92b43]"
-                  }`}
+                    }`}
                 >
                   {role}
                 </button>
