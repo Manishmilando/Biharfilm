@@ -7,7 +7,7 @@ import {
     Filter, ArrowUpDown
 } from "lucide-react";
 import AddVendorForm from "./AddVendorForm";
-import { DndContext, DragOverlay, closestCorners, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, DragOverlay, closestCorners, PointerSensor, useSensor, useSensors, useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -111,7 +111,11 @@ const SortableVendorCard = ({ vendor, onClick }) => {
 };
 
 // Clean Kanban Column
-const KanbanColumn = ({ title, vendors, icon, count, color, bgColor, description }) => {
+const KanbanColumn = ({ title, vendors, icon, count, color, bgColor, description, id }) => {
+    const { setNodeRef } = useDroppable({
+        id: id,
+    });
+
     return (
         <div className="flex-1 min-w-[340px] max-w-[420px]">
             <div className="bg-gray-50 rounded-xl border border-gray-100 h-full flex flex-col">
@@ -134,7 +138,7 @@ const KanbanColumn = ({ title, vendors, icon, count, color, bgColor, description
                 </div>
 
                 {/* Cards Container */}
-                <div className="flex-1 p-4 space-y-3 overflow-y-auto">
+                <div ref={setNodeRef} className="flex-1 p-4 space-y-3 overflow-y-auto">
                     <SortableContext items={vendors.map(v => v.id)} strategy={verticalListSortingStrategy}>
                         {vendors.map((vendor) => (
                             <SortableVendorCard key={vendor.id} vendor={vendor} onClick={() => { }} />
@@ -173,7 +177,7 @@ const VendorDirectory = ({ searchQuery }) => {
 
     const fetchVendors = async () => {
         try {
-            const res = await axios.get("https://biharfilmbackend-production.up.railway.app/api/vendor/getvendors");
+            const res = await axios.get("http://localhost:3000/api/vendor/getvendors");
             setVendors(res.data.data || []);
         } catch (err) {
             console.error("Failed to fetch vendors:", err);
@@ -218,33 +222,51 @@ const VendorDirectory = ({ searchQuery }) => {
         }
 
         const activeVendor = vendors.find(v => v.id === active.id);
-        const overVendor = vendors.find(v => v.id === over.id);
 
         if (!activeVendor) {
             setActiveId(null);
             return;
         }
 
-        const shouldVerify = verifiedVendors.some(v => v.id === over.id) ||
-            (overVendor && overVendor.isVerified);
+        // Check if dropped over a column container or over another vendor
+        let targetStatus = null;
 
-        const shouldUnverify = nonVerifiedVendors.some(v => v.id === over.id) ||
-            (overVendor && !overVendor.isVerified);
+        // If dropped over a droppable container (column)
+        if (over.id === 'pending' || over.id === 'verified') {
+            targetStatus = over.id === 'verified';
+        } else {
+            // If dropped over another vendor, find that vendor's status
+            const overVendor = vendors.find(v => v.id === over.id);
+            if (overVendor) {
+                targetStatus = overVendor.isVerified;
+            }
+        }
 
-        if ((shouldVerify && !activeVendor.isVerified) || (shouldUnverify && activeVendor.isVerified)) {
-            const newVerificationStatus = shouldVerify;
+        // If status needs to change
+        if (targetStatus !== null && targetStatus !== activeVendor.isVerified) {
+            // Optimistically update UI first
+            const previousVendors = [...vendors];
+            setVendors(vendors.map(v =>
+                v.id === active.id ? { ...v, isVerified: targetStatus } : v
+            ));
 
             try {
-                await axios.patch(
-                    `https://biharfilmbackend-production.up.railway.app/api/vendor/${active.id}`,
-                    { isVerified: newVerificationStatus }
-                );
+                const endpoint = targetStatus
+                    ? `http://localhost:3000/api/vendor/${active.id}/verify`
+                    : `http://localhost:3000/api/vendor/${active.id}/unverify`;
 
-                setVendors(vendors.map(v =>
-                    v.id === active.id ? { ...v, isVerified: newVerificationStatus } : v
-                ));
+                const token = localStorage.getItem('authToken');
+                await axios.patch(endpoint, {}, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                console.log(`✅ Vendor ${active.id} verification status updated to ${targetStatus}`);
             } catch (err) {
                 console.error("Failed to update vendor:", err);
+                // Revert on error
+                setVendors(previousVendors);
             }
         }
 
@@ -347,6 +369,7 @@ const VendorDirectory = ({ searchQuery }) => {
                 >
                     <div className="flex gap-5 overflow-x-auto pb-4">
                         <KanbanColumn
+                            id="pending"
                             title="Pending Review"
                             description="Awaiting verification"
                             vendors={nonVerifiedVendors}
@@ -356,6 +379,7 @@ const VendorDirectory = ({ searchQuery }) => {
                             bgColor="bg-amber-50"
                         />
                         <KanbanColumn
+                            id="verified"
                             title="Verified"
                             description="Approved vendors"
                             vendors={verifiedVendors}

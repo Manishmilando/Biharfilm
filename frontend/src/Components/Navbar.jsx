@@ -326,21 +326,12 @@ const Navbar = () => {
                   </li>
                   <li
                     onClick={() => {
-                      navigate("/document/film-policy");
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
-                  >
-                    Film Policy
-                  </li>
-                  <li
-                    onClick={() => {
                       navigate("/document/bihar-baiskop");
                       setIsMobileMenuOpen(false);
                     }}
                     className="px-4 py-2 hover:bg-gray-200 hover:text-red-600"
                   >
-                    Bihar Baiskop
+                    Bihar Baiscope
                   </li>
                   <li
                     onClick={() => {

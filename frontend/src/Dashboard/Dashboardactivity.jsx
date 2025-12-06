@@ -172,7 +172,7 @@ function Dashboardactivity({ searchQuery }) {
         }
 
         const response = await axios.get(
-          "https://biharfilmbackend-production.up.railway.app/api/noc/getAllNocForms",
+          "http://localhost:3000/api/noc/getAllNocForms",
           {
             headers: {
               'Authorization': `Bearer ${token}`
@@ -228,7 +228,7 @@ function Dashboardactivity({ searchQuery }) {
     try {
       const token = localStorage.getItem('authToken');
       const response = await axios.put(
-        `https://biharfilmbackend-production.up.railway.app/api/noc/reject/${formData.id}`,
+        `http://localhost:3000/api/noc/reject/${formData.id}`,
         { remarks },
         {
           headers: {
@@ -761,7 +761,7 @@ function Dashboardactivity({ searchQuery }) {
                     const departmentsPayload = selectedDepartments;
 
                     const response = await axios.put(
-                      `https://biharfilmbackend-production.up.railway.app/api/noc/forward/${selectedRow.id}`,
+                      `http://localhost:3000/api/noc/forward/${selectedRow.id}`,
                       {
                         districts: districtsPayload,
                         departments: departmentsPayload,

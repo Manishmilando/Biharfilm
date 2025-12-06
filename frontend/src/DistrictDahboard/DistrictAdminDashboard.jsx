@@ -119,7 +119,7 @@ function DistrictAdminDashboard() {
         const bearerToken = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
 
         const userResponse = await axios.get(
-          "https://biharfilmbackend-production.up.railway.app/api/auth/profile",
+          "http://localhost:3000/api/auth/profile",
           {
             headers: {
               'Authorization': bearerToken,
@@ -177,7 +177,7 @@ function DistrictAdminDashboard() {
         }
 
         const formsResponse = await axios.get(
-          `https://biharfilmbackend-production.up.railway.app/api/noc/district/${districtId}/forms`,
+          `http://localhost:3000/api/noc/district/${districtId}/forms`,
           {
             headers: {
               'Authorization': `Bearer ${token}`
@@ -228,7 +228,7 @@ function DistrictAdminDashboard() {
       });
 
       const response = await axios.put(
-        `https://biharfilmbackend-production.up.railway.app/api/noc/districtAction/${formId}`,
+        `http://localhost:3000/api/noc/districtAction/${formId}`,
         {
           action: 'approve',
           remarks: 'Approved by district admin'
@@ -310,7 +310,7 @@ function DistrictAdminDashboard() {
 
 
       const response = await axios.put(
-        `https://biharfilmbackend-production.up.railway.app/api/noc/districtAction/${formId}`,
+        `http://localhost:3000/api/noc/districtAction/${formId}`,
         {
           action: 'reject',
           remarks: actionRemarks
@@ -430,8 +430,8 @@ function DistrictAdminDashboard() {
       {/* Notification Toast */}
       {notification.show && (
         <div className={`fixed top-4 right-4 z-50 max-w-md rounded-lg shadow-lg p-4 flex items-center gap-3 animate-slide-in ${notification.type === 'success'
-            ? 'bg-green-50 border border-green-200'
-            : 'bg-red-50 border border-red-200'
+          ? 'bg-green-50 border border-green-200'
+          : 'bg-red-50 border border-red-200'
           }`}>
           {notification.type === 'success' ? (
             <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
@@ -690,10 +690,10 @@ function DistrictAdminDashboard() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${pendingDays > 30
-                              ? 'bg-red-100 text-red-800'
-                              : pendingDays > 15
-                                ? 'bg-yellow-100 text-yellow-800'
-                                : 'bg-green-100 text-green-800'
+                            ? 'bg-red-100 text-red-800'
+                            : pendingDays > 15
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-green-100 text-green-800'
                             }`}>
                             <Clock className="h-3 w-3 mr-1" />
                             {pendingDays} days
@@ -719,8 +719,8 @@ function DistrictAdminDashboard() {
                             </div>
                           ) : (
                             <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${form.status === 'approved'
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-red-100 text-red-800'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
                               }`}>
                               {form.status === 'approved' && <CheckCircle className="h-3 w-3 mr-1" />}
                               {form.status === 'rejected' && <XCircle className="h-3 w-3 mr-1" />}

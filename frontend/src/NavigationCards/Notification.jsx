@@ -20,7 +20,7 @@ const Notifications = () => {
   const fetchNotifications = async () => {
     try {
       const { data } = await axios.get(
-        "https://biharfilmbackend-production.up.railway.app/api/notification/notifications"
+        "http://localhost:3000/api/notification/notifications"
       );
       setNotifications(data.notifications || []);
     } catch (error) {

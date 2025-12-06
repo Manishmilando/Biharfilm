@@ -47,7 +47,7 @@ const SignupPage = () => {
       setLoading(true);
 
       const res = await axios.post(
-        "https://biharfilmbackend-production.up.railway.app/api/auth/signup",
+        "http://localhost:3000/api/auth/signup",
         {
           name,  // ✅ NEW: Include name
           email,
@@ -116,8 +116,8 @@ const SignupPage = () => {
                   type="button"
                   onClick={() => setSelectedRole(role)}
                   className={`px-5 py-2 rounded-full border text-sm font-medium transition ${selectedRole === role
-                      ? "border-[#a92b43] bg-[#a92b43] text-white"
-                      : "border-gray-300 text-gray-600 hover:border-[#a92b43]"
+                    ? "border-[#a92b43] bg-[#a92b43] text-white"
+                    : "border-gray-300 text-gray-600 hover:border-[#a92b43]"
                     }`}
                 >
                   {role}

@@ -282,7 +282,7 @@ const ProducerRegistration = () => {
       });
 
       const response = await axios.post(
-        "https://biharfilmbackend-production.up.railway.app/api/producer/register",
+        "http://localhost:3000/api/producer/register",
         formToSubmit,
         {
           headers: {

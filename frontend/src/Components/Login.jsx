@@ -21,7 +21,7 @@ const LoginPage = () => {
 
     try {
       const res = await axios.post(
-        "https://biharfilmbackend-production.up.railway.app/api/auth/login",
+        "http://localhost:3000/api/auth/login",
         { email, password }
       );
 

@@ -103,7 +103,7 @@ function AddNotification({ onClose, editData }) {
 
     try {
       const response = await fetch(
-        "https://biharfilmbackend-production.up.railway.app/api/notification/createNotification",
+        "http://localhost:3000/api/notification/createNotification",
         {
           method: "POST",
           body: formData,
@@ -163,7 +163,7 @@ function AddNotification({ onClose, editData }) {
 
     try {
       const response = await fetch(
-        `https://biharfilmbackend-production.up.railway.app/api/notification/updatedNotification/${editData.id}`,
+        `http://localhost:3000/api/notification/updatedNotification/${editData.id}`,
         {
           method: "PUT",
           body: formData,

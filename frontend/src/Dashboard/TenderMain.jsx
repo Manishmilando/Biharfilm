@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FileText, PlusCircle, Trash2, Edit, AlertCircle } from "lucide-react";
 import { RiContractFill } from "react-icons/ri";
+import { IoEyeOutline } from "react-icons/io5";
 import AddTender from "./AddTender";
 import axios from "axios";
 
@@ -13,7 +14,7 @@ const TenderMain = ({ searchQuery }) => {
   const fetchTenders = async () => {
     try {
       const { data } = await axios.get(
-        "https://biharfilmbackend-production.up.railway.app/api/tender/tenders"
+        "http://localhost:3000/api/tender/tenders"
       );
       setTenders(data.tenders || []);
     } catch (error) {
@@ -40,7 +41,7 @@ const TenderMain = ({ searchQuery }) => {
     if (!window.confirm("Are you sure you want to delete this tender?")) return;
     try {
       await axios.delete(
-        `https://biharfilmbackend-production.up.railway.app/api/tender/tenders/${id}`
+        `http://localhost:3000/api/tender/tenders/${id}`
       );
       setTenders(tenders.filter((t) => t.id !== id));
     } catch (error) {
@@ -183,16 +184,10 @@ const TenderMain = ({ searchQuery }) => {
                           className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-gray-100 transition-colors"
                           title="Edit"
                         >
-                          <Edit className="w-4 h-4" />
+                          <IoEyeOutline className="w-4 h-4" />
                         </button>
 
-                        <button
-                          onClick={() => deleteTender(item.id)}
-                          className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+
                       </div>
                     </td>
                   </tr>

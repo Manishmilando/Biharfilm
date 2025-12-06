@@ -91,8 +91,8 @@ const VendorDashboard = () => {
     autoClose: false
   });
 
-  const API_BASE_URL = "https://biharfilmbackend-production.up.railway.app/api/vendor";
-  const API_BASE_URL_PRODUCTS = "https://biharfilmbackend-production.up.railway.app/api/vendorproduct";
+  const API_BASE_URL = "http://localhost:3000/api/vendor";
+  const API_BASE_URL_PRODUCTS = "http://localhost:3000/api/vendorproduct";
   const token = localStorage.getItem("authToken");
 
   // ✅ Alert helper function

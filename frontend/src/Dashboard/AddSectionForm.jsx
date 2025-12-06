@@ -32,7 +32,7 @@ const AddSectionForm = ({ onClose, onProfileCreated, artist, isCreatingProfile }
     link: "",
   });
 
-  const API_BASE_URL = "https://biharfilmbackend-production.up.railway.app/api/artist";
+  const API_BASE_URL = "http://localhost:3000/api/artist";
   const token = localStorage.getItem("authToken");
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 

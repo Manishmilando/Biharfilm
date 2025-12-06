@@ -6,21 +6,27 @@ import { IoIosLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import ProducerRegistration from "./ProducerRegistration";
 import ApplyNOCForm from "../NavigationCards/ShootingPermissionFoam";
-import ArtistRegistrationForm from "../Dashboard/AddArtistForm";
-import VendorRegistrationForm from "../Dashboard/VendorForm";
+import ArtistRegistrationForm from "./AddArtistForm";
+import VendorRegistrationForm from "./VendorForm";
 import ArtistProfile from "./ArtistProfile";
 import FilmmakerOverview from "./FilmmakerOverview";
 import VendorDashboard from "./VendorDashboard";
 import UserProfile from "./UserProfile";
 import AlertBox from "../Components/AlertBox";
+import { Lock } from "lucide-react";
+
+import axios from "axios";
 
 const UserDashboard = () => {
   const [userRole, setUserRole] = useState(null);
   const [userName, setUserName] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [userEmail, setUserEmail] = useState("");
+  const [producerRegistrationStatus, setProducerRegistrationStatus] = useState(false);
+
   const [activeSection, setActiveSection] = useState("Overview");
   const [nocList, setNocList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isProducerRegistered, setIsProducerRegistered] = useState(false);
   const navigate = useNavigate();
 
   // Alert state
@@ -56,73 +62,126 @@ const UserDashboard = () => {
   };
 
   useEffect(() => {
+    // Initialize from localStorage first to avoid blank screen
     const userDataStr = localStorage.getItem("user");
-    const token = localStorage.getItem("authToken");
-
-    console.log('UserDashboard - Token:', token ? 'Present' : 'Missing');
-    console.log('UserDashboard - User Data:', userDataStr);
-
-    if (!token || !userDataStr) {
-      console.error('No auth data found in UserDashboard');
-
-      showAlert({
-        type: "error",
-        title: "Authentication Required",
-        message: "Please login to access your dashboard.",
-        confirmText: "Login",
-        onConfirm: () => {
-          navigate("/login", { replace: true });
+    if (userDataStr) {
+      try {
+        const userData = JSON.parse(userDataStr);
+        if (userData) {
+          setUserId(userData.id);
+          setUserName(userData.name || userData.email);
+          setUserEmail(userData.email);
+          if (userData.role) {
+            setUserRole(userData.role.toLowerCase());
+          }
         }
-      });
-      return;
+      } catch (e) {
+        console.error("Error parsing initial local storage user data", e);
+      }
     }
 
-    try {
-      const userData = JSON.parse(userDataStr);
-      console.log('UserDashboard - Parsed User:', userData);
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem("authToken");
 
-      if (userData?.role) {
-        setUserRole(userData.role);
-        setUserName(userData.name || userData.email);
-        console.log('User role set to:', userData.role);
-      } else {
-        console.error('User data missing role field:', userData);
-
-        showAlert({
-          type: "error",
-          title: "Invalid User Data",
-          message: "User role information is missing. Please login again.",
-          confirmText: "Login",
-          onConfirm: () => {
-            navigate("/login", { replace: true });
-          }
-        });
+      if (!token) {
+        // If no token, we can't fetch profile. 
+        // If we also didn't find user data in local storage, show alert.
+        if (!userDataStr) {
+          showAlert({
+            type: "error",
+            title: "Authentication Required",
+            message: "Please login to access your dashboard.",
+            confirmText: "Login",
+            onConfirm: () => {
+              navigate("/login", { replace: true });
+            }
+          });
+        }
+        setLoading(false);
         return;
       }
 
-      const savedNOCs = JSON.parse(localStorage.getItem("nocApplications")) || [];
-      setNocList(savedNOCs);
+      try {
+        const response = await axios.get("http://localhost:3000/api/auth/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      // Check if producer registration is completed
-      const producerRegStatus = localStorage.getItem("producerRegistrationCompleted");
-      setIsProducerRegistered(producerRegStatus === "true");
+        console.log("Profile API Response:", response.data);
+        const apiData = response.data.user || response.data;
+        console.log("👉 Parsed API Data:", apiData);
+        console.log("👉 Producer Registration Status:", apiData.producerRegistrations);
 
-    } catch (error) {
-      console.error('Failed to parse user data:', error);
+        const { id, name, email, role, producerRegistrations } = apiData;
 
-      showAlert({
-        type: "error",
-        title: "Error Loading Profile",
-        message: "Failed to load your profile data. Please login again.",
-        confirmText: "Login",
-        onConfirm: () => {
-          navigate("/login", { replace: true });
+        if (id) setUserId(id);
+        if (name) setUserName(name);
+        if (email) setUserEmail(email);
+
+        // Safely handle role
+        if (role) {
+          setUserRole(role.toLowerCase());
         }
-      });
-      return;
-    } finally {
-      setLoading(false);
-    }
+
+        // Handle boolean or array value
+        if (producerRegistrations !== undefined) {
+          // If it's an array (like [] or [{...}]), check if it has items
+          if (Array.isArray(producerRegistrations)) {
+            setProducerRegistrationStatus(producerRegistrations.length > 0);
+          } else {
+            // If it's a boolean or other value
+            setProducerRegistrationStatus(!!producerRegistrations);
+          }
+        }
+
+        // Update localStorage with merged data
+        const updatedUser = {
+          id: id || userId,
+          name: name || userName,
+          email: email || userEmail,
+          role: role ? role.toLowerCase() : userRole
+        };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+
+        const savedNOCs = JSON.parse(localStorage.getItem("nocApplications")) || [];
+        setNocList(savedNOCs);
+
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+        // We don't necessarily want to block the user if the API fails but we have localStorage data
+        // Only show critical error if we have NO user data
+        if (!userRole && !userDataStr) {
+          if (error.response && error.response.status === 401) {
+            showAlert({
+              type: "error",
+              title: "Session Expired",
+              message: "Your session has expired. Please login again.",
+              confirmText: "Login",
+              onConfirm: () => {
+                localStorage.removeItem("authToken");
+                localStorage.removeItem("user");
+                navigate("/login", { replace: true });
+              }
+            });
+          } else {
+            showAlert({
+              type: "error",
+              title: "Error Loading Profile",
+              message: "Failed to load your profile data. Please try again.",
+              confirmText: "Retry",
+              onConfirm: () => {
+                window.location.reload();
+              }
+            });
+          }
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
   }, [navigate]);
 
   const handleLogout = () => {
@@ -185,6 +244,8 @@ const UserDashboard = () => {
   };
 
   const renderSection = () => {
+    console.log("Rendering Section - Active:", activeSection, "Role:", userRole);
+
     if (userRole === "artist" && activeSection === "Profile") {
       return <ArtistProfile />;
     }
@@ -213,7 +274,13 @@ const UserDashboard = () => {
       return <VendorRegistrationForm />;
     }
 
-    return <p className="text-gray-600">Invalid section</p>;
+    return (
+      <div className="p-4">
+        <p className="text-red-500 font-bold">Invalid section</p>
+        <p className="text-sm text-gray-500">Active Section: {activeSection}</p>
+        <p className="text-sm text-gray-500">User Role: {userRole}</p>
+      </div>
+    );
   };
 
   if (loading) {
@@ -227,9 +294,9 @@ const UserDashboard = () => {
     );
   }
 
-  if (!userRole) {
-    return null;
-  }
+  // if (!userRole) {
+  //   return null;
+  // }
 
   return (
     <div className="flex h-screen bg-white font-sans">
@@ -249,34 +316,45 @@ const UserDashboard = () => {
         {/* Navigation */}
         <nav className="flex-1 p-4 overflow-y-auto">
           <ul className="space-y-1">
-            {(sidebarItems[userRole] || []).map((item, idx) => (
-              <li key={idx}>
-                <button
-                  className={`w-full px-4 py-2.5 flex items-center text-sm font-medium rounded-lg transition-all duration-200 ${item === activeSection
+            {(sidebarItems[userRole] || []).map((item, idx) => {
+              const isLocked = item === "Apply NOC" && !producerRegistrationStatus;
+
+              return (
+                <li key={idx}>
+                  <button
+                    className={`w-full px-4 py-2.5 flex items-center justify-between text-sm font-medium rounded-lg transition-all duration-200 ${item === activeSection
                       ? "text-[#891737] bg-[#891737]/5 border border-[#891737]/10"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                    }`}
-                  onClick={() => {
-                    if (item === "Apply NOC" && !isProducerRegistered) {
-                      showAlert({
-                        type: "warning",
-                        title: "Registration Required",
-                        message: "Please fill the Producer Registration Form first before applying for NOC.",
-                        confirmText: "OK"
-                      });
-                      return;
-                    }
-                    if (item === "Artist Registration") {
-                      handleArtistClick();
-                    } else {
-                      setActiveSection(item);
-                    }
-                  }}
-                >
-                  {item}
-                </button>
-              </li>
-            ))}
+                      : isLocked
+                        ? "text-gray-400 cursor-not-allowed hover:bg-transparent"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                      }`}
+                    onClick={() => {
+                      if (isLocked) {
+                        showAlert({
+                          type: "warning",
+                          title: "Registration Required",
+                          message: "Please complete the Producer Registration form before applying for NOC.",
+                          confirmText: "Go to Registration",
+                          onConfirm: () => setActiveSection("Producer Registration"),
+                          showCancel: true,
+                          cancelText: "Close"
+                        });
+                        return;
+                      }
+
+                      if (item === "Artist Registration") {
+                        handleArtistClick();
+                      } else {
+                        setActiveSection(item);
+                      }
+                    }}
+                  >
+                    <span>{item}</span>
+                    {isLocked && <Lock className="w-4 h-4" />}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 

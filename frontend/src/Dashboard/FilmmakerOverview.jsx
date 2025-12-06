@@ -34,7 +34,7 @@ const FilmmakerOverview = ({ nocList: propNocList = [] }) => {
         }
 
         const response = await axios.get(
-          "https://biharfilmbackend-production.up.railway.app/api/noc/my-forms",
+          "http://localhost:3000/api/noc/my-forms",
           {
             headers: {
               Authorization: `Bearer ${token}`,

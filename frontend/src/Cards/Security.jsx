@@ -10,7 +10,7 @@ const Security = () => {
   useEffect(() => {
     const fetchProviders = async () => {
       try {
-        const response = await fetch("https://biharfilmbackend-production.up.railway.app/api/vendor/securityvendors");
+        const response = await fetch("http://localhost:3000/api/vendor/securityvendors");
         const data = await response.json();
         if (data.success) {
           setProviders(data.data);

@@ -130,7 +130,7 @@ const VendorDashboard = () => {
     setLoading(true);
     setError(null);
 
-    const result = await makeApiCall(`https://biharfilmbackend-production.up.railway.app/api/vendor/vendors/${vendorId}`);
+    const result = await makeApiCall(`http://localhost:3000/api/vendor/vendors/${vendorId}`);
 
     if (result.success) {
       setVendorData(prev => ({ ...prev, ...result.data, products: result.data.products || [] }));
@@ -215,7 +215,7 @@ const VendorDashboard = () => {
 
     console.log('Submitting product data:', requestData);
 
-    const result = await makeApiCall('https://biharfilmbackend-production.up.railway.app/api/vendor/addProduct', {
+    const result = await makeApiCall('http://localhost:3000/api/vendor/addProduct', {
       method: 'POST',
       body: JSON.stringify({ data: requestData })
     });
@@ -249,13 +249,13 @@ const VendorDashboard = () => {
 
     if (vendorData.id) {
       // Update existing vendor
-      apiUrl = `https://biharfilmbackend-production.up.railway.app/api/vendor/updateVendorById/${vendorData.id}`;
+      apiUrl = `http://localhost:3000/api/vendor/updateVendorById/${vendorData.id}`;
       method = 'PUT';
       requestData = { data: profileFormData };
     } else {
       // Create new vendor - try different endpoint patterns
       // First try the original endpoint
-      apiUrl = 'https://biharfilmbackend-production.up.railway.app/api/vendor/addVendor';
+      apiUrl = 'http://localhost:3000/api/vendor/addVendor';
       method = 'POST';
       requestData = {
         ...profileFormData,
@@ -277,7 +277,7 @@ const VendorDashboard = () => {
       console.log('Trying alternative endpoint...');
 
       // Try without /addVendor
-      apiUrl = 'https://biharfilmbackend-production.up.railway.app/api/vendor';
+      apiUrl = 'http://localhost:3000/api/vendor';
       result = await makeApiCall(apiUrl, {
         method: 'POST',
         body: JSON.stringify(requestData)
@@ -286,7 +286,7 @@ const VendorDashboard = () => {
       // If still failing, try with different data structure
       if (!result.success && result.error.includes('404')) {
         console.log('Trying with data wrapper...');
-        apiUrl = 'https://biharfilmbackend-production.up.railway.app/api/vendor';
+        apiUrl = 'http://localhost:3000/api/vendor';
         result = await makeApiCall(apiUrl, {
           method: 'POST',
           body: JSON.stringify({ data: profileFormData })
@@ -311,12 +311,12 @@ const VendorDashboard = () => {
     console.log('Testing API endpoints...');
 
     const endpoints = [
-      'https://biharfilmbackend-production.up.railway.app/api/vendor/vendors/1',
-      'https://biharfilmbackend-production.up.railway.app/api/vendor/addVendor',
-      'https://biharfilmbackend-production.up.railway.app/api/vendor',
-      'https://biharfilmbackend-production.up.railway.app/api/vendor/addProduct',
-      'https://biharfilmbackend-production.up.railway.app/health', // Common health check endpoint
-      'https://biharfilmbackend-production.up.railway.app/', // Base URL
+      'http://localhost:3000/api/vendor/vendors/1',
+      'http://localhost:3000/api/vendor/addVendor',
+      'http://localhost:3000/api/vendor',
+      'http://localhost:3000/api/vendor/addProduct',
+      'http://localhost:3000/health', // Common health check endpoint
+      'http://localhost:3000/', // Base URL
     ];
 
     for (const endpoint of endpoints) {
@@ -387,7 +387,7 @@ const VendorDashboard = () => {
           <h3 className="font-semibold text-red-800 mb-2">⚠️ API Debug Information</h3>
           <div className="text-sm text-red-700 space-y-1">
             <p><strong>Issue:</strong> HTTP 404 - API endpoint not found</p>
-            <p><strong>Backend URL:</strong> https://biharfilmbackend-production.up.railway.app</p>
+            <p><strong>Backend URL:</strong> http://localhost:3000</p>
             <p><strong>Expected Endpoints:</strong></p>
             <ul className="list-disc list-inside ml-4 text-xs">
               <li>POST /api/vendor/addVendor (for creating vendor)</li>
@@ -403,7 +403,7 @@ const VendorDashboard = () => {
                 Test All Endpoints
               </button>
               <button
-                onClick={() => window.open('https://biharfilmbackend-production.up.railway.app', '_blank')}
+                onClick={() => window.open('http://localhost:3000', '_blank')}
                 className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
               >
                 Check Backend

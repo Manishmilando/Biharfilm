@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Upload, FileText, X, Loader, Check, AlertCircle } from "lucide-react";
+import { Upload, FileText, X, Loader, Check, AlertCircle, Trash2 } from "lucide-react";
 import AlertBox from "../Components/AlertBox";
 
 function AddTender({ tenderData, onClose }) {
@@ -17,7 +17,9 @@ function AddTender({ tenderData, onClose }) {
     type: "info",
     title: "",
     message: "",
-    autoClose: false
+    autoClose: false,
+    showCancel: false,
+    onConfirm: null
   });
 
   // Load previous data when tenderData is available
@@ -110,7 +112,7 @@ function AddTender({ tenderData, onClose }) {
 
     try {
       const response = await fetch(
-        "https://biharfilmbackend-production.up.railway.app/api/tender/createTender",
+        "http://localhost:3000/api/tender/createTender",
         {
           method: "POST",
           body: formData,
@@ -177,7 +179,7 @@ function AddTender({ tenderData, onClose }) {
 
     try {
       const response = await fetch(
-        `https://biharfilmbackend-production.up.railway.app/api/tender/updateTender/${tenderData.id}`,
+        `http://localhost:3000/api/tender/updateTender/${tenderData.id}`,
         {
           method: "PUT",
           body: formData,
@@ -220,6 +222,64 @@ function AddTender({ tenderData, onClose }) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDeleteTender = async () => {
+    showAlert({
+      type: "warning",
+      title: "Confirm Delete",
+      message: "Are you sure you want to delete this tender? This action cannot be undone.",
+      confirmText: "Yes, Delete",
+      cancelText: "Cancel",
+      showCancel: true,
+      onConfirm: async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(
+            `http://localhost:3000/api/tender/deletetender/${tenderData.id}`,
+            {
+              method: "DELETE",
+              credentials: 'include'
+            }
+          );
+
+          let result;
+          const contentType = response.headers.get("content-type");
+          if (contentType && contentType.indexOf("application/json") !== -1) {
+            result = await response.json();
+          } else {
+            const text = await response.text();
+            console.error("Non-JSON response:", text);
+            throw new Error(`Server returned ${response.status} ${response.statusText}`);
+          }
+
+          if (response.ok) {
+            showAlert({
+              type: "success",
+              title: "Deleted",
+              message: "Tender deleted successfully!",
+              autoClose: true,
+              duration: 2000
+            });
+
+            setTimeout(() => {
+              if (onClose) onClose(true); // Pass true to indicate deletion
+            }, 2000);
+          } else {
+            throw new Error(result.message || "Failed to delete tender");
+          }
+        } catch (error) {
+          console.error("Error deleting tender:", error);
+          showAlert({
+            type: "error",
+            title: "Error",
+            message: error.message || "Failed to delete tender. Please try again."
+          });
+        } finally {
+          setLoading(false);
+        }
+      }
+    });
   };
 
   const handleSubmit = () => {
@@ -342,6 +402,7 @@ function AddTender({ tenderData, onClose }) {
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setPdf(null)}
                   className="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors flex-shrink-0 ml-2"
                 >
@@ -364,30 +425,47 @@ function AddTender({ tenderData, onClose }) {
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
-        <button
-          onClick={onClose}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="px-4 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#891737]/90 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-        >
-          {loading ? (
-            <>
-              <Loader className="w-4 h-4 animate-spin" />
-              {tenderData ? "Updating..." : "Saving..."}
-            </>
-          ) : (
-            <>
-              <Check className="w-4 h-4" />
-              {tenderData ? "Update" : "Publish"}
-            </>
-          )}
-        </button>
+      <div className="px-6 py-4 border-t border-gray-100 flex justify-between items-center">
+        {/* Delete Button - Only show when editing */}
+        {tenderData && (
+          <button
+            type="button"
+            onClick={handleDeleteTender}
+            disabled={loading}
+            className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete
+          </button>
+        )}
+
+        <div className={`flex gap-3 ${!tenderData ? 'ml-auto' : ''}`}>
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="px-4 py-2 text-sm font-medium text-white bg-[#891737] hover:bg-[#891737]/90 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          >
+            {loading ? (
+              <>
+                <Loader className="w-4 h-4 animate-spin" />
+                {tenderData ? "Updating..." : "Saving..."}
+              </>
+            ) : (
+              <>
+                <Check className="w-4 h-4" />
+                {tenderData ? "Update" : "Publish"}
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

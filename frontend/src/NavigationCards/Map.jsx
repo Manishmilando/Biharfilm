@@ -10,7 +10,7 @@ const Map = () => {
     useEffect(() => {
         const fetchVendors = async () => {
             try {
-                const response = await fetch("https://biharfilmbackend-production.up.railway.app/api/vendor/getvendors");
+                const response = await fetch("http://localhost:3000/api/vendor/getvendors");
                 const data = await response.json();
                 if (data.success) {
                     setVendors(data.data);

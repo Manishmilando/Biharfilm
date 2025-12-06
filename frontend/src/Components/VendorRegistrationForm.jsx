@@ -168,7 +168,7 @@ const VendorRegistrationForm = () => {
         console.log(key, value);
       }
 
-      const response = await fetch('https://biharfilmbackend-production.up.railway.app/api/vendor/addvendors', {
+      const response = await fetch('http://localhost:3000/api/vendor/addvendors', {
         method: 'POST',
         body: submitData,
       });

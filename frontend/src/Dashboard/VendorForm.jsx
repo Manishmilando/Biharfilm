@@ -297,7 +297,7 @@ const VendorProductForm = () => {
       }
 
       // Use fetch instead of axios to match the attached file
-      const response = await fetch('https://biharfilmbackend-production.up.railway.app/api/vendor/addvendors', {
+      const response = await fetch('http://localhost:3000/api/vendor/addvendors', {
         method: 'POST',
         body: submitData,
       });

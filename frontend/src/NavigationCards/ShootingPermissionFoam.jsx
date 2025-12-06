@@ -118,7 +118,7 @@ const Response = () => {
 
       // ✅ Add Authorization header with JWT token
       const response = await axios.post(
-        "https://biharfilmbackend-production.up.railway.app/api/noc/submit",
+        "http://localhost:3000/api/noc/submit",
         formToSubmit,
         {
           headers: {

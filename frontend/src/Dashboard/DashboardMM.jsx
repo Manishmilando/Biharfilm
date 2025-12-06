@@ -3,13 +3,16 @@ import "../App.css";
 import Logo1 from "/src/assets/Logo1.png";
 import { MdSpaceDashboard } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
-import { FileText, CheckCircle, Clock, XCircle, Building2, Search, Bell, LogOut, Menu, X } from "lucide-react";
+import { FileText, CheckCircle, Clock, XCircle, Building2, Search, Bell, LogOut, Menu, X, Users, Film } from "lucide-react";
 import Dashboardactivity from "./Dashboardactivity";
 import Artist from "./Artist";
 import VendorDirectory from "./VendorDirectory";
 import { RiContractFill } from "react-icons/ri";
 import TenderMain from "../Dashboard/TenderMain";
 import NotificationMain from "./NotificationMain";
+import DistrictPassword from "./DistrictManager";
+import UserManager from "./UserManager";
+import FilmClubAdmin from "./FilmClubAdmin";
 import axios from "axios";
 
 const Dashboard = () => {
@@ -30,7 +33,7 @@ const Dashboard = () => {
         if (!token) return;
 
         const { data } = await axios.get(
-          "https://biharfilmbackend-production.up.railway.app/api/noc/getAllNocForms",
+          "http://localhost:3000/api/noc/getAllNocForms",
           {
             headers: { 'Authorization': `Bearer ${token}` }
           }
@@ -112,6 +115,12 @@ const Dashboard = () => {
         return <NotificationMain searchQuery={searchQuery} />;
       case "Tender":
         return <TenderMain searchQuery={searchQuery} />;
+      case "District Manager":
+        return <DistrictPassword searchQuery={searchQuery} />;
+      case "User Manager":
+        return <UserManager searchQuery={searchQuery} />;
+      case "Film Club":
+        return <FilmClubAdmin searchQuery={searchQuery} />;
       case "Deleted":
         return (
           <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
@@ -133,6 +142,9 @@ const Dashboard = () => {
     { label: "Vendor Directory", icon: <Building2 className="w-5 h-5" /> },
     { label: "Notifications", icon: <Bell className="w-5 h-5" /> },
     { label: "Tender", icon: <RiContractFill className="w-5 h-5" /> },
+    { label: "District Manager", icon: <RiContractFill className="w-5 h-5" /> },
+    { label: "User Manager", icon: <Users className="w-5 h-5" /> },
+    { label: "Film Club", icon: <Film className="w-5 h-5" /> },
   ];
 
   return (

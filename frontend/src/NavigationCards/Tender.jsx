@@ -20,7 +20,7 @@ const Tenders = () => {
   const fetchTenders = async () => {
     try {
       const { data } = await axios.get(
-        // "https://biharfilmbackend-production.up.railway.app/api/tender/tenders"
+        // "http://localhost:3000/api/tender/tenders"
       );
       setTenders(data.tenders || []);
     } catch (error) {

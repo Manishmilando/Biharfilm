@@ -18,7 +18,7 @@ const ArtistProfile = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [bannerImage, setBannerImage] = useState("/bannerArtist.jpg");
-  
+
   const [artist, setArtist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,7 +43,7 @@ const ArtistProfile = () => {
     autoClose: false
   });
 
-  const API_BASE_URL = "https://biharfilmbackend-production.up.railway.app/api/artist";
+  const API_BASE_URL = "http://localhost:3000/api/artist";
   const token = localStorage.getItem("authToken");
 
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
@@ -92,7 +92,7 @@ const ArtistProfile = () => {
           const result = await response.json();
           console.log("✅ Artist profile fetched:", result.data);
           setArtist(result.data);
-          
+
           if (result.data.image) {
             setPreviewImage(result.data.image);
           }
@@ -103,7 +103,7 @@ const ArtistProfile = () => {
         } else if (response.status === 401) {
           setError("Session expired. Please login again.");
           localStorage.removeItem("authToken");
-          
+
           showAlert({
             type: "error",
             title: "Session Expired",
@@ -119,7 +119,7 @@ const ArtistProfile = () => {
       } catch (err) {
         console.error("Error fetching artist profile:", err);
         setError("Failed to load artist profile");
-        
+
         showAlert({
           type: "error",
           title: "Failed to Load Profile",
@@ -208,7 +208,7 @@ const ArtistProfile = () => {
         console.log("✅ Profile image saved:", result.data);
         setArtist(result.data);
         setSelectedImage(null);
-        
+
         showAlert({
           type: "success",
           title: "Profile Updated!",
@@ -222,7 +222,7 @@ const ArtistProfile = () => {
       }
     } catch (err) {
       console.error("Error saving image:", err);
-      
+
       showAlert({
         type: "error",
         title: "Upload Failed",
@@ -274,17 +274,17 @@ const ArtistProfile = () => {
       if (response.ok) {
         const result = await response.json();
         console.log("✅ Experience updated:", result.data);
-        
+
         // Update artist state
         setArtist(prev => ({
           ...prev,
-          experiences: prev.experiences.map(exp => 
+          experiences: prev.experiences.map(exp =>
             exp.id === editingExperienceId ? result.data : exp
           )
         }));
 
         setEditingExperienceId(null);
-        
+
         showAlert({
           type: "success",
           title: "Experience Updated!",
@@ -330,7 +330,7 @@ const ArtistProfile = () => {
 
           if (response.ok) {
             console.log("✅ Experience deleted");
-            
+
             // Update artist state
             setArtist(prev => ({
               ...prev,
@@ -383,10 +383,10 @@ const ArtistProfile = () => {
       if (response.ok) {
         const result = await response.json();
         console.log("✅ About updated:", result.data);
-        
+
         setArtist(result.data);
         setEditingAbout(false);
-        
+
         showAlert({
           type: "success",
           title: "About Updated!",
@@ -742,20 +742,20 @@ const ArtistProfile = () => {
                         <input
                           type="text"
                           value={editedExperience.filmTitle}
-                          onChange={(e) => setEditedExperience({...editedExperience, filmTitle: e.target.value})}
+                          onChange={(e) => setEditedExperience({ ...editedExperience, filmTitle: e.target.value })}
                           placeholder="Film Title"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a92b4e]"
                         />
                         <input
                           type="text"
                           value={editedExperience.roleInFilm}
-                          onChange={(e) => setEditedExperience({...editedExperience, roleInFilm: e.target.value})}
+                          onChange={(e) => setEditedExperience({ ...editedExperience, roleInFilm: e.target.value })}
                           placeholder="Role"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a92b4e]"
                         />
                         <textarea
                           value={editedExperience.description}
-                          onChange={(e) => setEditedExperience({...editedExperience, description: e.target.value})}
+                          onChange={(e) => setEditedExperience({ ...editedExperience, description: e.target.value })}
                           placeholder="Description"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a92b4e] resize-none"
                           rows="2"
@@ -763,7 +763,7 @@ const ArtistProfile = () => {
                         <input
                           type="text"
                           value={editedExperience.awards || ""}
-                          onChange={(e) => setEditedExperience({...editedExperience, awards: e.target.value})}
+                          onChange={(e) => setEditedExperience({ ...editedExperience, awards: e.target.value })}
                           placeholder="Awards (optional)"
                           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#a92b4e]"
                         />

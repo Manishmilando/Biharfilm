@@ -10,7 +10,7 @@ const LocalArtist = () => {
     useEffect(() => {
         const fetchArtists = async () => {
             try {
-                const response = await fetch("https://biharfilmbackend-production.up.railway.app/api/artist/getAllArtists");
+                const response = await fetch("http://localhost:3000/api/artist/getAllArtists");
                 const data = await response.json();
                 if (data.success) {
                     setArtists(data.data);
