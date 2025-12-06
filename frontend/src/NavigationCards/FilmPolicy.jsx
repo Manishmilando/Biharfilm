@@ -63,7 +63,7 @@ export default function FilmPolicyNOC() {
         <button
           onClick={() => {
             const link = document.createElement("a");
-            link.href = "/FilmPolicy.pdf"; // keep file in public folder
+            link.href = "/filmPolicy.pdf"; // keep file in public folder
             link.download = "Bihar_Film_Policy.pdf";
             link.click();
           }}

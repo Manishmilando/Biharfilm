@@ -13,6 +13,7 @@ const PDFViewerPage = () => {
     "bihar-baiskop": "/BiharBaiskop.png",
     "goa-film-brochure": "/GoaFilmBrochure.png",
     "promotion-policy": "/PromotionPolicy.png",
+    "film-policy": "/filmPolicy.pdf",
   };
 
   // If no docId → Show list of documents UI
